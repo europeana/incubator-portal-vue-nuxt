@@ -60,6 +60,7 @@
             </figcaption>
             <LangSelector data-qa="language selector" />
           </figure>
+          <NewsletterForm />
         </b-col>
       </b-row>
       <hr class="my-5">
@@ -84,11 +85,13 @@
 
 <script>
   import LangSelector from './generic/LanguageSelector';
+  import NewsletterForm from './generic/NewsletterForm';
   import LinkGroup from './generic/LinkGroup';
 
   export default {
     components: {
       LangSelector,
+      NewsletterForm,
       LinkGroup
     },
 

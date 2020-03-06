@@ -445,7 +445,8 @@ export default {
     "disclaimerLine1": "Europeana is an initiative of the European Union, financed by the European Union’s Connecting Europe Facility and European Union Member States. The Europeana services, including this website, are operated by a consortium led by the Europeana Foundation under a service contract with the European Commission.",
     "disclaimerLine2": "The European Commission does not guarantee the accuracy of the information and accepts no responsibility or liability whatsoever with regard to the information on this website. Neither the European Commission, nor any person acting on the European Commission’s behalf, is responsible or liable for the accuracy or use of the information on this website.",
     "imageDescription": "Co-financed by the Connecting Europe Facility of the European Union",
-    "findUsElsewhere": "Find us elsewhere"
+    "findUsElsewhere": "Find us elsewhere",
+    "newsletter": "Sign up for our newsletter"
   },
   "collections": {
     "fashion": {
