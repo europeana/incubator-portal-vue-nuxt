@@ -44,9 +44,9 @@
         <b-card-title
           v-if="displayTitle"
           title-tag="div"
-          :lang="displayTitle.code"
+          :lang="displayTitle.lang"
         >
-          {{ displayTitle.values[0] | truncate(90, $t('formatting.ellipsis')) }}
+          {{ displayTitle.value | truncate(90, $t('formatting.ellipsis')) }}
         </b-card-title>
         <time
           v-if="datetime"
@@ -62,12 +62,12 @@
           >
             <b-card-text
               :key="index"
-              :lang="text.code"
+              :lang="text.lang"
               text-tag="div"
             >
               <!-- eslint-disable vue/no-v-html -->
               <p
-                v-html="cardText(text.values)"
+                v-html="cardText(text.value)"
               />
               <!-- eslint-enable vue/no-v-html -->
             </b-card-text>
@@ -149,6 +149,7 @@
         default: null
       }
     },
+
     data() {
       return {
         cardImageUrl: this.imageUrl
@@ -165,29 +166,24 @@
       },
 
       displayTitle() {
-        if (typeof this.title === 'string') {
-          return { values: [this.title], code: null };
-        } else {
-          return langMapValueForLocale(this.title, this.$i18n.locale);
-        }
+        return langMapValueForLocale(this.title, this.$i18n.locale);
       },
 
       displayTexts() {
-        return this.texts.filter(Boolean).map((value) => {
-          if (typeof value === 'string') {
-            return { values: [value], code: null };
-          } else if (Array.isArray(value)) {
-            return { values: value, code: null };
-          } else {
-            return langMapValueForLocale(value, this.$i18n.locale, { omitUrisIfOtherValues: this.omitUrisIfOtherValues, omitAllUris: this.omitAllUris });
-          }
-        });
+        return this.texts.map((value) => {
+          return langMapValueForLocale(value, this.$i18n.locale, { omitUrisIfOtherValues: this.omitUrisIfOtherValues, omitAllUris: this.omitAllUris });
+        }).filter(Boolean);
       },
 
       optimisedImageUrl() {
         return this.$options.filters.optimisedImageUrl(this.imageUrl, this.imageContentType, this.imageOptimisationOptions);
       }
     },
+
+    // mounted() {
+    //   console.log('ContentCard displayTitle', this.displayTitle);
+    //   console.log('ContentCard displayTexts', this.displayTexts);
+    // },
 
     methods: {
       cardText(values) {

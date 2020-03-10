@@ -26,26 +26,24 @@
               :class="cardGridClass"
             >
               <header
-                v-if="titlesInCurrentLanguage"
+                v-if="titles"
                 class="card-heading"
               >
-                <template
-                  v-for="(heading, index) in titlesInCurrentLanguage"
+                <h1
+                  :lang="prefTitle.lang"
                 >
-                  <h1
-                    v-if="index === 0"
-                    :key="index"
-                    :lang="heading.code"
-                  >
-                    {{ heading.value }}
-                  </h1>
+                  {{ prefTitle.value }}
+                </h1>
+                <template
+                  v-for="(oneAltTitle, index) in altTitles"
+                >
                   <p
-                    v-else
-                    :key="index"
-                    :lang="heading.code"
+                    v-for="(altTitleValue, altTitleIndex) in oneAltTitle.value"
+                    :key="`${index}.${altTitleIndex}`"
+                    :lang="oneAltTitle.lang"
                     class="font-weight-bold"
                   >
-                    {{ heading.value }}
+                    {{ altTitleValue }}
                   </p>
                 </template>
               </header>
@@ -67,17 +65,17 @@
                 class="description"
               >
                 <div
-                  v-for="(value, index) in descriptionInCurrentLanguage.values"
+                  v-for="(value, index) in descriptionInCurrentLanguage.value"
                   :key="index"
                 >
                   <!-- eslint-disable vue/no-v-html -->
                   <p
-                    :lang="descriptionInCurrentLanguage.code"
+                    :lang="descriptionInCurrentLanguage.lang"
                     v-html="$options.filters.convertNewLine(value)"
                   />
                   <!-- eslint-disable vue/no-v-html -->
                   <hr
-                    v-if="(index + 1) < descriptionInCurrentLanguage.values.length"
+                    v-if="(index + 1) < descriptionInCurrentLanguage.value.length"
                   >
                 </div>
               </div>
@@ -89,8 +87,8 @@
               :europeana-identifier="identifier"
               :use-proxy="useProxy"
               :rights-statement="rightsStatement"
-              :data-provider-name="dataProvider.values[0]"
-              :data-provider-lang="dataProvider.code"
+              :data-provider-name="dataProvider.value"
+              :data-provider-lang="dataProvider.lang"
               :is-shown-at="isShownAt"
             />
           </div>
@@ -221,33 +219,37 @@
         const entities = this.europeanaConcepts.concat(this.europeanaAgents);
         return entities.map((entity) => entity.about).slice(0, 5);
       },
-      titlesInCurrentLanguage() {
-        let titles = [];
+      titles() {
+        // let titles = [];
 
-        const mainTitle = this.title ? langMapValueForLocale(this.title, this.$i18n.locale) : '';
-        const alternativeTitle = this.altTitle ? langMapValueForLocale(this.altTitle, this.$i18n.locale) : '';
+        const mainTitle = langMapValueForLocale(this.title, this.$i18n.locale);
+        const alternativeTitle = langMapValueForLocale(this.altTitle, this.$i18n.locale);
 
-        const allTitles = [].concat(mainTitle, alternativeTitle).filter(Boolean);
-        for (let title of allTitles) {
-          for (let value of title.values) {
-            titles.push({ 'code': title.code, value });
-          }
-        }
-
+        const titles = [].concat(mainTitle, alternativeTitle).filter(Boolean);
+        // for (let title of allTitles) {
+        //   for (let value of title.values) {
+        //     titles.push({ 'code': title.code, value });
+        //   }
+        // }
+        // console.log('titles', titles);
         return titles;
       },
+      prefTitle() {
+        return this.titles[0];
+      },
+      altTitles() {
+        return this.titles.slice(1);
+      },
       descriptionInCurrentLanguage() {
-        if (!this.description) {
-          return false;
-        }
         return langMapValueForLocale(this.description, this.$i18n.locale);
       },
       metaTitle() {
-        return this.titlesInCurrentLanguage[0] ? this.titlesInCurrentLanguage[0].value : this.$t('record.record');
+        return this.prefTitle ? this.prefTitle.value : this.$t('record.record');
       },
       metaDescription() {
-        if (!this.descriptionInCurrentLanguage) return '';
-        return this.descriptionInCurrentLanguage.values[0] ? this.descriptionInCurrentLanguage.values[0] : '';
+        // console.log('descriptionInCurrentLanguage', this.descriptionInCurrentLanguage);
+        if (!this.descriptionInCurrentLanguage) return null;
+        return this.descriptionInCurrentLanguage.value;
       },
       isRichMedia() {
         return isRichMedia(this.selectedMedia, {
@@ -279,15 +281,17 @@
         return this.selectedMedia.webResourceEdmRights ? this.selectedMedia.webResourceEdmRights : this.fields.edmRights;
       },
       rightsStatement() {
-        if (this.edmRights) return langMapValueForLocale(this.edmRights, this.$i18n.locale).values[0];
+        if (this.edmRights) return langMapValueForLocale(this.edmRights, this.$i18n.locale).value;
         return false;
       },
       dataProvider() {
         const edmDataProvider = langMapValueForLocale(this.coreFields.edmDataProvider, this.$i18n.locale);
+        console.log('edmDataProvider', edmDataProvider);
 
-        if (edmDataProvider.values[0].about) {
-          return edmDataProvider.values[0];
-        }
+        // FIXME: restore logic; move into utils.js?
+        // if (edmDataProvider.value[0].about) {
+        //   return edmDataProvider.value[0];
+        // }
 
         return edmDataProvider;
       },
@@ -380,10 +384,12 @@
       getSimilarItemsData(value) {
         if (!value) return;
 
-        const data = langMapValueForLocale(value, this.$i18n.locale).values;
+        const data = langMapValueForLocale(value, this.$i18n.locale);
         if (!data) return;
 
-        return data.filter(item => typeof item === 'string');
+        return data
+          .map(item => item.value)
+          .filter(value => typeof value === 'string');
       }
     },
 

@@ -10,32 +10,36 @@
     >
       {{ $t(`fieldLabels.${context}.${name}`) }}
     </label>
+    <!-- <br>
+    <code>fieldData <pre>{{ fieldData }}</pre></code>
+    <code>langMappedValues <pre>{{ langMappedValues }}</pre></code> -->
     <ul>
       <template
-        v-for="(value, index) of displayValues.values"
+        v-for="(item, index) of displayValues"
       >
+        <!-- FIXME: restore functionality -->
         <template
-          v-if="value.about"
+          v-if="item.about"
         >
           <li
-            v-for="(nestedValue, nestedIndex) of value.values"
-            :key="index + '_' + nestedIndex"
-            :lang="value.code"
+            v-for="(nestedItem, nestedIndex) of item.value"
+            :key="index + '.' + nestedIndex"
+            :lang="item.lang"
             data-qa="entity value"
           >
             <EntityField
-              :value="nestedValue"
-              :about="value.about"
+              :value="nestedItem"
+              :about="item.about"
             />
           </li>
         </template>
         <li
           v-else
           :key="index"
-          :lang="langMappedValues.code"
+          :lang="item.lang"
           data-qa="literal value"
         >
-          {{ value }}
+          {{ item.value }}
         </li>
       </template>
     </ul>
@@ -86,11 +90,13 @@
 
     computed: {
       displayValues() {
-        const display = Object.assign({}, this.langMappedValues);
+        // console.log('MetadataField this.langMappedValues', this.langMappedValues);
+        let display = Object.assign({}, this.langMappedValues);
 
-        if (this.limitDisplayValues && (display.values.length > this.limit)) {
-          display.values = display.values.slice(0, this.limit).concat(this.$t('formatting.ellipsis'));
+        if (this.limitDisplayValues && (display.length > this.limit)) {
+          display = display.slice(0, this.limit).concat(this.$t('formatting.ellipsis'));
         }
+
         return display;
       },
 
@@ -99,21 +105,15 @@
       },
 
       langMappedValues() {
-        if (this.fieldData === null) {
-          return null;
-        } else if (typeof(this.fieldData) === 'string') {
-          return { values: [this.fieldData], code: '' };
-        } else if (Array.isArray(this.fieldData)) {
-          return { values: this.fieldData, code: '' };
-        }
-        return langMapValueForLocale(this.fieldData, this.$i18n.locale, { omitUrisIfOtherValues: this.omitUrisIfOtherValues, omitAllUris: this.omitAllUris });
+        return langMapValueForLocale(this.fieldData, this.$i18n.locale, {
+          omitUrisIfOtherValues: this.omitUrisIfOtherValues,
+          omitAllUris: this.omitAllUris
+        });
       },
 
       hasValuesForLocale() {
-        if (this.langMappedValues === null) {
-          return null;
-        }
-        return this.langMappedValues.values.length >= 1;
+        // console.log('MetadataField this.langMappedValues', this.langMappedValues);
+        return this.langMappedValues !== null;
       }
     }
   };
