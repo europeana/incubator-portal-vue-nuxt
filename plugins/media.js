@@ -38,7 +38,7 @@ function serviceConformsToIIIFImageAPI(service = {}) {
 }
 
 export function isIIIFMedia(media) {
-  return (media.services || []).some((service) => serviceConformsToIIIFImageAPI(service));
+  return isImage(media) || (media.services || []).some((service) => serviceConformsToIIIFImageAPI(service));
 }
 
 export function isIIIFImage(media) {
@@ -69,6 +69,6 @@ export function iiifManifest(media, europeanaIdentifier) {
 }
 
 export function isRichMedia(media) {
-  return isOEmbed(media) || isHTMLVideo(media) || isHTMLAudio(media) || isIIIFMedia(media) ||
+  return isImage(media) || isOEmbed(media) || isHTMLVideo(media) || isHTMLAudio(media) || isIIIFMedia(media) ||
     (Number(process.env.ENABLE_EUROPEANA_MEDIA_PLAYER) && isPlayableMedia(media));
 }
