@@ -247,7 +247,11 @@ export function searchEntities(entityUris) {
     }
   })
     .then((response) => {
-      let items = response.data.items ? response.data.items : [];
+      const items = (response.data.items ? response.data.items : []).map(item => {
+        return { id: item.id, prefLabel: item.prefLabel, type: item.type, isShownBy: item.isShownBy };
+      });
+      // console.log('searchEntities length', JSON.stringify(items).length);
+      // console.log('searchEntities items', items);
       return items;
     })
     .catch((error) => {

@@ -44,9 +44,9 @@ function parseRecordDataFromApiResponse(response) {
 /**
  * Retrieves the "Core" fields which will always be displayed on record pages.
  *
- * @param {Object[]} proxyData All core fields are in the proxyData.
+ * @param {Object} proxyData All core fields are in the proxyData.
  * @param {Object[]} entities Entities in order to perform entity lookups
- * @return {Object[]} Key value pairs of the metadata fields.
+ * @return {Object} Key value pairs of the metadata fields.
  */
 function coreFields(proxyData, edmDataProvider, entities) {
   return lookupEntities(omitBy({
@@ -64,10 +64,10 @@ function coreFields(proxyData, edmDataProvider, entities) {
 /**
  * Retrieves all additional fields which will be displayed on record pages in the collapsable section.
  *
- * @param {Object[]} proxyData To take the fields from.
- * @param {Object[]} edm To take additional fields from.
+ * @param {Object} proxyData To take the fields from.
+ * @param {Object} edm To take additional fields from.
  * @param {Object[]} entities Entities in order to perform entity lookups
- * @return {Object[]} Key value pairs of the metadata fields.
+ * @return {Object} Key value pairs of the metadata fields.
  */
 function extraFields(proxyData, edm, entities) {
   const providerAggregation = edm.aggregations[0];

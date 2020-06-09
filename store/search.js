@@ -121,6 +121,8 @@ export const mutations = {
           field.label = `"${field.label}"`;
         }
       }
+
+      facet.fields = Object.freeze(facet.fields);
     }
     state.facets = value;
   },
@@ -128,7 +130,7 @@ export const mutations = {
     state.lastAvailablePage = value;
   },
   setResults(state, value) {
-    state.results = value;
+    state.results = Object.freeze(value);
   },
   setTotalResults(state, value) {
     state.totalResults = value;

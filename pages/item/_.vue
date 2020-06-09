@@ -208,6 +208,7 @@
         concepts: null,
         coreFields: null,
         description: null,
+        europeanaEntityUris: [],
         error: null,
         fields: null,
         identifier: null,
@@ -239,16 +240,6 @@
       },
       fieldsAndKeywords() {
         return { ...this.fields, ...{ keywords: this.keywords } };
-      },
-      europeanaAgents() {
-        return (this.agents || []).filter((agent) => agent.about.startsWith(`${this.apiConfig.data.origin}/agent/`));
-      },
-      europeanaConcepts() {
-        return (this.concepts || []).filter((concept) => concept.about.startsWith(`${this.apiConfig.data.origin}/concept/`));
-      },
-      europeanaEntityUris() {
-        const entities = this.europeanaConcepts.concat(this.europeanaAgents);
-        return entities.map((entity) => entity.about).slice(0, 5);
       },
       titlesInCurrentLanguage() {
         let titles = [];
@@ -329,9 +320,11 @@
       }
     },
 
-    asyncData({ params, res, query }) {
-      return getRecord(`/${params.pathMatch}`, { origin: query.recordApi })
+    asyncData({ params, res, query, app }) {
+      return getRecord(`/${params.pathMatch}`, { origin: query.recordApi, locale: app.i18n.locale })
         .then((result) => {
+          // console.log('result.record', result.record);
+          // console.log('result.record size', JSON.stringify(result.record).length);
           return result.record;
         })
         .catch((error) => {
@@ -369,7 +362,7 @@
 
       axios.all([
         Number(process.env['ENABLE_ITEM_TAGGING_ANNOTATIONS']) ? searchAnnotations(taggingAnnotationSearchParams) : [],
-        searchEntities(this.europeanaEntityUris),
+        searchEntities(this.europeanaEntityUris.slice(0, 5)),
         this.getSimilarItems()
       ])
         .then(axios.spread((taggingAnnotations, entities, similar) => {
