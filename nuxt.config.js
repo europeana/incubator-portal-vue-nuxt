@@ -1,5 +1,8 @@
+const isDev = process.env.NODE_ENV !== 'production';
+
 // Load dotenv for server/index.js to access env vars from .env file
-require('dotenv').config();
+if (isDev) require('dotenv').config();
+
 const pkg = require('./package');
 const i18nLocales = require('./plugins/i18n/locales.js');
 const i18nDateTime = require('./plugins/i18n/datetime.js');
@@ -116,7 +119,7 @@ module.exports = {
   ** Nuxt.js modules
   */
   modules: [
-    '@nuxtjs/dotenv',
+    '~/modules/config',
     '~/modules/apis',
     'bootstrap-vue/nuxt',
     'cookie-universal-nuxt',
@@ -144,7 +147,7 @@ module.exports = {
         syncRouteParams: true
       }
     }]
-  ],
+  ].concat(isDev ? '@nuxtjs/dotenv' : []),
 
   router: {
     middleware: routerMiddleware,
