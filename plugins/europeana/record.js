@@ -21,10 +21,18 @@ function parseRecordDataFromApiResponse(response) {
   const entities = [].concat(edm.concepts, edm.places, edm.agents, edm.timespans)
     .filter(isNotUndefined)
     .reduce((memo, entity) => {
-      memo[entity.about] = entity;
+      memo[entity.about] = {
+        prefLabel: entity.prefLabel,
+        about: entity.about
+      };
       return memo;
     }, {});
   const proxyData = merge.all(edm.proxies, { arrayMerge: combineMerge });
+
+  const europeanaAgents = (edm.agents || []).filter((agent) => agent.about.startsWith(`${config.data.origin}/agent/`));
+  const europeanaConcepts = (edm.concepts || []).filter((concept) => concept.about.startsWith(`${config.data.origin}/concept/`));
+  const europeanaEntityUris = europeanaConcepts.concat(europeanaAgents)
+    .map((entity) => entity.about);
 
   return {
     altTitle: proxyData.dctermsAlternative,
@@ -35,8 +43,7 @@ function parseRecordDataFromApiResponse(response) {
     coreFields: coreFields(proxyData, providerAggregation.edmDataProvider, entities),
     fields: extraFields(proxyData, edm, entities),
     media: aggregationMedia(providerAggregation, edm.type, edm.services),
-    agents: edm.agents,
-    concepts: edm.concepts,
+    europeanaEntityUris,
     title: proxyData.dcTitle
   };
 }
@@ -260,7 +267,7 @@ export function getRecord(europeanaId, options = {}) {
   })
     .then((response) => {
       return {
-        record: parseRecordDataFromApiResponse(response),
+        record: parseRecordDataFromApiResponse(response, options.locale),
         error: null
       };
     })
