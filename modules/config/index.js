@@ -1,7 +1,7 @@
 const path = require('path');
 const MODULE_NAME = 'config';
 
-module.exports = async function() {
+module.exports = function() {
   this.addTemplate({
     src: path.resolve(__dirname, 'settings.js'),
     fileName: path.join(MODULE_NAME, 'settings.js')

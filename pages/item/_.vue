@@ -320,10 +320,10 @@
         return `https://classic.europeana.eu/portal/${this.$i18n.locale}/record${this.identifier}.html?utm_source=new-website&utm_medium=button`;
       },
       redirectNotificationsEnabled() {
-        return Boolean(Number(process.env.ENABLE_LINKS_TO_CLASSIC));
+        return this.$config.ENABLE_LINKS_TO_CLASSIC;
       },
       enableEuropeanaMediaPlayer() {
-        return Boolean(Number(process.env.ENABLE_EUROPEANA_MEDIA_PLAYER));
+        return this.$config.ENABLE_EUROPEANA_MEDIA_PLAYER;
       }
     },
 
@@ -352,7 +352,7 @@
       };
 
       axios.all([
-        Number(process.env['ENABLE_ITEM_TAGGING_ANNOTATIONS']) ? searchAnnotations(taggingAnnotationSearchParams) : [],
+        this.$config.ENABLE_ITEM_TAGGING_ANNOTATIONS ? searchAnnotations(taggingAnnotationSearchParams) : [],
         searchEntities(this.europeanaEntityUris),
         this.getSimilarItems()
       ])

@@ -50,7 +50,7 @@
           }
         };
 
-        if (Number(process.env.ENABLE_IIIF_ANNOTATIONS)) {
+        if (this.$config.ENABLE_IIIF_ANNOTATIONS) {
           options.window.allowWindowSideBar = true;
           options.window.panels.annotations = true;
           options.window.defaultSideBarPanel = 'annotations';

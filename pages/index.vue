@@ -57,7 +57,7 @@
         return this.hero ? this.hero.image.fields.file : null;
       },
       onHomePage() {
-        return Boolean(Number(process.env.ENABLE_LINKS_TO_CLASSIC)) && !this.path;
+        return this.$config.ENABLE_LINKS_TO_CLASSIC && !this.path;
       },
       notificationUrl() {
         return `https://classic.europeana.eu/portal/${this.$store.state.i18n.locale}?utm_source=new-website&utm_medium=button`;

@@ -10,8 +10,12 @@ export default ({ app, store }, inject) => {
       mutations: {
         set(state, env = {}) {
           for (const property of settings) {
-            // TODO: camelcase properties?
-            state.settings[property] = env[property];
+            let value = env[property];
+            // typecast feature toggles
+            if (property.startsWith('ENABLE_') || property.startsWith('DISABLE_')) {
+              value = Boolean(Number(value));
+            }
+            state.settings[property] = value;
           }
         }
       }

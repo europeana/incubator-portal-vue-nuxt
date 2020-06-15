@@ -89,7 +89,7 @@
       }),
 
       disqusShortname() {
-        return process.env.DISQUS_SHORTNAME;
+        return this.$config.DISQUS_SHORTNAME;
       },
 
       enableBlogComments() {

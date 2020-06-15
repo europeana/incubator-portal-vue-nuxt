@@ -12,7 +12,6 @@
     </a>
     <PageHeader
       :enable-auto-suggest="enableAutoSuggest"
-      :enable-language-selector="enableLanguageSelector"
       :enable-suggestion-validation="enableSuggestionValidation"
     />
     <main role="main">
@@ -43,8 +42,6 @@
   import PageHeader from '../components/PageHeader';
 
   const config = {
-    enableLanguageSelector: Boolean(Number(process.env['ENABLE_LANGUAGE_SELECTOR'])),
-    enableSuggestionValidation: Boolean(Number(process.env['ENABLE_ENTITY_SUGGESTION_RECORD_VALIDATION'])),
     bootstrapVersion: require('bootstrap/package.json').version,
     bootstrapVueVersion: require('bootstrap-vue/package.json').version
   };
@@ -59,7 +56,8 @@
 
     data() {
       return {
-        ...config
+        ...config,
+        enableSuggestionValidation: this.$config.ENABLE_ENTITY_SUGGESTION_RECORD_VALIDATION)
       };
     },
 
@@ -74,7 +72,7 @@
       enableAutoSuggest() {
         // Auto suggest on search form will be disabled unless toggled on by env var,
         // and always disabled on entity pages.
-        return Boolean(Number(process.env['ENABLE_AUTOSUGGEST'])) && !(this.$store.state.entity && this.$store.state.entity.id);
+        return this.$config.ENABLE_AUTOSUGGEST && !(this.$store.state.entity && this.$store.state.entity.id);
       }
     },
 

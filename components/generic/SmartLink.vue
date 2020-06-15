@@ -38,7 +38,8 @@
 
     data() {
       return {
-        internalDomain: process.env.INTERNAL_LINK_DOMAIN
+        // FIXME: should this be a prop?
+        internalDomain: this.$config.INTERNAL_LINK_DOMAIN
       };
     },
 
