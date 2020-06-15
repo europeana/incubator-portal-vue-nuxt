@@ -1,5 +1,8 @@
 <template>
-  <div data-qa="exhibition chapter">
+  <div
+    data-qa="exhibition chapter"
+    class="exhibition-page"
+  >
     <HeroImage
       v-if="hero"
       :image-url="heroImage.url"
@@ -49,28 +52,31 @@
           />
         </b-col>
       </b-row>
-      <b-row v-if="chapters">
-        <b-col class="my-3">
-          <ExhibitionChaptersNavigation
-            :exhibition-identifier="exhibitionIdentifier"
-            :chapter-navigation="chapterNavigation"
-          />
-          <h2 class="is-size-1-5">
-            {{ $t('exhibitions.chapters') }}
-          </h2>
-          <ExhibitionChapters
-            :exhibition-identifier="exhibitionIdentifier"
-            :chapters="chapters"
-            :credits="credits"
-          />
-        </b-col>
-      </b-row>
+      <client-only>
+        <b-row v-if="chapters">
+          <b-col class="my-3">
+            <ExhibitionChaptersNavigation
+              :exhibition-identifier="exhibitionIdentifier"
+              :chapter-navigation="chapterNavigation"
+            />
+            <h2 class="is-size-1-5">
+              {{ $t('exhibitions.chapters') }}
+            </h2>
+            <ExhibitionChapters
+              :exhibition-identifier="exhibitionIdentifier"
+              :chapters="chapters"
+              :credits="credits"
+            />
+          </b-col>
+        </b-row>
+      </client-only>
     </b-container>
   </div>
 </template>
 
 <script>
   import createClient from '../../../plugins/contentful';
+  import ClientOnly from 'vue-client-only';
   import BrowseSections from '../../../components/browse/BrowseSections';
   import ExhibitionChapters from '../../../components/exhibition/ExhibitionChapters';
   import ExhibitionChaptersNavigation from '../../../components/exhibition/ExhibitionChaptersNavigation';
@@ -80,6 +86,7 @@
   export default {
     components: {
       BrowseSections,
+      ClientOnly,
       ExhibitionChapters,
       ExhibitionChaptersNavigation,
       HeroImage,

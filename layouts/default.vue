@@ -1,6 +1,8 @@
 <template>
   <div>
-    <CookieDisclaimer />
+    <client-only>
+      <CookieDisclaimer />
+    </client-only>
     <a
       class="skip-main"
       href="#main"
@@ -28,25 +30,43 @@
         id="main"
       />
     </main>
-    <PageFooter />
+    <client-only>
+      <PageFooter />
+    </client-only>
   </div>
 </template>
 
 <script>
-  import { mapGetters } from 'vuex';
+  import { mapGetters, mapState } from 'vuex';
 
-  import PageHeader from '../components/PageHeader.vue';
-  import PageFooter from '../components/PageFooter.vue';
-  import CookieDisclaimer from '../components/generic/CookieDisclaimer';
+  import ClientOnly from 'vue-client-only';
+  import PageHeader from '../components/PageHeader';
+
+  const config = {
+    enableLanguageSelector: Boolean(Number(process.env['ENABLE_LANGUAGE_SELECTOR'])),
+    enableSuggestionValidation: Boolean(Number(process.env['ENABLE_ENTITY_SUGGESTION_RECORD_VALIDATION'])),
+    bootstrapVersion: require('bootstrap/package.json').version,
+    bootstrapVueVersion: require('bootstrap-vue/package.json').version
+  };
 
   export default {
     components: {
+      ClientOnly,
+      CookieDisclaimer: () => import('../components/generic/CookieDisclaimer'),
       PageHeader,
-      PageFooter,
-      CookieDisclaimer
+      PageFooter: () => import('../components/PageFooter')
+    },
+
+    data() {
+      return {
+        ...config
+      };
     },
 
     computed: {
+      ...mapState({
+        breadcrumbs: state => state.breadcrumb.data
+      }),
       ...mapGetters({
         canonicalUrl: 'http/canonicalUrl',
         canonicalUrlWithoutLocale: 'http/canonicalUrlWithoutLocale'
@@ -55,21 +75,6 @@
         // Auto suggest on search form will be disabled unless toggled on by env var,
         // and always disabled on entity pages.
         return Boolean(Number(process.env['ENABLE_AUTOSUGGEST'])) && !(this.$store.state.entity && this.$store.state.entity.id);
-      },
-      enableLanguageSelector() {
-        return Boolean(Number(process.env['ENABLE_LANGUAGE_SELECTOR']));
-      },
-      enableSuggestionValidation() {
-        return Boolean(Number(process.env['ENABLE_ENTITY_SUGGESTION_RECORD_VALIDATION']));
-      },
-      breadcrumbs() {
-        return this.$store.state.breadcrumb.data;
-      },
-      bootstrapVersion() {
-        return require('bootstrap/package.json').version;
-      },
-      bootstrapVueVersion() {
-        return require('bootstrap-vue/package.json').version;
       }
     },
 

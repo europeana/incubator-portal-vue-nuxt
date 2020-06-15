@@ -1,6 +1,7 @@
 <template>
   <div
     data-qa="exhibition page"
+    class="exhibition-page"
   >
     <HeroImage
       v-if="hero"

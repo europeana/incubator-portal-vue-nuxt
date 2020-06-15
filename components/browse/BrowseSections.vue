@@ -52,21 +52,14 @@
 </template>
 
 <script>
-  import CompareImageSlider from '../generic/CompareImageSlider';
-  import ContentCardSection from './ContentCardSection';
-  import LatestSection from './LatestSection';
-  import HTMLEmbed from '../generic/HTMLEmbed';
-  import ImageWithAttribution from '../generic/ImageWithAttribution';
-  import RichText from './RichText';
-
   export default {
     components: {
-      CompareImageSlider,
-      ContentCardSection,
-      LatestSection,
-      HTMLEmbed,
-      ImageWithAttribution,
-      RichText
+      CompareImageSlider: () => import('../generic/CompareImageSlider'),
+      ContentCardSection: () => import('./ContentCardSection'),
+      LatestSection: () => import('./LatestSection'),
+      HTMLEmbed: () => import('../generic/HTMLEmbed'),
+      ImageWithAttribution: () => import('../generic/ImageWithAttribution'),
+      RichText: () => import('./RichText')
     },
 
     props: {

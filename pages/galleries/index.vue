@@ -40,7 +40,6 @@
 <script>
   import ContentHeader from '../../components/generic/ContentHeader';
   import ContentCard from '../../components/generic/ContentCard';
-  import PaginationNav from '../../components/generic/PaginationNav';
   import createClient, { getLinkedItems } from '../../plugins/contentful';
   import { pageFromQuery } from '../../plugins/utils';
 
@@ -51,7 +50,7 @@
     components: {
       ContentHeader,
       ContentCard,
-      PaginationNav
+      PaginationNav: () => import('../../components/generic/PaginationNav')
     },
     head() {
       return {

@@ -1,5 +1,7 @@
 <template>
-  <b-container data-qa="exhibitions">
+  <b-container
+    data-qa="exhibitions"
+  >
     <ContentHeader
       :title="$tc('exhibitions.exhibitions', 2)"
       :description="$t('exhibitions.description')"

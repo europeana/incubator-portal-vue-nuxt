@@ -75,6 +75,7 @@
     "nuxt-i18n": "^6.10.1",
     "qs": "^6.6.0",
     "vue": "^2.6.11",
+    "vue-client-only": "^2.0.0",
     "vue-disqus": "^3.0.5",
     "vue-i18n": "^8.17.3",
     "vue-scrollto": "^2.17.1"
@@ -95,8 +96,8 @@
     "@storybook/vue": "^5.3.18",
     "@vue/cli-plugin-babel": "^3.5.1",
     "@vue/cli-plugin-eslint": "^3.5.1",
-    "@vue/cli-plugin-unit-mocha": "^4.4.1",
-    "@vue/cli-service": "^4.4.1",
+    "@vue/cli-plugin-unit-mocha": "^3.5.1",
+    "@vue/cli-service": "^3.5.1",
     "@vue/test-utils": "^1.0.0-beta.29",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.5",

@@ -34,36 +34,40 @@
         md="3"
         class="pb-3"
       >
-        <h2
-          v-if="relatedEntities.length > 0"
-          class="related-heading text-uppercase"
-        >
-          {{ $t('contentYouMightLike') }}
-        </h2>
-        <section
-          v-if="relatedCollectionCards"
-        >
-          <BrowseContentCard
-            v-for="card in relatedCollectionCards"
-            :key="card.sys.id"
-            :fields="card.fields"
-            :card-type="card.sys.contentType ? card.sys.contentType.sys.id : ''"
-            :data-qa="card.fields.name + ' entity card'"
+        <client-only>
+          <h2
+            v-if="relatedEntities.length > 0"
+            class="related-heading text-uppercase"
+          >
+            {{ $t('contentYouMightLike') }}
+          </h2>
+          <section
+            v-if="relatedCollectionCards"
+          >
+            <BrowseContentCard
+              v-for="card in relatedCollectionCards"
+              :key="card.sys.id"
+              :fields="card.fields"
+              :card-type="card.sys.contentType ? card.sys.contentType.sys.id : ''"
+              :data-qa="card.fields.name + ' entity card'"
+            />
+          </section>
+          <EntityCards
+            v-else-if="relatedEntities"
+            :entities="relatedEntities"
+            data-qa="related entities"
           />
-        </section>
-        <EntityCards
-          v-else-if="relatedEntities"
-          :entities="relatedEntities"
-          data-qa="related entities"
-        />
+        </client-only>
       </b-col>
     </b-row>
     <b-row>
       <b-col>
-        <BrowseSections
-          v-if="page"
-          :sections="page.hasPart"
-        />
+        <client-only>
+          <BrowseSections
+            v-if="page"
+            :sections="page.hasPart"
+          />
+        </client-only>
       </b-col>
     </b-row>
   </b-container>
@@ -72,10 +76,7 @@
 <script>
   import axios from 'axios';
 
-  import AlertMessage from '../../../components/generic/AlertMessage';
-  import EntityCards from '../../../components/entity/EntityCards';
-  import BrowseContentCard from '../../../components/browse/BrowseContentCard';
-  import BrowseSections from '../../../components/browse/BrowseSections';
+  import ClientOnly from 'vue-client-only';
   import EntityDetails from '../../../components/entity/EntityDetails';
   import SearchInterface from '../../../components/search/SearchInterface';
 
@@ -88,10 +89,11 @@
 
   export default {
     components: {
-      AlertMessage,
-      BrowseContentCard,
-      BrowseSections,
-      EntityCards,
+      AlertMessage: () => import('../../../components/generic/AlertMessage'),
+      BrowseContentCard: () => import('../../../components/browse/BrowseContentCard'),
+      BrowseSections: () => import('../../../components/browse/BrowseSections'),
+      ClientOnly,
+      EntityCards: () => import('../../../components/entity/EntityCards'),
       EntityDetails,
       SearchInterface
     },

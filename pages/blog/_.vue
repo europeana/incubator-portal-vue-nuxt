@@ -59,18 +59,14 @@
   import { mapGetters } from 'vuex';
   import createClient from '../../plugins/contentful';
   import BlogPost from '../../components/blog/BlogPost';
-  import BlogTags from '../../components/blog/BlogTags';
-  import BlogAuthors from '../../components/blog/BlogAuthors';
-  import BlogCategories from '../../components/blog/BlogCategories';
-  import HeroImage from '../../components/generic/HeroImage';
 
   export default {
     components: {
       BlogPost,
-      BlogTags,
-      BlogAuthors,
-      BlogCategories,
-      HeroImage
+      BlogTags: () => import('../../components/blog/BlogTags'),
+      BlogAuthors: () => import('../../components/blog/BlogAuthors'),
+      BlogCategories: () => import('../../components/blog/BlogCategories'),
+      HeroImage: () => import('../../components/generic/HeroImage')
     },
 
     data() {

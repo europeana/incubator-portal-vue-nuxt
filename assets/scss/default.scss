@@ -186,10 +186,6 @@ input[type='checkbox']:focus + label {
 }
 
 main {
-  margin-top: 68px;
+  margin-top: 71px;
 }
-@media (min-width: $bp-large) {
-  main {
-    margin-top: 78px;
-  }
-}
+
