@@ -57,7 +57,7 @@
     data() {
       return {
         ...config,
-        enableSuggestionValidation: this.$config.ENABLE_ENTITY_SUGGESTION_RECORD_VALIDATION)
+        enableSuggestionValidation: this.$config.ENABLE_ENTITY_SUGGESTION_RECORD_VALIDATION
       };
     },
 
