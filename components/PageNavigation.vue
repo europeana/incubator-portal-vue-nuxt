@@ -63,7 +63,7 @@
     },
     computed: {
       enableAuthLinks() {
-        return Boolean(Number(process.env.ENABLE_XX_USER_AUTH));
+        return this.$config.ENABLE_XX_USER_AUTH;
       },
       isAuthenticated() {
         return this.$store.state.auth.loggedIn;

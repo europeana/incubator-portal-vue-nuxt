@@ -76,7 +76,7 @@
     computed: {
       showUserButtons() {
         // TODO: can be removed at some point
-        return Boolean(Number(process.env.ENABLE_XX_USER_AUTH));
+        return this.$config.ENABLE_XX_USER_AUTH;
       }
     },
 
