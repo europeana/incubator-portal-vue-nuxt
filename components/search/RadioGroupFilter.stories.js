@@ -20,7 +20,6 @@ const i18n = {
   }
 };
 
-
 const store = () => new Vuex.Store({
   actions: {
     'search/setResettableFilter': () => ({})

@@ -4,11 +4,13 @@ module.exports = function(migration) {
     .name('Related collection cards')
     .type('Array')
     .localized(false)
-    .validations([ {
-      size: {
-        max: 4
+    .validations([
+      {
+        size: {
+          max: 4
+        }
       }
-    }])
+    ])
     .disabled(false)
     .omitted(false)
     .items({

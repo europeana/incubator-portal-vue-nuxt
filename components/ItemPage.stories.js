@@ -48,7 +48,7 @@ storiesOf('Item page', module)
       }
     },
     components: { MediaPresentation, MediaThumbnailGrid },
-    template:  `
+    template: `
       <b-container class="mt-3">
         <div class="media-presentation" style="display: inline-block;">
           <MediaPresentation

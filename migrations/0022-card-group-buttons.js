@@ -8,7 +8,8 @@ module.exports = function(migration) {
     .validations([
       {
         linkContentType: ['link']
-      }])
+      }
+    ])
     .disabled(false)
     .omitted(false);
 };

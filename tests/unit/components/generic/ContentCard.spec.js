@@ -112,7 +112,8 @@ describe('components/generic/ContentCard', () => {
 
   it('has an optimised image with max width', () => {
     const wrapper = factory();
-    wrapper.setProps({ imageUrl: '//images.ctfassets.net/example/example.jpg',
+    wrapper.setProps({
+      imageUrl: '//images.ctfassets.net/example/example.jpg',
       imageContentType: 'image/jpeg',
       imageOptimisationOptions: { width: 510 }
     });

@@ -60,10 +60,7 @@ module.exports = {
         alwaysMatch: {
           acceptInsecureCerts: true,
           'moz:firefoxOptions': {
-            args: [
-              '-headless',
-              '-verbose'
-            ]
+            args: ['-headless', '-verbose']
           }
         }
       }

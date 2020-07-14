@@ -46,14 +46,16 @@ const factory = (options = {}) => shallowMount(SearchForm, {
 const getters = {
   'apis/config': () => apiConfig,
   'search/activeView': (state) => state.search.view,
-  'search/queryUpdatesForFacetChanges': () => () => {}
+  'search/queryUpdatesForFacetChanges': () => () => {},
+  'ui/searchView': (state) => state.ui.showSearch
 };
-const store = (searchState = {}) => {
+const store = (searchState = {}, uiState = {}) => {
   return new Vuex.Store({
     getters,
     state: {
       i18n: { locale: 'en' },
-      search: searchState
+      search: searchState,
+      ui: uiState
     }
   });
 };
@@ -78,6 +80,18 @@ const entityApiSuggestionsResponse = {
 };
 
 describe('components/search/SearchForm', () => {
+  beforeEach(() => {
+    $goto.resetHistory();
+  });
+  it('contains the show mobile search button', () => {
+    const wrapper = factory({
+      store: store({})
+    });
+    const showSearchButton = wrapper.find('[data-qa="show mobile search button"]');
+    showSearchButton.attributes().class.should.contain('d-lg-none');
+    showSearchButton.isVisible().should.equal(true);
+  });
+
   describe('query', () => {
     it('is read from the route', () => {
       const wrapper = factory({
@@ -264,6 +278,37 @@ describe('components/search/SearchForm', () => {
       //
       //   wrapper.vm.suggestions.should.deep.eq(parsedSuggestions);
       // });
+    });
+  });
+
+  describe('mobile search buttons', () => {
+    context('on collection pages (with a "pill")', () => {
+      const searchState = {
+        active: true,
+        pill: {
+          values: ['Theatre']
+        },
+        view: 'grid'
+      };
+      const uiState = {
+        showSearch: true
+      };
+      const wrapper = factory({ store: store(searchState, uiState) });
+      wrapper.setData({
+        showSearchQuery: true
+      });
+      const collectionSearchButton = wrapper.find('[data-qa="search in collection button"]');
+      const entireSearchButton = wrapper.find('[data-qa="search entire collection button"]');
+
+      it('contains the search in collection button', () => {
+        collectionSearchButton.attributes().class.should.contain('search');
+        collectionSearchButton.isVisible().should.be.true;
+      });
+
+      it('contains the search entire collection button', () => {
+        entireSearchButton.attributes().class.should.contain('search');
+        entireSearchButton.isVisible().should.be.true;
+      });
     });
   });
 });

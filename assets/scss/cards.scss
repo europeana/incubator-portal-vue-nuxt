@@ -200,8 +200,47 @@
     }
   }
 
+  .user-buttons {
+    display: none;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+
+    .btn {
+      align-items: center;
+      justify-content: center;
+      background-color: $white;
+      border: 1px solid $paper;
+      color: $mediumgrey;
+      display: inline-flex;
+      font-size: 1.5rem;
+      height: 2.25rem;
+      width: 2.25rem;
+      line-height: 1;
+      padding: 0.375rem;
+
+      &:hover {
+        box-shadow: $boxshadow-small;
+      }
+
+      &.active {
+        color: $white;
+        background-color: $red;
+        border-color: $red;
+      }
+
+      &-sm {
+        font-size: $font-size-small;
+      }
+    }
+  }
+
   &:hover {
     box-shadow: $boxshadow-large;
+
+    .user-buttons {
+      display: block;
+    }
   }
 }
 

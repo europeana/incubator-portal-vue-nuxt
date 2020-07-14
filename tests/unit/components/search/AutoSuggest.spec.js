@@ -46,16 +46,9 @@ const store = (options = {}) => {
 
 const query = 'dor';
 const suggestions = {
-  'http://data.europeana.eu/concept/base/17': {
-    en: 'Manuscript',
-    sq: 'Dorëshkrimi'
-  },
-  'http://data.europeana.eu/agent/base/57083': {
-    en: 'Gustave Doré'
-  },
-  'http://data.europeana.eu/agent/base/146799': {
-    en: 'Doris Day'
-  }
+  'http://data.europeana.eu/concept/base/17': 'Dorëshkrimi',
+  'http://data.europeana.eu/agent/base/57083': 'Gustave Doré',
+  'http://data.europeana.eu/agent/base/146799': 'Doris Day'
 };
 
 describe('components/search/AutoSuggest', () => {
@@ -91,7 +84,7 @@ describe('components/search/AutoSuggest', () => {
       suggestionElements.length.should.eq(suggestionValues.length);
 
       suggestionValues.forEach((value, index) => {
-        Object.values(value).should.include(suggestionElements.at(index).text());
+        value.should.include(suggestionElements.at(index).text());
       });
     });
 

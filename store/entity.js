@@ -1,16 +1,12 @@
-import createClient from '../plugins/contentful';
-const contentfulClient = createClient();
-
 import { getEntityQuery } from '../plugins/europeana/entity';
 
 export const state = () => ({
+  curatedEntities: null,
   entity: null,
   id: null,
   page: null,
   recordsPerPage: 9,
-  relatedEntities: null,
-  collections: {},
-  curatedEntities: null
+  relatedEntities: null
 });
 
 export const mutations = {
@@ -26,9 +22,6 @@ export const mutations = {
   setRelatedEntities(state, value) {
     state.relatedEntities = value;
   },
-  setCollections(state, value) {
-    state.collections = value;
-  },
   setCuratedEntities(state, value) {
     state.curatedEntities = value;
   }
@@ -41,35 +34,17 @@ export const getters = {
     }
     return state.entity.prefLabel.en;
   },
+
+  curatedEntity: (state) => (uri) => {
+    return state.curatedEntities.find(entity => entity.identifier === uri);
+  },
+
   id(state) {
-    if (!state.id) {
-      return null;
-    }
-    return state.id;
+    return state.id ? state.id : null;
   }
 };
 
 export const actions = {
-  async init({ commit }) {
-    // TODO: account for potential pagination if > 1,000 entries
-    await contentfulClient.getEntries({
-      'content_type': 'entityPage',
-      'fields.genre[exists]': 'true',
-      'include': 0,
-      'limit': 1000
-    })
-      .then((response) => {
-        const collections = response.items.reduce((memo, entityPage) => {
-          memo[entityPage.fields.identifier] = entityPage.fields.genre;
-          return memo;
-        }, {});
-
-        commit('setCollections', collections);
-      }).catch(error => {
-        throw error;
-      });
-  },
-
   async searchForRecords({ getters, dispatch, commit, state }, query) {
     if (!state.entity) return;
 
@@ -84,8 +59,9 @@ export const actions = {
       rows: state.recordsPerPage
     };
 
-    if (state.collections[entityUri]) {
-      overrideParams.qf.push(`collection:${state.collections[entityUri]}`);
+    const curatedEntity = getters.curatedEntity(entityUri);
+    if (curatedEntity && curatedEntity.genre) {
+      overrideParams.qf.push(`collection:${curatedEntity.genre}`);
     } else {
       const entityQuery = getEntityQuery(entityUri);
       overrideParams.qf.push(entityQuery);

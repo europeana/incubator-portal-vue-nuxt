@@ -67,7 +67,6 @@ export default {
     "right": "Rechts"
   },
   "edmIsShownAtLinkAlt": "Bekijken op de website van de provider",
-  "entity": "Entiteit",
   "error": "Fout",
   "exhibitions": {
     "chapters": "Hoofdstukken",
@@ -450,10 +449,7 @@ export default {
   "readMore": "Lees verder",
   "record": {
     "downloadCopyrightInfo": "Dit item is auteursrechtelijk beschermd en kan niet worden gedownload.",
-    "extendedInformation": "Uitgebreide informatie",
-    "hideAll": "Verberg alle informatie",
     "record": "Registratie",
-    "showAll": "Toon alle informatie",
     "similarItems": "Vergelijkbare items",
     "view": {
       "image": "Afbeelding weergeven",

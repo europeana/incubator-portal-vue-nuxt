@@ -30,3 +30,19 @@ export const currentProtocol = ({ req }) => {
 export const requestOrigin = (req) => {
   return currentProtocol({ req }) + '//' + currentHost({ req });
 };
+
+export const routeOnDatasetBlacklist = (route, datasetBlacklist) => {
+  if (datasetBlacklist.length === 0) return false;
+  if (typeof route !== 'object' || !route) return false;
+  if (!/^item-all(___[a-z]{2})?$/.test(route.name)) return false;
+
+  const dataset = route.params.pathMatch.split('/')[0];
+
+  const datasetBlacklistRegExp = new RegExp(`^(${datasetBlacklist.join('|')})$`);
+  return datasetBlacklistRegExp.test(dataset);
+};
+
+export const routePermittedOnEitherScheme = route => {
+  if (typeof route !== 'object' || !route) return false;
+  return /^iiif(___[a-z]{2})?$/.test(route.name);
+};

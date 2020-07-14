@@ -1,6 +1,6 @@
 const util = require('util');
 
-const script = function(context, options, done) {
+function script(context, options, done) {
   if (!window.axe) done({ error: 'aXe not found. Make sure it has been injected' });
 
   window
@@ -12,7 +12,7 @@ const script = function(context, options, done) {
     .catch(error => {
       done({ error: error.toString() });
     });
-};
+}
 
 exports.assertion = function(context, config) {
   const FAILURE_MSG = 'Accessibility violations found: %s \n\n%s';
@@ -47,10 +47,10 @@ exports.assertion = function(context, config) {
   };
 
   this.value = function(result) {
-    const value = this.results = result.value.results;
+    this.results = result.value.results;
 
-    if (value.violations.length) {
-      return value.violations.length;
+    if (this.results.violations.length) {
+      return this.results.violations.length;
     }
     return result.value;
   };

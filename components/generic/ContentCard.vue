@@ -80,6 +80,24 @@
         </template>
       </b-card-body>
     </SmartLink>
+    <div
+      v-if="showUserButtons"
+      class="user-buttons"
+      data-qa="user buttons"
+    >
+      <b-button
+        class="icon-ic-add"
+        data-qa="add to gallery button"
+        :aria-label="$t('actions.addToGallery')"
+      />
+      <b-button
+        :pressed.sync="liked"
+        class="icon-heart"
+        data-qa="like button"
+        :aria-label="$t('actions.like')"
+        size="sm"
+      />
+    </div>
   </b-card>
 </template>
 
@@ -156,12 +174,17 @@
       blankImageWidth: {
         type: Number,
         default: null
+      },
+      showUserButtons: {
+        type: Boolean,
+        default: false
       }
     },
     data() {
       return {
         cardImageUrl: this.imageUrl,
-        displayLabelTypes: 'exhibitions|galleries|blog'
+        displayLabelTypes: 'exhibitions|galleries|blog',
+        liked: false
       };
     },
 
@@ -175,7 +198,9 @@
       },
 
       displayTitle() {
-        if (typeof this.title === 'string') {
+        if (!this.title) {
+          return null;
+        } else if (typeof this.title === 'string') {
           return { values: [this.title], code: null };
         } else {
           return langMapValueForLocale(this.title, this.$i18n.locale);

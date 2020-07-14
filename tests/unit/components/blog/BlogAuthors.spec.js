@@ -18,11 +18,13 @@ describe('components/blog/BlogAuthors', () => {
     const wrapper = factory();
 
     wrapper.setProps({
-      authors: [{
-        fields: {
-          name: 'Joe bloggs'
+      authors: [
+        {
+          fields: {
+            name: 'Joe bloggs'
+          }
         }
-      }]
+      ]
     });
 
     wrapper.vm.authorTitle.should.eq('blog.author');
@@ -32,16 +34,18 @@ describe('components/blog/BlogAuthors', () => {
     const wrapper = factory();
 
     wrapper.setProps({
-      authors: [{
-        fields: {
-          name: 'Joe bloggs'
+      authors: [
+        {
+          fields: {
+            name: 'Joe bloggs'
+          }
+        },
+        {
+          fields: {
+            name: 'Jane bloggs'
+          }
         }
-      },
-      {
-        fields: {
-          name: 'Jane bloggs'
-        }
-      }]
+      ]
     });
 
     wrapper.vm.authorTitle.should.eq('blog.authors');

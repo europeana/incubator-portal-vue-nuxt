@@ -12,6 +12,10 @@
         <b-col>
           <h1>{{ $t('search') }}</h1>
         </b-col>
+        <RelatedCollections
+          v-if="relatedCollectionsEnabled"
+          :query="this.$route.query.query"
+        />
         <SearchInterface
           :per-row="4"
         />
@@ -29,7 +33,8 @@
   export default {
     components: {
       SearchInterface,
-      NotificationBanner
+      NotificationBanner,
+      RelatedCollections: () => import('../../components/generic/RelatedCollections')
     },
 
     middleware({ query, redirect, app }) {
@@ -40,15 +45,7 @@
         return redirect(app.$path({ name: 'search', query: { ...query, ...{ page: '1' } } }));
       }
     },
-    computed: {
-      notificationUrl() {
-        return legacyUrl(this.$route.query, this.$store.state.i18n.locale) +
-          '&utm_source=new-website&utm_medium=button';
-      },
-      redirectNotificationsEnabled() {
-        return this.$config.ENABLE_LINKS_TO_CLASSIC;
-      }
-    },
+
     async fetch({ store, query, res }) {
       await store.dispatch('search/activate');
       store.commit('search/set', ['userParams', query]);
@@ -56,6 +53,18 @@
       await store.dispatch('search/run');
       if (store.state.search.error && typeof res !== 'undefined') {
         res.statusCode = store.state.search.errorStatusCode;
+      }
+    },
+    computed: {
+      notificationUrl() {
+        return legacyUrl(this.$route.query, this.$store.state.i18n.locale) +
+          '&utm_source=new-website&utm_medium=button';
+      },
+      redirectNotificationsEnabled() {
+        return this.$config.ENABLE_LINKS_TO_CLASSIC;
+      },
+      relatedCollectionsEnabled() {
+        return this.$config.ENABLE_SEARCH_RELATED_COLLECTIONS;
       }
     },
 

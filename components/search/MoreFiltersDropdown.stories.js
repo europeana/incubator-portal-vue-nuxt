@@ -168,4 +168,3 @@ storiesOf('Search', module)
       </b-container>`
   }));
 
-

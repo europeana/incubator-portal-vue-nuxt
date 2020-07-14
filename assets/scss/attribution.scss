@@ -1,0 +1,108 @@
+.figure-attribution {
+  .image-wrapper.container-fluid {
+    max-width: 51.25rem;
+    figure {
+      overflow: hidden;
+      margin: 0;
+      display: block;
+      width: auto;
+      height: 100%;
+      background: $white;
+      img {
+        width: auto;
+        object-fit: contain;
+      }
+      figcaption {
+        z-index: 4;
+        .icon-info {
+          position: absolute;
+          bottom: 1rem;
+          right: 1rem;
+          width: 1.5rem;
+          height: 1.5rem;
+          transition: $standard-transition;
+          &:hover {
+            opacity: 0.8;
+            cursor: pointer;
+          }
+          &:before {
+            content: '\e91f';
+            font-size: 1.5rem;
+            text-shadow: $textshadow-light;
+          }
+        }
+        cite {
+          left: initial;
+          right: 0.5rem;
+          bottom: 0.5rem;
+          border-radius: 0.25rem;
+          margin: 0;
+          padding: 0.75rem;
+          font-size: 0.75rem;
+          max-width: 75%;
+          box-shadow: $boxshadow-small;
+          p {
+            color: $mediumgrey;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 0.25rem;
+            a {
+              text-decoration: none;
+            }
+          }
+          .attribution {
+            margin-top: 0.5rem;
+            > span {
+              margin-left: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+  .jumbotron {
+    height: auto;
+    background: $white;
+    &:before {display: none;}
+    &.hero {
+      height: 50vh;
+      figure {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        &:before {
+          background: rgba(41, 55, 69, 0.35);
+          content: '';
+          display: block;
+          height: 100%;
+          position: absolute;
+          width: 100%;
+          z-index: 3;
+        }
+        img {
+          object-fit: cover;
+          width: 100%;
+        }
+      }
+    }
+    .container {
+      max-width: none;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  @media (max-width: $bp-large) {
+    .hero-wrapper figcaption cite {
+      max-width: 17rem;
+      .attribution.is-external-link {
+        max-width: 12rem;
+        > span {
+          white-space: normal;
+        }
+      }
+    }
+  }
+}
+

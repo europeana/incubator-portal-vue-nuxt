@@ -66,7 +66,6 @@ export default {
     "right": "Дясно"
   },
   "edmIsShownAtLinkAlt": "Преглед на уебсайта на доставчика",
-  "entity": "Обект",
   "error": "Грешка",
   "exhibitions": {
     "chapters": "Глави",
@@ -444,10 +443,7 @@ export default {
   "readMore": "Прочетете повече",
   "record": {
     "downloadCopyrightInfo": "Върху този елемент има авторски права и не може да бъде изтеглен.",
-    "extendedInformation": "Разширена информация",
-    "hideAll": "Скриване на цялата информация",
     "record": "Запис",
-    "showAll": "Показване на цялата информация",
     "similarItems": "Подобни елементи",
     "view": {
       "image": "Преглед на изображението",

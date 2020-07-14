@@ -4,16 +4,19 @@ pipeline {
   }
   agent {
     dockerfile {
-      dir 'docker/deploy'
-      args "-u node:node"
+      dir 'deploy/cloud-foundry'
+      args '-u node:node -v ${HOME}/.ssh:/home/node/.ssh' // Single quotes to skip jenkins escaping.
     }
   }
   environment {
     CF_HOME='/home/node' // Revert override from Jenkins global env
     CF_API="${env.CF_API}"
     CF_LOGIN=credentials('portaljs.cloudfoundry.login')
+    CF_LOG_DRAINER_SERVICE="${env.CF_LOG_DRAINER_SERVICE_NAME}"
     CF_ORG="${env.CF_ORG}"
     CF_SPACE="${env.BRANCH_NAME ==~ /\Av\d+\.\d+\.\d+\z/ ? 'production' : 'test'}"
+    CF_APP_NAME="portaljs${env.CF_SPACE == 'production' ? '' : '-' + env.CF_SPACE}"
+    ELK_REGISTRATION_COMMAND="${env.ELK_SERVICE_REGISTRATION_COMMAND}"
   }
   stages {
     stage('Build') {
@@ -35,14 +38,37 @@ pipeline {
     }
     stage('Deploy to CF') {
       environment {
-        CF_APP_NAME="portaljs${env.CF_SPACE == 'production' ? '' : '-' + env.CF_SPACE}"
         CTF_CPA_ACCESS_TOKEN=credentials("portaljs.${env.CF_SPACE}.contentful.cpa")
         HTTP_DIGEST_ACL=credentials("portaljs.${env.CF_SPACE}.http.digest.acl")
       }
       steps {
-        sh 'sed -i "s|env:|env:\\n  CTF_CPA_ACCESS_TOKEN: ${CTF_CPA_ACCESS_TOKEN}|" manifest.yml'
-        sh 'sed -i "s|env:|env:\\n  HTTP_DIGEST_ACL: ${HTTP_DIGEST_ACL}|" manifest.yml'
-        sh 'cf blue-green-deploy ${CF_APP_NAME} -f manifest.yml --delete-old-apps'
+        sh 'if [ "${CF_LOG_DRAINER_SERVICE}" != "null" ]; then echo "services:\\n  - ${CF_LOG_DRAINER_SERVICE}" >> ./deploy/cloud-foundry/manifest.yml; fi'
+        sh 'sed -i "s|env:|env:\\n  CTF_CPA_ACCESS_TOKEN: ${CTF_CPA_ACCESS_TOKEN}|" ./deploy/cloud-foundry/manifest.yml'
+        sh 'sed -i "s|env:|env:\\n  HTTP_DIGEST_ACL: ${HTTP_DIGEST_ACL}|" ./deploy/cloud-foundry/manifest.yml'
+        sh 'cf blue-green-deploy ${CF_APP_NAME} -f ./deploy/cloud-foundry/manifest.yml --delete-old-apps'
+      }
+    }
+    stage('Attach autoscaling policy on CF') {
+      steps {
+        configFileProvider([
+          configFile(fileId: "portaljs.${env.CF_SPACE}.autoscaling-policy.json", targetLocation: './deploy/cloud-foundry/autoscaling-policy.json'),
+        ]) {
+          sh 'cf attach-autoscaling-policy ${CF_APP_NAME} ./deploy/cloud-foundry/autoscaling-policy.json'
+        }
+      }
+    }
+    stage('Register with ELK') {
+      when {
+        not {
+          environment name: 'ELK_REGISTRATION_COMMAND', value: 'null'
+        }
+      }
+      environment {
+          CF_APP_GUID="${sh(script:'cf app ${CF_APP_NAME} --guid | head -1', returnStdout: true).trim()}"
+      }
+      steps {
+        sh '${ELK_REGISTRATION_COMMAND} ${CF_APP_NAME} ${CF_APP_GUID}'
+        sh 'if [ $? -eq 0 ]; then echo "Log drainer registration OK"; else echo "ELK registration failed!"; exit 1; fi'
       }
     }
     stage('Deploy Storybook') {

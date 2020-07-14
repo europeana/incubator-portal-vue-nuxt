@@ -7,34 +7,10 @@ const localVue = createLocalVue();
 localVue.use(BootstrapVue);
 localVue.component('SmartLink', SmartLink);
 
-const dummyStore = {
-  state: {
-    'link-group': {
-      data: {
-        footerMoreInfo: {
-          name: 'More info',
-          links: [
-            { url: 'https://www.example.org', text: 'Example link' },
-            { url: 'https://www.europeana.eu', text: 'Europeana link' }
-          ]
-        },
-        footerHelp: {
-          name: 'Help',
-          links: [
-            { url: 'https://www.example.org', text: 'Example link' },
-            { url: 'https://www.europeana.eu', text: 'Europeana link' }
-          ]
-        }
-      }
-    }
-  }
-};
-
 const factory = () => shallowMount(PageFooter, {
   localVue,
   mocks: {
-    $t: () => {},
-    $store: dummyStore
+    $t: () => {}
   }
 });
 

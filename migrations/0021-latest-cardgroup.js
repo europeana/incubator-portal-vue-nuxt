@@ -32,11 +32,7 @@ module.exports = function(migration) {
       type: 'Link',
       validations: [
         {
-          linkContentType: [
-            'cardGroup',
-            'richText',
-            'latestCardGroup'
-          ]
+          linkContentType: ['cardGroup', 'richText', 'latestCardGroup']
         }
       ],
       linkType: 'Entry'

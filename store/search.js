@@ -376,7 +376,7 @@ export const actions = {
 
   updateForFailure({ commit }, error) {
     commit('setError', error.message);
-    commit('setErrorStatusCode', (typeof error.statusCode !== 'undefined') ? error.statusCode : 500);
+    commit('setErrorStatusCode', (typeof error.statusCode === 'undefined') ? 500 : error.statusCode);
     commit('setFacets', []);
     commit('setLastAvailablePage', null);
     commit('setResults', []);

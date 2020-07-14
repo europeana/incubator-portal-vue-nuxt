@@ -177,6 +177,9 @@
         }
       }
     },
+    fetch() {
+      this.viewFromRouteQuery();
+    },
     data() {
       return {
         coreFacetNames: ['collection', 'TYPE', 'COUNTRY', 'REUSABILITY'],
@@ -276,11 +279,20 @@
       moreSelectedFacets() {
         // TODO: use resettableFilters here?
         // TODO: if not, move newspaper filter names into store/collections/newspapers?
-        return pickBy(this.filters, (selected, name) =>
-          this.moreFacetNames.includes(name) || ['api', this.PROXY_DCTERMS_ISSUED].includes(name));
+        return pickBy(this.filters, (selected, name) => this.moreFacetNames.includes(name) || ['api', this.PROXY_DCTERMS_ISSUED].includes(name));
       },
       enableMoreFacets() {
         return this.moreFacets.length > 0;
+      },
+      contentTierZeroPresent() {
+        return this.moreFacets.some(facet => {
+          return facet.name === 'contentTier' && facet.fields && facet.fields.some(option => option.label === '"0"');
+        });
+      },
+      contentTierZeroActive() {
+        return this.filters.contentTier && this.filters.contentTier.some(filter => {
+          return filter === '"0"' || filter === '*'; // UI applies "0", this won't handle user provided values.
+        });
       },
       showPagination() {
         return this.totalResults > this.perPage;
@@ -298,17 +310,17 @@
       }
     },
     watch: {
-      routeQueryView() {
-        this.view = this.routeQueryView;
-      }
+      routeQueryView: 'viewFromRouteQuery',
+      contentTierZeroPresent: 'showContentTierToast',
+      contentTierZeroActive: 'showContentTierToast'
     },
     mounted() {
       this.showContentTierToast();
     },
-    updated() {
-      this.showContentTierToast();
-    },
     methods: {
+      viewFromRouteQuery() {
+        if (this.routeQueryView) this.view = this.routeQueryView;
+      },
       facetDropdownType(name) {
         return name === 'collection' ? 'radio' : 'checkbox';
       },
@@ -366,14 +378,11 @@
       showContentTierToast() {
         if (!process.browser) return;
 
-        const contentTierFacet = this.moreFacets.find(facet => {
-          return facet.name === 'contentTier' && facet.fields && facet.fields.some(option => option.label === '"0"');
-        });
-
-        if (contentTierFacet && !sessionStorage.contentTierToastShown) {
-          this.$bvToast.show('tier-toast');
-          this.$root.$on('bv::toast:shown', () => sessionStorage.contentTierToastShown = true);
+        if (sessionStorage.contentTierToastShown || this.contentTierZeroActive || !this.contentTierZeroPresent) {
+          return;
         }
+        this.$bvToast.show('tier-toast');
+        sessionStorage.contentTierToastShown = 'true';
       }
     }
   };

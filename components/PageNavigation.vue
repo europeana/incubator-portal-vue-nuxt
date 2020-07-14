@@ -4,21 +4,47 @@
     data-qa="main navigation"
   >
     <li
-      v-for="(nav, index) in navigation"
+      v-for="(link, index) in links"
       :key="index"
       class="nav-item"
     >
       <SmartLink
         v-b-toggle.menu
-        :destination="nav.url"
+        :destination="link.url"
         link-class="nav-link"
+        exact
       >
         <span>
-          <i :class="renderIcon(nav.url)" />
-          {{ nav.text }}
+          <i :class="renderIcon(link.url)" />
+          {{ link.text }}
         </span>
       </SmartLink>
     </li>
+    <!-- sso links -->
+    <template v-if="enableAuthLinks">
+      <li
+        v-if="isAuthenticated"
+        class="nav-item"
+      >
+        <b-link
+          :to="localePath({ name: 'account-profile' })"
+          class="nav-link"
+        >
+          <span>{{ $t('account.linkAccount') }}</span>
+        </b-link>
+      </li>
+      <li
+        v-else
+        class="nav-item"
+      >
+        <b-link
+          class="nav-link"
+          :to="{ name: 'account-login' }"
+        >
+          <span>{{ $t('account.linkLogin') }}</span>
+        </b-link>
+      </li>
+    </template>
   </b-navbar-nav>
 </template>
 
@@ -29,28 +55,21 @@
     components: {
       SmartLink
     },
-
+    props: {
+      links: {
+        type: Array,
+        default: () => []
+      }
+    },
     computed: {
-      navigation() {
-        return this.$store.state['link-group'].data.mobileNavigation.links;
+      enableAuthLinks() {
+        return Boolean(Number(process.env.ENABLE_XX_USER_AUTH));
       },
-
-      i18n() {
-        return this.$store.state.i18n.locale;
+      isAuthenticated() {
+        return this.$store.state.auth.loggedIn;
       }
     },
-
-    watch: {
-      i18n() {
-        this.getNavigationData();
-      }
-    },
-
     methods: {
-      async getNavigationData() {
-        return this.$store.dispatch('link-group/init');
-      },
-
       renderIcon(name) {
         let className = '';
         switch (name) {
@@ -68,6 +87,9 @@
           break;
         case ('/help'):
           className = 'icon-help';
+          break;
+        default:
+          className = 'icon-info blank';
           break;
         }
         return className;
@@ -100,7 +122,7 @@
           z-index: 1;
           left: 0;
           right: 0;
-          bottom: -0.8rem;
+          bottom: -0.6rem;
         }
       }
 
@@ -138,6 +160,9 @@
           }
           &.icon-help:before {
             content: '\e921';
+          }
+          &.blank:before {
+            color: transparent;
           }
         }
       }
@@ -187,10 +212,6 @@
     @media (min-width: $bp-large) {
       width: auto;
       margin: auto;
-
-      &:first-of-type, &:last-of-type {
-        display: none;
-      }
 
       .nav-link {
         text-transform: uppercase;

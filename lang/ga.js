@@ -66,7 +66,6 @@ export default {
     "right": "Ar dheis"
   },
   "edmIsShownAtLinkAlt": "Amharc air ag láithreán gréasáin an tsoláthraí",
-  "entity": "Eintiteas",
   "error": "Earráid",
   "exhibitions": {
     "chapters": "Caibidlí",
@@ -444,10 +443,7 @@ export default {
   "readMore": "Léigh níos mó",
   "record": {
     "downloadCopyrightInfo": "Tá cóipcheart i bhfeidhm ar an mír seo agus ní féidir í a íoslódáil dá bharr.",
-    "extendedInformation": "Faisnéise bhreisithe",
-    "hideAll": "Folaigh an fhaisnéis go léir",
     "record": "Taifead",
-    "showAll": "Taispeáin an fhaisnéis go léir",
     "similarItems": "Míreanna eile den chineál céanna",
     "view": {
       "image": "Breathnaigh ar íomhá",

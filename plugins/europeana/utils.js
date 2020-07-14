@@ -44,7 +44,7 @@ function isEntity(value) {
 }
 
 function entityValues(values, locale) {
-  const iterableValues = ((typeof(values) === 'string') ? [values] : values || []);
+  const iterableValues = ((typeof (values) === 'string') ? [values] : values || []);
   const iterableEntities = iterableValues.filter((value) => isEntity(value));
   return iterableEntities.map((value) => entityValue(value, locale));
 }
@@ -177,7 +177,7 @@ function setLangCode(map, key, locale) {
     map['code'] = '';
   } else {
     const langCode = normalizedLangCode(key);
-    map['code'] = locale !== langCode ? langCode : null; // output if different from UI language
+    map['code'] = locale === langCode ? null : langCode; // output if different from UI language
   }
 }
 

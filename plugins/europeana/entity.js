@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { apiError, langMapValueForLocale } from './utils';
 import { config } from './';
-import { search } from './search';
 
 /**
  * Get data for one entity from the API
@@ -35,46 +34,23 @@ function entityApiUrl(endpoint) {
  * @param {string} text the query text to supply suggestions for
  * @param {Object} params additional parameters sent to the API
  * @param {string} params.language language(s), comma-separated, to request
- * @param {Object} options optional settings
- * @param {boolean} options.recordValidation if `true`, filter suggestions to those with record matches
- * @return {Object[]} entity suggestions from the API
  */
-export function getEntitySuggestions(text, params = {}, options = {}) {
+export function getEntitySuggestions(text, params = {}) {
   return axios.get(entityApiUrl('/suggest'), {
     params: {
+      ...params,
       text,
       type: 'agent,concept',
-      language: params.language,
       scope: 'europeana',
       wskey: config.entity.key
     }
   })
     .then((response) => {
-      if (!response.data.items) return [];
-      return options.recordValidation ? filterSuggestionsByRecordValidation(response.data.items) : response.data.items;
+      return response.data.items ? response.data.items : [];
     })
     .catch((error) => {
       throw apiError(error);
     });
-}
-
-function filterSuggestionsByRecordValidation(suggestions) {
-  const searches = suggestions.map((entity) => {
-    return search({
-      query: getEntityQuery(entity.id),
-      rows: 0,
-      profile: 'minimal',
-      qf: ['contentTier:(2 OR 3 OR 4)']
-    });
-  });
-
-  return axios.all(searches)
-    .then(axios.spread(function() {
-      const searchResponses = arguments;
-      return suggestions.filter((entity, index) => {
-        return searchResponses[index].totalResults > 0;
-      });
-    }));
 }
 
 /**
@@ -219,10 +195,9 @@ export function relatedEntities(type, id, options = {}) {
  */
 async function getEntityFacets(facets, currentId) {
   let entities = [];
-  for (let facet of facets) {
-    entities = entities.concat(facet['fields'].filter(value =>
-      value['label'].includes(config.data.origin) && value['label'].split('/').pop() !== currentId
-    ));
+  for (const facet of facets) {
+    const facetFilter = (value) => value['label'].includes(config.data.origin) && value['label'].split('/').pop() !== currentId;
+    entities = entities.concat(facet['fields'].filter(facetFilter));
   }
 
   const entityUris = entities.slice(0, 4).map(entity => {
@@ -290,11 +265,11 @@ export function getEntityDescription(entity, locale) {
     // TODO: it _should_ always be an array. this is an Entity API bug. remove
     //       the condition when fixed upstream.
     //       see: https://europeana.atlassian.net/browse/EA-1685
-    if (entity.biographicalInformation.length !== undefined) {
-      description = langMapValueForLocale(entity.biographicalInformation, locale);
-    } else {
+    if (entity.biographicalInformation.length === undefined) {
       const text = entity.biographicalInformation['@language'] === 'en' ? entity.biographicalInformation['@value'] : '';
       description = { values: [text], code: 'en' };
+    } else {
+      description = langMapValueForLocale(entity.biographicalInformation, locale);
     }
   }
   return description;

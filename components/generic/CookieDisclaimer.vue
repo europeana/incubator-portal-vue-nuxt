@@ -52,7 +52,7 @@
 
     computed: {
       bottomPosition() {
-        return !this.isOpen ? `bottom: -${this.bannerHeight}px` : '';
+        return this.isOpen ? '' : `bottom: -${this.bannerHeight}px`;
       }
     },
 

@@ -1,7 +1,9 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils';
 import ExhibitionChaptersNavigation from '../../../../components/exhibition/ExhibitionChaptersNavigation.vue';
+import BootstrapVue from 'bootstrap-vue';
 
 const localVue = createLocalVue();
+localVue.use(BootstrapVue);
 
 const $route = {
   params: {
@@ -9,21 +11,23 @@ const $route = {
   }
 };
 
-const chapterNavigation = [{
-  name: 'Allium',
-  identifier: 'allium',
-  url: 'en/exhibition/flowers/allium'
-},
-{
-  name: 'Astilbe',
-  identifier: 'astilbe',
-  url: 'en/exhibition/flowers/astilbe'
-},
-{
-  name: 'Calls for education',
-  identifier: 'calls-for-education',
-  url: 'en/exhibition/flowers/calls-for-education'
-}];
+const chapterNavigation = [
+  {
+    name: 'Allium',
+    identifier: 'allium',
+    url: 'en/exhibition/flowers/allium'
+  },
+  {
+    name: 'Astilbe',
+    identifier: 'astilbe',
+    url: 'en/exhibition/flowers/astilbe'
+  },
+  {
+    name: 'Calls for education',
+    identifier: 'calls-for-education',
+    url: 'en/exhibition/flowers/calls-for-education'
+  }
+];
 
 const factory = () => shallowMount(ExhibitionChaptersNavigation, {
   localVue,

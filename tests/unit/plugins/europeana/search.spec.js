@@ -386,7 +386,6 @@ describe('plugins/europeana/search', () => {
     });
   });
 
-
   describe('rangeToQueryParam', () => {
     context('with no start or end', () => {
       it('returns "[* TO *]"', () => {

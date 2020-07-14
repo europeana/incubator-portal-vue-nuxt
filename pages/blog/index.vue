@@ -13,11 +13,11 @@
           <ContentCard
             v-for="(post, index) in posts"
             :key="index"
-            :title="post.fields.name"
-            :url="{ name: 'blog-all', params: { pathMatch: post.fields.identifier } }"
-            :image-url="post.fields.primaryImageOfPage && post.fields.primaryImageOfPage.fields.image.fields.file.url"
-            :texts="[post.fields.description]"
-            :datetime="post.fields.datePublished"
+            :title="post.name"
+            :url="{ name: 'blog-all', params: { pathMatch: post.identifier } }"
+            :image-url="post.primaryImageOfPage && post.primaryImageOfPage.image.url"
+            :texts="[post.description]"
+            :datetime="post.datePublished"
           />
         </b-card-group>
       </b-col>
@@ -39,7 +39,6 @@
 
 <script>
   import ContentHeader from '../../components/generic/ContentHeader';
-  import createClient from '../../plugins/contentful';
   import ContentCard from '../../components/generic/ContentCard';
   import { pageFromQuery } from '../../plugins/utils';
 
@@ -53,10 +52,34 @@
       PaginationNav: () => import('../../components/generic/PaginationNav')
     },
 
-    head() {
-      return {
-        title: this.$t('blog.blog')
+    asyncData({ query, redirect, error, app }) {
+      const currentPage = pageFromQuery(query.page);
+      if (currentPage === null) {
+        // Redirect non-positive integer values for `page` to `page=1`
+        query.page = '1';
+        return redirect(app.$path({ name: 'blog', query }));
+      }
+
+      const variables = {
+        locale: app.i18n.isoLocale(),
+        preview: query.mode === 'preview',
+        limit: PER_PAGE,
+        skip: (currentPage - 1) * PER_PAGE
       };
+
+      return app.$contentful.query('blogFoyerPage', variables)
+        .then(response => response.data.data)
+        .then(data => {
+          return {
+            posts: data.blogPostingCollection.items,
+            total: data.blogPostingCollection.total,
+            page: currentPage,
+            perPage: PER_PAGE
+          };
+        })
+        .catch((e) => {
+          error({ statusCode: 500, message: e.toString() });
+        });
     },
 
     data() {
@@ -72,38 +95,16 @@
       }
     },
 
-    asyncData({ query, redirect, error, app }) {
-      const currentPage = pageFromQuery(query.page);
-      if (currentPage === null) {
-        // Redirect non-positive integer values for `page` to `page=1`
-        query.page = '1';
-        return redirect(app.$path({ name: 'blog', query }));
-      }
-
-      const contentfulClient = createClient(query.mode);
-      return contentfulClient.getEntries({
-        'locale': app.i18n.isoLocale(),
-        'content_type': 'blogPosting',
-        'skip': (currentPage - 1) * PER_PAGE,
-        'order': '-fields.datePublished',
-        limit: PER_PAGE
-      })
-        .then((response) => {
-          return {
-            posts: response.items,
-            total: response.total,
-            perPage: PER_PAGE
-          };
-        })
-        .catch((e) => {
-          error({ statusCode: 500, message: e.toString() });
-        });
-    },
-
     methods: {
       paginationLink(val) {
         return this.$path({ name: 'blog', query: { page: val } });
       }
+    },
+
+    head() {
+      return {
+        title: this.$t('blog.blog')
+      };
     },
 
     watchQuery: ['page']

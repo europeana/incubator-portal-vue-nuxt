@@ -2,9 +2,10 @@ const axios = require('axios');
 const express = require('express');
 const path = require('path');
 
-const { requestOrigin } = require(path.resolve(__dirname, '../../plugins/http'));
+// FIXME: modules should not require from other local modules like this
+const { requestOrigin } = require(path.resolve(__dirname, '../http/templates/utils'));
 
-const config = require('./config');
+const rc = require('./rc');
 
 const app = express();
 
@@ -12,7 +13,7 @@ const app = express();
 app.get('/:locale/item/:dataset/:item.json', (req, res) => {
   const europeanaId = `/${req.params.dataset}/${req.params.item}`;
   const reqOrigin = requestOrigin(req);
-  const apiConfig = config[reqOrigin] || config.defaults;
+  const apiConfig = rc[reqOrigin] || rc.defaults;
 
   let apiPath = apiConfig.record.path;
   if (!apiPath.endsWith('/record')) apiPath += '/record';

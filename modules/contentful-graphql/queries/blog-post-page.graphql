@@ -1,0 +1,37 @@
+query BlogPostPage(
+  $identifier: String!,
+  $locale: String!,
+  $preview: Boolean = false
+) {
+  blogPostingCollection(preview: $preview, locale: $locale, where: { identifier: $identifier }, limit: 1) {
+    items {
+      identifier
+      name
+      description
+      datePublished
+      articleBody
+      genre
+      keywords
+      authorCollection {
+        items {
+          name
+          affiliation
+          url
+        }
+      }
+      primaryImageOfPage {
+        name
+        creator
+        provider
+        license
+        url
+        image {
+          url
+          contentType
+          width
+          height
+        }
+      }
+    }
+  }
+}

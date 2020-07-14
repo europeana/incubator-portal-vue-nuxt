@@ -66,7 +66,6 @@ export default {
     "right": "Vpravo"
   },
   "edmIsShownAtLinkAlt": "Zobrazenie na webovej stránke poskytovateľa",
-  "entity": "Subjekt",
   "error": "Chyba",
   "exhibitions": {
     "chapters": "Kapitoly",
@@ -444,10 +443,7 @@ export default {
   "readMore": "Viac",
   "record": {
     "downloadCopyrightInfo": "Táto položka je chránená autorským zákonom a nie je možné ju stiahnuť.",
-    "extendedInformation": "Ďalšie informácie",
-    "hideAll": "Skryť všetky informácie",
     "record": "Záznam",
-    "showAll": "Zobraziť všetky informácie",
     "similarItems": "Podobné položky",
     "view": {
       "image": "Zobraziť obrázok",

@@ -3,14 +3,18 @@
     v-if="hasValuesForLocale"
     :data-field-name="name"
     data-qa="metadata field"
+    class="metadata-row d-lg-flex"
   >
     <label
       v-if="labelled"
       data-qa="label"
+      class="m-0"
     >
       {{ $t(`fieldLabels.${context}.${name}`) }}
     </label>
-    <ul>
+    <ul
+      class="m-0 p-0 text-left text-lg-right list-unstyled"
+    >
       <template
         v-for="(value, index) of displayValues.values"
       >
@@ -101,7 +105,7 @@
       langMappedValues() {
         if (this.fieldData === null) {
           return null;
-        } else if (typeof(this.fieldData) === 'string') {
+        } else if (typeof (this.fieldData) === 'string') {
           return { values: [this.fieldData], code: '' };
         } else if (Array.isArray(this.fieldData)) {
           return { values: this.fieldData, code: '' };
@@ -120,17 +124,38 @@
 </script>
 
 <style lang="scss" scoped>
-  label {
-    font-weight: bold;
-  }
-  ul {
-    list-style: none;
-    padding: 0;
-    li {
-      display: inline;
-      &:not(:last-child):after {
-        content: ';';
-        padding: 0 0.2rem;
+  @import './assets/scss/variables.scss';
+
+  .metadata-row {
+    border-bottom: 1px solid #e7e7e9;
+    font-size: $font-size-small;
+    padding: 1rem 0;
+
+    &:first-child {
+      padding-top: 0;
+    }
+
+    &:last-child {
+      border: 0;
+      padding-bottom: 0;
+    }
+
+    ul {
+      font-weight: 600;
+
+      li {
+        display: inline;
+        &:not(:last-child):after {
+          content: ';';
+          padding: 0 0.2rem;
+        }
+      }
+    }
+
+    @media (min-width: $bp-large) {
+      label,
+      ul {
+        flex: 1;
       }
     }
   }

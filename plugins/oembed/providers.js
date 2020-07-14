@@ -15,17 +15,12 @@ export default [
   {
     name: 'EUscreen',
     endpoint: 'https://oembed.euscreen.eu/services/oembed',
-    schemes: [
-      'http://www.euscreen.eu/item.html*'
-    ]
+    schemes: ['http://www.euscreen.eu/item.html*']
   },
   {
     name: 'SoundCloud',
     endpoint: 'https://soundcloud.com/oembed',
-    schemes: [
-      'http://soundcloud.com/*',
-      'https://soundcloud.com/*'
-    ]
+    schemes: ['http://soundcloud.com/*', 'https://soundcloud.com/*']
   },
   {
     name: 'Vimeo',

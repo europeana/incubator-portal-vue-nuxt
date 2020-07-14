@@ -2,10 +2,7 @@ import { mount } from '@vue/test-utils';
 import MetadataField from '../../../../components/item/MetadataField.vue';
 
 const $i18n = {
-  locales: [
-    { code: 'en', name: 'English' },
-    { code: 'de', name: 'Deutsch' }
-  ],
+  locales: [{ code: 'en', name: 'English' }, { code: 'de', name: 'Deutsch' }],
   locale: 'en'
 };
 
@@ -26,7 +23,6 @@ describe('components/item/MetadataField', () => {
       const entityObj = { about: 'entity_uri', prefLabel: { def: ['Entity Name Undefined 1', 'Entity Name Undefined 2'], en: ['English name'] } };
       const props = { name: 'dcCreator', fieldData: { def: ['Artist', entityObj] } };
       it('outputs the context specific translated label', () => {
-
         wrapper.setProps(props);
 
         const fieldValue = wrapper.find('[data-qa="metadata field"] [data-qa="literal value"]');

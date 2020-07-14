@@ -8,6 +8,12 @@
   export default {
     layout: 'minimal',
 
+    asyncData({ query }) {
+      return {
+        uri: query.uri
+      };
+    },
+
     data() {
       return {
         manifest: null,
@@ -22,10 +28,12 @@
         // Doc: https://github.com/ProjectMirador/mirador/blob/master/src/config/settings.js
         const options = {
           id: 'viewer',
-          windows: [{
-            manifestId: this.uri,
-            thumbnailNavigationPosition: 'far-bottom'
-          }],
+          windows: [
+            {
+              manifestId: this.uri,
+              thumbnailNavigationPosition: 'far-bottom'
+            }
+          ],
           window: {
             allowClose: false,
             allowFullscreen: true,
@@ -58,12 +66,6 @@
 
         return options;
       }
-    },
-
-    asyncData({ query }) {
-      return {
-        uri: query.uri
-      };
     },
 
     mounted() {

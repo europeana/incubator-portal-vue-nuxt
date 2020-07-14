@@ -66,7 +66,6 @@ export default {
     "right": "Derecha"
   },
   "edmIsShownAtLinkAlt": "Ver en el sitio web del proveedor",
-  "entity": "Entidad",
   "error": "Error",
   "exhibitions": {
     "chapters": "Capítulos",
@@ -444,10 +443,7 @@ export default {
   "readMore": "Leer más",
   "record": {
     "downloadCopyrightInfo": "Este objeto tiene derechos de autor y no se puede descargar.",
-    "extendedInformation": "Información ampliada",
-    "hideAll": "Ocultar toda la información",
     "record": "Registro",
-    "showAll": "Mostrar toda la información",
     "similarItems": "Objetos similares",
     "view": {
       "image": "Ver imagen",

@@ -14,76 +14,78 @@ storiesOf('Generic', module)
           fields: {
             headline: 'Art',
             text: 'Discover inspiring art, artists and stories in 2,165,362 artworks from European museums, galleries, libraries and archives',
-            hasPart: [{
-              sys: {
-                id: '123456'
-              },
-              fields: {
-                name: 'Jonas Martinaitis. Piemenų landynė. 1942 | Jonas Martinaitis',
-                image: {
-                  fields: {
-                    file: {
-                      url: 'img/landscape.jpg'
-                    }
-                  }
+            hasPart: [
+              {
+                sys: {
+                  id: '123456'
                 },
-                url: 'http://europeana.eu'
-              }
-            },
-            {
-              sys: {
-                id: '6789'
-              },
-              fields: {
-                name: 'Kanutas Ruseckas. Mitologinė pastoralinė scena. XIX a. | Kanutas Ruseckas',
-                image: {
-                  fields: {
-                    file: {
-                      url: 'img/landscape.jpg'
+                fields: {
+                  name: 'Jonas Martinaitis. Piemenų landynė. 1942 | Jonas Martinaitis',
+                  image: {
+                    fields: {
+                      file: {
+                        url: 'img/landscape.jpg'
+                      }
                     }
-                  }
-                },
-                url: 'http://europeana.eu'
-              }
-            },
-            {
-              sys: {
-                id: '98765'
+                  },
+                  url: 'http://europeana.eu'
+                }
               },
-              fields: {
-                name: 'Jonas Mackevičius. Anykščių bažnyčia. XX a. I p. | Jonas Mackevičius',
-                image: {
-                  fields: {
-                    file: {
-                      url: 'img/landscape.jpg'
-                    }
-                  }
+              {
+                sys: {
+                  id: '6789'
                 },
-                url: 'http://europeana.eu'
-              }
-            },
-            {
-              sys: {
-                id: '43210'
+                fields: {
+                  name: 'Kanutas Ruseckas. Mitologinė pastoralinė scena. XIX a. | Kanutas Ruseckas',
+                  image: {
+                    fields: {
+                      file: {
+                        url: 'img/landscape.jpg'
+                      }
+                    }
+                  },
+                  url: 'http://europeana.eu'
+                }
               },
-              fields: {
-                name: 'Juozapas Kamarauskas. Vilniaus muitinės pastatas. 1920 | Juozapas Kamarauskas',
-                image: {
-                  fields: {
-                    file: {
-                      url: 'img/landscape.jpg'
-                    }
-                  }
+              {
+                sys: {
+                  id: '98765'
                 },
-                url: 'http://europeana.eu'
+                fields: {
+                  name: 'Jonas Mackevičius. Anykščių bažnyčia. XX a. I p. | Jonas Mackevičius',
+                  image: {
+                    fields: {
+                      file: {
+                        url: 'img/landscape.jpg'
+                      }
+                    }
+                  },
+                  url: 'http://europeana.eu'
+                }
+              },
+              {
+                sys: {
+                  id: '43210'
+                },
+                fields: {
+                  name: 'Juozapas Kamarauskas. Vilniaus muitinės pastatas. 1920 | Juozapas Kamarauskas',
+                  image: {
+                    fields: {
+                      file: {
+                        url: 'img/landscape.jpg'
+                      }
+                    }
+                  },
+                  url: 'http://europeana.eu'
+                }
               }
-            }]
+            ]
           }
         }
       };
     },
     template: `<b-container class="mt-3">
-      <ContentCardSection 
+      <ContentCardSection
         :section="section"
       />
     </b-container>`
@@ -99,17 +101,16 @@ storiesOf('Generic/Messages', module)
     },
     methods: {
       toggleToast() {
-        if (!this.toggle) {
-          this.toggle = true;
-          this.$bvToast.show('tier-toast');
-        } else {
+        if (this.toggle) {
           this.toggle = false;
           this.$bvToast.hide('tier-toast');
+        } else {
+          this.toggle = true;
+          this.$bvToast.show('tier-toast');
         }
-
       }
     },
-    template:  `<b-container class="mt-3">
+    template: `<b-container class="mt-3">
       <b-button
         variant="primary"
         class="mr-3"

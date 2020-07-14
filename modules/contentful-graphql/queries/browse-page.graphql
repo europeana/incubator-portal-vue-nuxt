@@ -1,0 +1,75 @@
+query BrowsePage(
+  $identifier: String!,
+  $locale: String!,
+  $preview: Boolean = false
+) {
+  browsePageCollection(preview: $preview, locale: $locale, where: { identifier: $identifier }, limit: 1) {
+    items {
+      identifier
+      name
+      headline
+      description
+      primaryImageOfPage {
+        name
+        creator
+        provider
+        license
+        url
+        image {
+          url
+          contentType
+        }
+      }
+      image {
+        url
+        contentType
+      }
+      # TODO: enforce this limit in CTF content model
+      hasPartCollection(limit: 10) {
+        items {
+          __typename
+          ... on CardGroup {
+            headline
+          	text
+            # TODO: reduce this limit in CTF content model?
+            hasPartCollection(limit: 60) {
+              items {
+                __typename
+                ... on AutomatedEntityCard {
+                  name
+                  identifier
+                  description
+                  slug
+                  entityImage: image
+                }
+                ... on AutomatedRecordCard {
+                  identifier
+                  encoding
+                }
+                ... on CuratedCard {
+                  name
+                  description
+                  url
+                  image {
+                    url
+                    contentType
+                  }
+                }
+              }
+            }
+            moreButton {
+              url
+              text
+            }
+        	}
+          ... on LatestCardGroup {
+            genre
+          }
+          ... on ContentTypeRichText {
+            text
+          }
+        }
+      }
+    }
+  }
+}

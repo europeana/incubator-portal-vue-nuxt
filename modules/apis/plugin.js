@@ -1,4 +1,4 @@
-const config = <%= JSON.stringify(options, null, 2) %>;
+import config from './config';
 
 export default ({ app, store }, inject) => {
   app.$apis = config;

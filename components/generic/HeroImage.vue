@@ -4,6 +4,7 @@
     :lead="lead"
     :style="jumbotronStyle"
     fluid
+    class="browse-jumbotron"
     header-tag="h1"
     header-level="4"
     text-variant="white"

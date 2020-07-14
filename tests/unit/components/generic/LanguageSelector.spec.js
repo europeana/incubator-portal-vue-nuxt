@@ -23,7 +23,6 @@ const factory = (locale) => mount(LangSelector, {
 
 describe('components/generic/LanguageSelector Dropdown Items', () => {
   context('when the language is `en`', () => {
-
     it('only shows the German object as English is currently selected', () => {
       const wrapper = factory('en');
 
@@ -42,7 +41,6 @@ describe('components/generic/LanguageSelector Dropdown Items', () => {
 
 describe('components/generic/LanguageSelector Dropdown Button', () => {
   context('when the language is `en`', () => {
-
     it('shows `English` as the selected state', () => {
       const wrapper = factory('en');
 

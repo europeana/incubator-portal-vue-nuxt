@@ -50,7 +50,7 @@ async function waitForApp() {
       if (response.status !== 200) throw new Error;
       return;
     } catch (e) {
-      i++;
+      i = i + 1;
       await sleep(1000);
     }
   }

@@ -37,10 +37,10 @@
         apiConfig: 'apis/config'
       }),
       cardFields() {
-        return this.cardType === 'automatedRecordCard' && this.fields.encoding ? this.fields.encoding : this.fields;
+        return this.cardType === 'AutomatedRecordCard' && this.fields.encoding ? this.fields.encoding : this.fields;
       },
       title() {
-        if (this.cardType === 'automatedRecordCard' && this.fields.encoding) {
+        if (this.cardType === 'AutomatedRecordCard' && this.fields.encoding) {
           if (this.cardFields.dcTitleLangAware) {
             return this.cardFields.dcTitleLangAware;
           } else if (this.cardFields.dcDescriptionLangAware) {
@@ -52,7 +52,7 @@
         return this.cardFields.name;
       },
       imageIsContentfulAsset() {
-        return this.cardFields.image && this.cardFields.image.fields && this.cardFields.image.fields.file;
+        return this.cardFields.image && this.cardFields.image.url && this.cardFields.image.url.includes('://images.ctfassets.net/');
       },
       imageUrl() {
         if (this.cardFields.thumbnailUrl) {
@@ -62,13 +62,13 @@
         } else if (this.cardFields.edmPreview) {
           return `${this.cardFields.edmPreview[0]}&size=w200`;
         } else if (this.imageIsContentfulAsset) {
-          return this.cardFields.image.fields.file.url;
+          return this.cardFields.image.url;
         }
 
         return '';
       },
       imageContentType() {
-        return this.imageIsContentfulAsset ? this.cardFields.image.fields.file.contentType : null;
+        return this.imageIsContentfulAsset ? this.cardFields.image.contentType : null;
       },
       destination() {
         if (this.fields.url) {
@@ -89,7 +89,7 @@
         let texts = [];
         let textFields;
 
-        if (this.cardType === 'automatedRecordCard') {
+        if (this.cardType === 'AutomatedRecordCard') {
           if (this.fields.encoding) {
             textFields = ['dcCreatorLangAware', 'dataProvider'];
           } else {
@@ -107,7 +107,7 @@
         return texts;
       },
       cardVariant() {
-        return this.cardType === 'automatedEntityCard' ? 'entity' : 'default';
+        return this.cardType === 'AutomatedEntityCard' ? 'entity' : 'default';
       }
     },
     methods: {

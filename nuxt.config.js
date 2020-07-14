@@ -1,3 +1,4 @@
+// eslint-disable-line camelcase
 const isDev = process.env.NODE_ENV !== 'production';
 
 // Load dotenv for server/index.js to access env vars from .env file
@@ -7,10 +8,7 @@ const pkg = require('./package');
 const i18nLocales = require('./plugins/i18n/locales.js');
 const i18nDateTime = require('./plugins/i18n/datetime.js');
 
-const routerMiddleware = ['http', 'legacy/index', 'l10n'];
-if (!Number(process.env['DISABLE_SSL_NEGOTIATION'])) routerMiddleware.unshift('ssl');
-
-module.exports = {
+const config = {
   mode: 'universal',
 
   /*
@@ -77,9 +75,11 @@ module.exports = {
       'LinkPlugin',
       'ListGroupPlugin',
       'MediaPlugin',
+      'ModalPlugin',
       'NavbarPlugin',
       'NavPlugin',
       'PaginationNavPlugin',
+      'TabsPlugin',
       'ToastPlugin'
     ]
   },
@@ -88,7 +88,6 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '~/plugins/path',
     '~/plugins/europeana',
     '~/plugins/vue/index',
     '~/plugins/i18n.js',
@@ -108,6 +107,17 @@ module.exports = {
       frameworkName: 'Nuxt.js',
       frameworkVersion: require('nuxt/package.json').version
     }],
+    '~/modules/contentful-graphql',
+    ['~/modules/http', {
+      ports: {
+        http: process.env.HTTP_PORT,
+        https: process.env.HTTPS_PORT
+      },
+      sslNegotiation: {
+        enabled: Boolean(Number(process.env.ENABLE_SSL_NEGOTIATION)),
+        datasetBlacklist: (process.env.SSL_DATASET_BLACKLIST || '').split(',')
+      }
+    }],
     '@nuxtjs/gtm'
   ],
   gtm: {
@@ -119,8 +129,10 @@ module.exports = {
   ** Nuxt.js modules
   */
   modules: [
-    '~/modules/config',
+    '@nuxtjs/axios',
+    '@nuxtjs/auth',
     '~/modules/apis',
+    '~/modules/config',
     'bootstrap-vue/nuxt',
     'cookie-universal-nuxt',
     ['nuxt-i18n', {
@@ -134,6 +146,12 @@ module.exports = {
         fallbackLocale: 'en',
         silentFallbackWarn: true,
         dateTimeFormats: i18nDateTime
+      },
+      // Disable redirects to account callback & login pages
+      parsePages: false,
+      pages: {
+        'account/callback': false,
+        'account/login': false
       },
       // Enable browser language detection to automatically redirect user
       // to their preferred language as they visit your app for the first time
@@ -150,7 +168,7 @@ module.exports = {
   ].concat(isDev ? '@nuxtjs/dotenv' : []),
 
   router: {
-    middleware: routerMiddleware,
+    middleware: ['legacy/index', 'l10n'],
     extendRoutes(routes) {
       routes.push({
         name: 'slug',
@@ -195,7 +213,6 @@ module.exports = {
       }
     }
   },
-
   /*
   ** Render configuration
    */
@@ -205,3 +222,34 @@ module.exports = {
     }
   }
 };
+
+if (Number(process.env['ENABLE_XX_USER_AUTH'])) {
+  config.auth = {
+    // Redirect routes: 'callback' option for keycloak redirects,
+    // 'login' option for unauthorised redirection
+    // 'home' option for redirection after login
+    redirect: {
+      login: '/account/login',
+      logout: '/',
+      callback: '/account/callback',
+      home: '/account/profile'
+    },
+    fullPathRedirect: true,
+    strategies: {
+      local: false,
+      keycloak: {
+        _scheme: process.env.OAUTH_SCHEME,
+        client_id: process.env.OAUTH_CLIENT,
+        scope: process.env.OAUTH_SCOPE.split(','),
+        realm: process.env.OAUTH_REALM,
+        authorization_endpoint: process.env.OAUTH_URL + '/auth',
+        access_token_endpoint: process.env.OAUTH_URL + '/token',
+        userinfo_endpoint: process.env.OAUTH_URL + '/userinfo',
+        response_type: 'code id_token token',
+        token_type: 'Bearer'
+      }
+    }
+  };
+}
+
+module.exports = config;

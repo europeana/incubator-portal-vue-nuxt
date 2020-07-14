@@ -66,7 +66,6 @@ export default {
     "right": "Rechts"
   },
   "edmIsShownAtLinkAlt": "Auf der Website des Anbieters ansehen",
-  "entity": "Einheit",
   "error": "Fehler",
   "exhibitions": {
     "chapters": "Kapitel",
@@ -444,10 +443,7 @@ export default {
   "readMore": "Mehr anzeigen",
   "record": {
     "downloadCopyrightInfo": "Dieser Artikel ist urheberrechtlich geschützt und kann nicht heruntergeladen werden.",
-    "extendedInformation": "Erweiterte Informationen",
-    "hideAll": "Alle Informationen ausblenden",
     "record": "Aufzeichnung",
-    "showAll": "Alle Informationen anzeigen",
     "similarItems": "Ähnliche Artikel",
     "view": {
       "image": "Bild anzeigen",

@@ -18,7 +18,7 @@ services:
       - "3002:8080"
     environment:
       - NODE_ENV
-      - DISABLE_SSL_NEGOTIATION=0
+      - ENABLE_SSL_NEGOTIATION=1
       - HTTP_PORT=3000
       - HTTPS_PORT=3001
     env_file:

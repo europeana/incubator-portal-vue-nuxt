@@ -138,7 +138,7 @@ describe('plugins/europeana/legacy-search', () => {
     });
 
     context('for the migration collection', () => {
-      //let migrationQfParam = 'collection:migration';
+      // let migrationQfParam = 'collection:migration';
       context('for a simple search only containing User generated Content', () => {
         // Pending
         // const searchParams = { query: 'test', qf: [migrationQfParam] };

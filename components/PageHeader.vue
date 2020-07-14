@@ -40,20 +40,24 @@
         class="px-lg-3 mr-lg-auto mx-xl-auto"
         aria-label="search form"
         :enable-auto-suggest="enableAutoSuggest"
-        :enable-suggestion-validation="enableSuggestionValidation"
       />
     </header>
     <b-navbar
       class="p-lg-0 align-items-start justify-content-lg-end flex-column flex-lg-row d-none d-lg-block"
       role="navigation"
+      data-qa="desktop navigation"
     >
-      <PageNavigation />
+      <PageNavigation
+        v-if="mainNavigation"
+        :links="mainNavigation.links"
+      />
     </b-navbar>
     <transition name="slide">
       <b-navbar
         v-if="showSidebar"
         class="p-lg-0 align-items-start justify-content-lg-end flex-column flex-lg-row d-lg-none"
         role="navigation"
+        data-qa="mobile navigation"
       >
         <SmartLink
           :destination="{ name: 'index' }"
@@ -66,7 +70,10 @@
             data-qa="logo"
           >
         </SmartLink>
-        <PageNavigation />
+        <PageNavigation
+          v-if="mobileNavigation"
+          :links="mobileNavigation.links"
+        />
       </b-navbar>
     </transition>
     <transition name="fade">
@@ -96,15 +103,20 @@
         type: Boolean,
         default: false
       },
-      enableSuggestionValidation: {
-        type: Boolean,
-        default: false
+      mainNavigation: {
+        type: Object,
+        default: null
+      },
+      mobileNavigation: {
+        type: Object,
+        default: null
       }
     },
 
     data() {
       return {
-        showSidebar: null
+        showSidebar: null,
+        windowWidth: 0
       };
     },
 
@@ -137,7 +149,7 @@
     left: 0;
     z-index: 1030;
     padding: 0;
-    box-shadow: $boxshadow-light;
+    border-bottom: 1px solid $whitegrey;
   }
 
   .slide-enter-active, .fade-enter-active {
@@ -245,7 +257,6 @@
       }
     }
     .container-fluid {
-      border-bottom: none !important;
       transition: $standard-transition;
     }
   }

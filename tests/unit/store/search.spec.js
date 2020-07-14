@@ -21,7 +21,6 @@ describe('store/search', () => {
 
   describe('getters', () => {
     describe('filters()', () => {
-
       context('when collection param is absent', () => {
         const collection = undefined;
 
@@ -121,7 +120,7 @@ describe('store/search', () => {
 
       context('when facet is REUSABILITY', () => {
         context('with values selected', () => {
-          const selected = { 'REUSABILITY': ['open', 'permission' ] };
+          const selected = { 'REUSABILITY': ['open', 'permission'] };
           it('sets `reusability` to values joined with ","', () => {
             const updates = store.getters.queryUpdatesForFacetChanges(state, getters)(selected);
             updates.reusability.should.eq('open,permission');
@@ -164,9 +163,7 @@ describe('store/search', () => {
       context('in a collection having custom filters', () => {
         const state = {
           userParams: {
-            qf: [
-              'proxy_dcterms_issued:1900-01-01'
-            ]
+            qf: ['proxy_dcterms_issued:1900-01-01']
           },
           resettableFilters: ['proxy_dcterms_issued']
         };
@@ -567,12 +564,15 @@ describe('store/search', () => {
 
         await store.actions.deriveApiSettings({ commit, dispatch, state, getters, rootGetters });
 
-        commit.should.have.been.calledWith('set', ['apiParams', {
-          query: userQuery,
-          qf: [userQf, overrideQf],
-          profile,
-          facet
-        }]);
+        commit.should.have.been.calledWith('set', [
+          'apiParams',
+          {
+            query: userQuery,
+            qf: [userQf, overrideQf],
+            profile,
+            facet
+          }
+        ]);
       });
     });
 

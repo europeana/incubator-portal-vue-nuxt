@@ -7,6 +7,13 @@
 .btn-primary {
   background: $blue;
   border-color: $blue;
+  font-size: $font-size-small;
+  text-transform: uppercase;
+
+  &:hover {
+    background: $blue;
+    box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.15);
+  }  
 }
 
 .btn-link {
@@ -16,7 +23,7 @@
 .btn-outline-primary {
   border-color: $blue;
   color: $blue;
-  font-size: 0.875rem;
+  font-size: $font-size-small;
   text-transform: uppercase;
 
   &:hover:not([disabled]) {
@@ -48,6 +55,17 @@
 .btn-transparent {
   background-color: transparent;
   border: 0;
+}
+
+.btn-overlay {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: $white;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+    box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.15);
+    color: $white;
+  }  
 }
 
 a {

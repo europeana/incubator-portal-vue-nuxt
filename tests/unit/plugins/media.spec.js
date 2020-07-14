@@ -84,9 +84,11 @@ describe('plugins/media', () => {
   describe('isIIIFImage()', () => {
     it('returns `true` if item has IIIF Image service but no dctermsIsReferencedBy', () => {
       const item = {
-        services: [{
-          dctermsConformsTo: ['http://iiif.io/api/image']
-        }]
+        services: [
+          {
+            dctermsConformsTo: ['http://iiif.io/api/image']
+          }
+        ]
       };
 
       media.isIIIFImage(item).should.be.true;
@@ -96,9 +98,11 @@ describe('plugins/media', () => {
   describe('isIIIFPresentation()', () => {
     it('returns `true` if item has IIIF Image service and a dctermsIsReferencedBy', () => {
       const item = {
-        services: [{
-          dctermsConformsTo: ['http://iiif.io/api/image']
-        }],
+        services: [
+          {
+            dctermsConformsTo: ['http://iiif.io/api/image']
+          }
+        ],
         dctermsIsReferencedBy: ['http://www.example.org/iiif/manifest']
       };
 
@@ -107,10 +111,12 @@ describe('plugins/media', () => {
 
     it('returns `false` if dctermsIsReferencedBy is Image info.json', () => {
       const item = {
-        services: [{
-          about: 'http://www.example.org/image',
-          dctermsConformsTo: ['http://iiif.io/api/image']
-        }],
+        services: [
+          {
+            about: 'http://www.example.org/image',
+            dctermsConformsTo: ['http://iiif.io/api/image']
+          }
+        ],
         dctermsIsReferencedBy: ['http://www.example.org/image/info.json']
       };
 
@@ -125,9 +131,11 @@ describe('plugins/media', () => {
       it('returns the first element in dctermsIsReferencedBy', () => {
         const manifest = 'http://www.example.org/iiif/manifest';
         const item = {
-          services: [{
-            dctermsConformsTo: ['http://iiif.io/api/image']
-          }],
+          services: [
+            {
+              dctermsConformsTo: ['http://iiif.io/api/image']
+            }
+          ],
           dctermsIsReferencedBy: [manifest]
         };
 
@@ -138,9 +146,11 @@ describe('plugins/media', () => {
     context('for an Image', () => {
       it('uses the Europeana IIIF Presentation API', () => {
         const item = {
-          services: [{
-            dctermsConformsTo: ['http://iiif.io/api/image']
-          }]
+          services: [
+            {
+              dctermsConformsTo: ['http://iiif.io/api/image']
+            }
+          ]
         };
 
         media.iiifManifest(item, europeanaIdentifier).should.eq(`https://iiif.europeana.eu/presentation${europeanaIdentifier}/manifest`);

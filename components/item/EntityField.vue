@@ -34,10 +34,10 @@
     },
     computed: {
       isEuropeanaEntity() {
-        return !this.about ? false : isEntityUri(this.about, ['concept', 'agent']);
+        return this.about ? isEntityUri(this.about, ['concept', 'agent']) : false;
       },
       destination() {
-        return !this.isEuropeanaEntity ? this.about : entityParamsFromUri(this.about);
+        return this.isEuropeanaEntity ? entityParamsFromUri(this.about) : this.about;
       }
     }
   };

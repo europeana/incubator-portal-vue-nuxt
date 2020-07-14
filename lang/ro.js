@@ -66,7 +66,6 @@ export default {
     "right": "Dreapta"
   },
   "edmIsShownAtLinkAlt": "Vizualizează pe site-ul furnizorului",
-  "entity": "Entitate",
   "error": "Eroare",
   "exhibitions": {
     "chapters": "Capitole",
@@ -444,10 +443,7 @@ export default {
   "readMore": "Citește mai mult",
   "record": {
     "downloadCopyrightInfo": "Acest articol este protejat prin drepturi de autor și nu poate fi descărcat.",
-    "extendedInformation": "Informații extinse",
-    "hideAll": "Ascunde toate informațiile",
     "record": "Înregistrare",
-    "showAll": "Afișează toate informațiile",
     "similarItems": "Articole similare",
     "view": {
       "image": "Vizualizare imagine",

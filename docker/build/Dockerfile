@@ -17,7 +17,6 @@ COPY . .
 
 RUN npm install && \
     npm run build && \
-    rm -rf node_modules && \
-    NODE_ENV=production npm install
+    npm prune --production
 
 CMD NODE_ENV=production npm run start

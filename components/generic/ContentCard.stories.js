@@ -9,10 +9,10 @@ storiesOf('Design/Content cards', module)
     i18n,
     components: { ContentCard },
     template: `<b-col cols="3" class="mt-3">
-    	<ContentCard 
+      <ContentCard
         title="This is a Storybook Card"
         contentSource="card"
-        imageUrl="img/landscape.jpg" 
+        imageUrl="img/landscape.jpg"
       />
     </b-col>`
   }))
@@ -20,9 +20,9 @@ storiesOf('Design/Content cards', module)
     i18n,
     components: { ContentCard },
     template: `<b-col cols="3" class="mt-3">
-    	<ContentCard 
+      <ContentCard
         title="This is a Storybook Card"
-        imageUrl="img/landscape.jpg" 
+        imageUrl="img/landscape.jpg"
         variant="mini"
       />
     </b-col>`
@@ -31,9 +31,9 @@ storiesOf('Design/Content cards', module)
     i18n,
     components: { ContentCard },
     template: `<b-col cols="3" class="mt-3">
-    	<ContentCard 
+      <ContentCard
         title="This is a Storybook Card"
-        imageUrl="img/landscape.jpg" 
+        imageUrl="img/landscape.jpg"
         variant="entity"
       />
     </b-col>`
@@ -43,15 +43,13 @@ storiesOf('Design/Content cards', module)
     components: { ContentCard },
     data() {
       return {
-        texts: [
-          ['This is description']
-        ]
+        texts: [['This is description']]
       };
     },
     template: `<b-col cols="3" class="mt-3">
-    	<ContentCard 
+      <ContentCard
         title="This is a Storybook Card"
-        imageUrl="img/landscape.jpg" 
+        imageUrl="img/landscape.jpg"
         :texts="texts"
         variant="list"
       />

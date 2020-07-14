@@ -40,6 +40,6 @@ describe('components/search/MoreFiltersDropdownFacet', () => {
     await checkboxGroup.vm.$emit('change');
     await wrapper.vm.$nextTick();
 
-    wrapper.emitted()['selectedOptions'].should.eql([ [ 'LANGUAGE', [ 'de' ] ] ]);
+    wrapper.emitted()['selectedOptions'].should.eql([['LANGUAGE', ['de']]]);
   });
 });

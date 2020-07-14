@@ -66,7 +66,6 @@ export default {
     "right": "Δεξιά"
   },
   "edmIsShownAtLinkAlt": "Προβολή στον ιστότοπο του παρόχου",
-  "entity": "Οντότητα",
   "error": "Σφάλμα",
   "exhibitions": {
     "chapters": "Κεφάλαια",
@@ -444,10 +443,7 @@ export default {
   "readMore": "Διαβάστε περισσότερα",
   "record": {
     "downloadCopyrightInfo": "Αυτό το στοιχείο προστατεύεται από δικαίωμα πνευματικής ιδιοκτησίας και δεν μπορείτε να το κατεβάσετε.",
-    "extendedInformation": "Εκτεταμένες πληροφορίες",
-    "hideAll": "Απόκρυψη όλων των πληροφοριών",
     "record": "Εγγραφή",
-    "showAll": "Εμφάνιση όλων των πληροφοριών",
     "similarItems": "Παρόμοια στοιχεία",
     "view": {
       "image": "Προβολή εικόνας",

@@ -120,7 +120,6 @@ describe('components/search/MoreFacetsDropdown', () => {
     });
 
     wrapper.vm.moreFacetNames.should.eql(['LANGUAGE', 'PROVIDER']);
-
   });
 
   it('clones selected data', () => {
@@ -166,7 +165,6 @@ describe('components/search/MoreFacetsDropdown', () => {
     });
 
     wrapper.vm.clearPreSelected();
-
 
     wrapper.vm.preSelected.should.eql({ LANGUAGE: [] });
   });

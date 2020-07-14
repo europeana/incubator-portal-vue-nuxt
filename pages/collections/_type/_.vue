@@ -1,11 +1,5 @@
 <template>
-  <b-container v-if="error">
-    <AlertMessage
-      :error="error"
-    />
-  </b-container>
   <b-container
-    v-else
     data-qa="entity page"
   >
     <b-row class="flex-md-row pt-3">
@@ -36,7 +30,7 @@
       >
         <client-only>
           <h2
-            v-if="relatedEntities.length > 0"
+            v-if="relatedEntities && relatedEntities.length > 0"
             class="related-heading text-uppercase"
           >
             {{ $t('contentYouMightLike') }}
@@ -45,11 +39,11 @@
             v-if="relatedCollectionCards"
           >
             <BrowseContentCard
-              v-for="card in relatedCollectionCards"
-              :key="card.sys.id"
-              :fields="card.fields"
-              :card-type="card.sys.contentType ? card.sys.contentType.sys.id : ''"
-              :data-qa="card.fields.name + ' entity card'"
+              v-for="(card, index) in relatedCollectionCards"
+              :key="index"
+              :fields="card"
+              :data-qa="card.name + ' entity card'"
+              card-type="AutomatedEntityCard"
             />
           </section>
           <EntityCards
@@ -65,7 +59,7 @@
         <client-only>
           <BrowseSections
             v-if="page"
-            :sections="page.hasPart"
+            :sections="page.hasPartCollection.items"
           />
         </client-only>
       </b-col>
@@ -84,12 +78,10 @@
 
   import * as entities from '../../../plugins/europeana/entity';
   import { pageFromQuery } from '../../../plugins/utils';
-  import createClient from '../../../plugins/contentful';
   import { langMapValueForLocale } from  '../../../plugins/europeana/utils';
 
   export default {
     components: {
-      AlertMessage: () => import('../../../components/generic/AlertMessage'),
       BrowseContentCard: () => import('../../../components/browse/BrowseContentCard'),
       BrowseSections: () => import('../../../components/browse/BrowseSections'),
       ClientOnly,
@@ -97,64 +89,10 @@
       EntityDetails,
       SearchInterface
     },
-    async middleware({ app, store, query, redirect, params, error }) {
+
+    fetch({ query, params, redirect, error, app, store }) {
       store.commit('search/disableCollectionFacet');
-      const contentfulClient = createClient(query.mode);
 
-      // fetch all curated entity pages
-      if (!store.state.entity.curatedEntities) {
-        await contentfulClient.getEntries({
-          'locale': 'en-GB',
-          'content_type': 'entityPage',
-          'include': 0,
-          'limit': 1000 // 1000 is the maximum number of results returned by contentful
-        }).then((response) => {
-          const curatedEntities = response.items.reduce((memo, entityPage) => {
-            // TODO: store desired path, not name
-            memo[entityPage.fields.identifier] = entityPage.fields.name;
-            return memo;
-          }, {});
-          store.commit('entity/setCuratedEntities', curatedEntities);
-        }).catch(() => {
-          store.commit('entity/setCuratedEntities', []);
-        });
-      }
-
-      const entityUri = entities.getEntityUri(params.type, params.pathMatch);
-
-      // Fetch entity early as it's needed for getting English prefLabels which
-      // are needed for both redirects to preferred path, and best bets
-      if (entityUri !== store.state.entity.id) {
-        store.commit('entity/setPage', null);
-        store.commit('entity/setRelatedEntities', null);
-        let entity;
-        try {
-          entity = await entities.getEntity(params.type, params.pathMatch);
-        } catch (err) {
-          const statusCode = (typeof err.statusCode !== 'undefined') ? err.statusCode : 500;
-          return error({
-            message: err.message,
-            statusCode
-          });
-        }
-        store.commit('entity/setEntity', entity.entity);
-        store.commit('entity/setId', entityUri);
-      }
-
-      const entity = store.state.entity.entity;
-
-      const curatedEntityName = store.state.entity.curatedEntities[entityUri];
-      const desiredPath = entities.getEntitySlug(entity.id, curatedEntityName || entity.prefLabel.en);
-
-      if (params.pathMatch !== desiredPath) {
-        const redirectPath = app.$path({
-          name: 'collections-type-all',
-          params: { type: params.type, pathMatch: encodeURIComponent(desiredPath) }
-        });
-        return redirect(302, redirectPath);
-      }
-
-      // TODO: move to global middleware?
       const currentPage = pageFromQuery(query.page);
       if (currentPage === null) {
         // Redirect non-positive integer values for `page` to `page=1`
@@ -164,19 +102,78 @@
           query: { page: 1 }
         }));
       }
-    },
 
-    data() {
-      return {
-        entity: null,
-        error: null,
-        page: null,
-        relatedEntities: null
+      const entityUri = entities.getEntityUri(params.type, params.pathMatch);
+
+      if (entityUri !== store.state.entity.id) {
+        // TODO: group as a reset action on the store?
+        store.commit('entity/setId', null);
+        store.commit('entity/setEntity', null);
+        store.commit('entity/setPage', null);
+        store.commit('entity/setRelatedEntities', null);
+      }
+
+      store.commit('entity/setId', entityUri);
+
+      // Get all curated entity names & genres and store, unless already stored
+      const fetchCuratedEntities = !store.state.entity.curatedEntities;
+      // Get the full page for this entity if not known needed, or known to be needed, and store for reuse
+      const fetchEntityPage = !store.state.entity.curatedEntities ||
+        store.state.entity.curatedEntities.some(entity => entity.identifier === entityUri);
+      const fetchFromContentful = fetchCuratedEntities || fetchEntityPage;
+
+      // Prevent re-requesting entity content from APIs if already loaded,
+      // e.g. when paginating through entity search results
+      const fetchEntity = !store.state.entity.entity;
+
+      const contentfulVariables = {
+        identifier: entityUri,
+        locale: app.i18n.isoLocale(),
+        preview: query.mode === 'preview',
+        curatedEntities: fetchCuratedEntities,
+        entityPage: fetchEntityPage
       };
+
+      return axios.all(
+        [store.dispatch('entity/searchForRecords', query)]
+          .concat(fetchEntity ? entities.getEntity(params.type, params.pathMatch) : () => {})
+          .concat(fetchFromContentful ? app.$contentful.query('collectionPage', contentfulVariables) : () => {})
+      )
+        .then(axios.spread((recordSearchResponse, entityResponse, pageResponse) => {
+          if (fetchEntity) store.commit('entity/setEntity', entityResponse.entity);
+
+          if (fetchFromContentful) {
+            const pageResponseData = pageResponse.data.data;
+            if (fetchCuratedEntities) store.commit('entity/setCuratedEntities', pageResponseData.curatedEntities.items);
+            if (fetchEntityPage) store.commit('entity/setPage', pageResponseData.entityPage.items[0]);
+          }
+
+          const entity = store.state.entity.entity;
+          const page = store.state.entity.page;
+
+          const entityName = page ? page.name : entity.prefLabel.en;
+          const desiredPath = entities.getEntitySlug(entity.id, entityName);
+
+          if (params.pathMatch !== desiredPath) {
+            const redirectPath = app.$path({
+              name: 'collections-type-all',
+              params: { type: params.type, pathMatch: encodeURIComponent(desiredPath) }
+            });
+            return redirect(302, redirectPath);
+          }
+        }))
+        .catch((e) => {
+          const statusCode = (e.statusCode === undefined) ? 500 : e.statusCode;
+          store.commit('entity/setId', null);
+          error({ statusCode, message: e.toString() });
+        });
     },
 
     computed: {
       ...mapState({
+        entity: state => state.entity.entity,
+        page: state => state.entity.page,
+        relatedEntities: state => state.entity.relatedEntities,
         recordsPerPage: state => state.entity.recordsPerPage
       }),
       attribution() {
@@ -194,12 +191,12 @@
         return (this.description && this.description.values.length >= 1) ? this.description.values[0] : null;
       },
       editorialAttribution() {
-        return this.page.primaryImageOfPage.fields.url;
+        return this.page.primaryImageOfPage.url;
       },
       // Depiction from the Contentful entry
       editorialDepiction() {
         try {
-          const image = this.page.primaryImageOfPage.fields.image.fields.file;
+          const image = this.page.primaryImageOfPage.image;
           return this.$options.filters.optimisedImageUrl(image.url, image.contentType, { width: 510 });
         } catch (error) {
           if (error instanceof TypeError) {
@@ -222,8 +219,11 @@
         return this.page.name;
       },
       relatedCollectionCards() {
-        if (!this.page || !this.page.relatedLinks) return null;
-        return this.page.relatedLinks;
+        return (this.page
+          && this.page.relatedLinksCollection
+          && this.page.relatedLinksCollection.items
+          && this.page.relatedLinksCollection.items.length > 0)
+          ? this.page.relatedLinksCollection.items : null;
       },
       route() {
         return {
@@ -235,65 +235,24 @@
         };
       },
       title() {
-        if (!this.entity) return this.titleFallback(this.$t('entity'));
+        if (!this.entity) return this.titleFallback();
         if (this.editorialTitle) return this.titleFallback(this.editorialTitle);
         return langMapValueForLocale(this.entity.prefLabel, this.$store.state.i18n.locale);
       }
     },
 
-    asyncData({ query, params, res, app, store }) {
-      const entityUri = store.state.entity.entity.id;
-
-      // Prevent re-requesting entity content from APIs if already loaded,
-      // e.g. when paginating through entity search results
-      if (store.state.entity.entity && store.state.entity.relatedEntities) {
-        return {
-          entity: store.state.entity.entity,
-          page: store.state.entity.page,
-          relatedEntities: store.state.entity.relatedEntities
-        };
-      }
-
-      const contentfulClient = createClient(query.mode);
-      const curatedEntityName = store.state.entity.curatedEntities[entityUri];
-
-      return axios.all([
-        entities.relatedEntities(params.type, params.pathMatch, { origin: query.recordApi })
-      ].concat(!curatedEntityName ? [] : contentfulClient.getEntries({
-        'locale': app.i18n.isoLocale(),
-        'content_type': 'entityPage',
-        'fields.identifier': entityUri,
-        'include': 2,
-        'limit': 1
-      })))
-        .then(axios.spread(async(related, entries) => {
-          const entityPage = entries && entries.total > 0 ? entries.items[0].fields : null;
-
-          // Store content for reuse should a redirect be needed, below, or when
-          // navigating back to this page, e.g. from a search result.
-          store.commit('entity/setPage', entityPage);
-          store.commit('entity/setRelatedEntities', related);
-
-          return {
-            entity: store.state.entity.entity,
-            page: entityPage,
-            relatedEntities: related
-          };
-        }))
-        .catch((error) => {
-          if (typeof res !== 'undefined') {
-            res.statusCode = (typeof error.statusCode !== 'undefined') ? error.statusCode : 500;
-          }
-          return { error: error.message };
-        });
-    },
-
-    async fetch({ query, store }) {
-      await store.dispatch('entity/searchForRecords', query);
-    },
-
     mounted() {
       this.$store.commit('search/setPill', this.title);
+
+      this.$store.dispatch('entity/searchForRecords', this.$route.query);
+
+      // TODO: move into a new entity store action?
+      if (!this.relatedCollectionCards) {
+        entities.relatedEntities(this.$route.params.type, this.$route.params.pathMatch, { origin: this.$route.query.recordApi })
+          .then((related) => {
+            this.$store.commit('entity/setRelatedEntities', related);
+          });
+      }
     },
 
     methods: {
@@ -312,12 +271,14 @@
           { hid: 'og:type', property: 'og:type', content: 'article' },
           { hid: 'title', name: 'title', content: this.title.values[0] },
           { hid: 'og:title', property: 'og:title', content: this.title.values[0] }
-        ].concat(this.descriptionText ? [
-          { hid: 'description', name: 'description', content: this.descriptionText },
-          { hid: 'og:description', property: 'og:description', content: this.descriptionText }
-        ] : []).concat(this.depiction ? [
-          { hid: 'og:image', property: 'og:image', content: this.$options.filters.urlWithProtocol(this.depiction) }
-        ] : [])
+        ]
+          .concat(this.descriptionText ? [
+            { hid: 'description', name: 'description', content: this.descriptionText },
+            { hid: 'og:description', property: 'og:description', content: this.descriptionText }
+          ] : [])
+          .concat(this.depiction ? [
+            { hid: 'og:image', property: 'og:image', content: this.$options.filters.urlWithProtocol(this.depiction) }
+          ] : [])
       };
     },
 

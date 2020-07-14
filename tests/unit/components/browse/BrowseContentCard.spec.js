@@ -40,7 +40,7 @@ describe('components/browse/BrowseContentCard', () => {
       const name = 'Content item';
       const dcTitleLangAware = 'Content item in a language';
       const wrapper = factory({
-        cardType: 'automatedRecordCard',
+        cardType: 'AutomatedRecordCard',
         fields: {
           name,
           encoding: {
@@ -72,11 +72,11 @@ describe('components/browse/BrowseContentCard', () => {
       });
     });
 
-    context('when the card is an automatedRecordCard and `edmPreview` is present', () => {
+    context('when the card is an AutomatedRecordCard and `edmPreview` is present', () => {
       it('is used', () => {
         const edmPreview = 'https://www.example.org/image.jpg';
         const wrapper = factory({
-          cardType: 'automatedRecordCard',
+          cardType: 'AutomatedRecordCard',
           fields: {
             encoding: {
               edmPreview: [edmPreview]
@@ -88,10 +88,10 @@ describe('components/browse/BrowseContentCard', () => {
       });
     });
 
-    context('when `fields.image` is an object with its own fields', () => {
-      it('uses `fields.image.fields.file.url`', () => {
-        const imageUrl = 'https://www.example.org/image.jpg';
-        const wrapper = factory({ fields: { image: { fields: { file: { url: imageUrl } } } } });
+    context('when image is a Contentful asset', () => {
+      it('uses `fields.image.url`', () => {
+        const imageUrl = 'https://images.ctfassets.net/image.jpg';
+        const wrapper = factory({ fields: { image: { url: imageUrl } } });
 
         wrapper.vm.imageUrl.should.equal(imageUrl);
       });
@@ -170,7 +170,7 @@ describe('components/browse/BrowseContentCard', () => {
         const description = 'Some interesting content';
         const creator = 'A European artist';
         const provider = 'An aggregator';
-        const wrapper = factory({ cardType: 'automatedRecordCard', fields: { description, creator, provider } });
+        const wrapper = factory({ cardType: 'AutomatedRecordCard', fields: { description, creator, provider } });
         wrapper.vm.texts.should.not.include(description);
         wrapper.vm.texts.should.include(creator);
         wrapper.vm.texts.should.include(provider);
@@ -179,7 +179,7 @@ describe('components/browse/BrowseContentCard', () => {
         const dcCreatorLangAware = 'A European artist';
         const dataProvider = 'An aggregator';
         const wrapper = factory({
-          cardType: 'automatedRecordCard',
+          cardType: 'AutomatedRecordCard',
           fields: {
             name,
             encoding: {

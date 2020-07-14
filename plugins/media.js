@@ -44,8 +44,7 @@ export function isIIIFMedia(media) {
 export function isIIIFImage(media) {
   return isIIIFMedia(media) && (
     ((media.dctermsIsReferencedBy || []).length === 0) ||
-    media.dctermsIsReferencedBy.every((dctermsIsReferencedBy) =>
-      dctermsIsReferencedByIsImageInfoRequest(dctermsIsReferencedBy, media.services)
+    media.dctermsIsReferencedBy.every((dctermsIsReferencedBy) => dctermsIsReferencedByIsImageInfoRequest(dctermsIsReferencedBy, media.services)
     )
   );
 }
@@ -60,8 +59,7 @@ export function isIIIFPresentation(media) {
 
 export function iiifManifest(media, europeanaIdentifier) {
   if (isIIIFPresentation(media)) {
-    return media.dctermsIsReferencedBy.find((dctermsIsReferencedBy) =>
-      !dctermsIsReferencedByIsImageInfoRequest(dctermsIsReferencedBy, media.services)
+    return media.dctermsIsReferencedBy.find((dctermsIsReferencedBy) => !dctermsIsReferencedByIsImageInfoRequest(dctermsIsReferencedBy, media.services)
     );
   }
 

@@ -1,0 +1,31 @@
+query LinkGroups(
+  $locale: String!,
+  $linkGroups: Boolean = true,
+  $preview: Boolean = false
+) {
+  mainNavigation: linkGroupCollection(preview: $preview, locale: $locale, limit: 1, where: { identifier: "mainNavigation" }) @include(if: $linkGroups) {
+    ...linkGroupFields
+  }
+  mobileNavigation: linkGroupCollection(preview: $preview, locale: $locale, limit: 1, where: { identifier: "mobileNavigation" }) @include(if: $linkGroups) {
+    ...linkGroupFields
+  }
+  footerMoreInfo: linkGroupCollection(preview: $preview, locale: $locale, limit: 1, where: { identifier: "footerMoreInfo" }) @include(if: $linkGroups) {
+    ...linkGroupFields
+  }
+  footerHelp: linkGroupCollection(preview: $preview, locale: $locale, limit: 1, where: { identifier: "footerHelp" }) @include(if: $linkGroups) {
+    ...linkGroupFields
+  }
+}
+
+fragment linkGroupFields on LinkGroupCollection {
+  items {
+    identifier
+    name
+    links: linksCollection(limit: 10) {
+      items {
+        text
+        url
+      }
+    }
+  }
+}

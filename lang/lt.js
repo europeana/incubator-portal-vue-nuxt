@@ -66,7 +66,6 @@ export default {
     "right": "Dešinė"
   },
   "edmIsShownAtLinkAlt": "Peržiūrėti teikėjo svetainę",
-  "entity": "Subjektas",
   "error": "Klaida",
   "exhibitions": {
     "chapters": "Skyriai",
@@ -445,10 +444,7 @@ export default {
   "readMore": "Skaityti daugiau",
   "record": {
     "downloadCopyrightInfo": "Šis elementas apsaugos autorių teisėmis, jo negalima atsisiųsti.",
-    "extendedInformation": "Išplėstinė informacija",
-    "hideAll": "Slėpti visą informaciją",
     "record": "Įrašas",
-    "showAll": "Rodyti visą informaciją",
     "similarItems": "Panašūs elementai",
     "view": {
       "image": "Peržiūrėti vaizdą",

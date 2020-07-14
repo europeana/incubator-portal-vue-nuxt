@@ -66,7 +66,6 @@ export default {
     "right": "Labais"
   },
   "edmIsShownAtLinkAlt": "Skatīt pakalpojumu sniedzēja vietnē",
-  "entity": "Struktūrvienība",
   "error": "Kļūda",
   "exhibitions": {
     "chapters": "Nodaļas",
@@ -444,10 +443,7 @@ export default {
   "readMore": "Lasīt vairāk",
   "record": {
     "downloadCopyrightInfo": "Šis vienums ir aizsargāts ar autortiesībām, un to nevar lejupielādēt.",
-    "extendedInformation": "Paplašināta informācija",
-    "hideAll": "Paslēpt visu informāciju",
     "record": "Ieraksts",
-    "showAll": "Rādīt visu informāciju",
     "similarItems": "Līdzīgi vienumi",
     "view": {
       "image": "Skatīt attēlu",

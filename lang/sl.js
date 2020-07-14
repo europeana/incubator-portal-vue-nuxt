@@ -66,7 +66,6 @@ export default {
     "right": "Desno"
   },
   "edmIsShownAtLinkAlt": "Ogled na spletni strani ponudnika",
-  "entity": "Subjekt",
   "error": "Napaka",
   "exhibitions": {
     "chapters": "Poglavja",
@@ -444,10 +443,7 @@ export default {
   "readMore": "Preberi več",
   "record": {
     "downloadCopyrightInfo": "To delo je zaščiteno z avtorskimi pravicami in ga ni mogoče prenesti.",
-    "extendedInformation": "Razširjene informacije",
-    "hideAll": "Skrij vse informacije",
     "record": "Zapis",
-    "showAll": "Pokaži vse informacije",
     "similarItems": "Podobna dela",
     "view": {
       "image": "Ogled slike",

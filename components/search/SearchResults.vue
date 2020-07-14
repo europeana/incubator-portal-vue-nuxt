@@ -32,6 +32,7 @@
       :title="result.dcTitle || result.dcDescription"
       :url="{ name: 'item-all', params: { pathMatch: result.europeanaId.slice(1) } }"
       :image-url="result.edmPreview"
+      :show-user-buttons="showUserButtons"
       :texts="cardTexts(result)"
       data-qa="search result"
       :limit-values-within-each-text="3"
@@ -70,6 +71,13 @@
       return {
         activeView: this.view
       };
+    },
+
+    computed: {
+      showUserButtons() {
+        // TODO: can be removed at some point
+        return Boolean(Number(process.env.ENABLE_XX_USER_AUTH));
+      }
     },
 
     watch: {

@@ -66,7 +66,6 @@ export default {
     "right": "Direita"
   },
   "edmIsShownAtLinkAlt": "Ver no site do fornecedor",
-  "entity": "Entidade",
   "error": "Erro",
   "exhibitions": {
     "chapters": "Capítulos",
@@ -444,10 +443,7 @@ export default {
   "readMore": "Ler mais",
   "record": {
     "downloadCopyrightInfo": "Este item está protegido por direitos de autor e não pode ser transferido.",
-    "extendedInformation": "Informação detalhada",
-    "hideAll": "Ocultar todas as informações",
     "record": "Registo",
-    "showAll": "Mostrar todas as informações",
     "similarItems": "Itens relacionados",
     "view": {
       "image": "Ver imagem",

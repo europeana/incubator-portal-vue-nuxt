@@ -10,9 +10,9 @@
       <BlogAuthor
         v-for="(author, index) in authors"
         :key="index"
-        :name="author.fields.name"
-        :organisation="author.fields.affiliation"
-        :url="author.fields.url"
+        :name="author.name"
+        :organisation="author.affiliation"
+        :url="author.url"
       />
     </b-col>
   </b-row>

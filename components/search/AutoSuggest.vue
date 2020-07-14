@@ -22,11 +22,12 @@
       role="option"
       data-qa="search suggestion"
       :aria-selected="index === focus"
-      :to="linkGen(val[locale])"
+      :to="linkGen(val)"
       :class="{ 'hover': index === focus }"
       :data-index="index"
       @mouseover="focus = index"
       @focus="index === focus"
+      @mousedown.prevent
     >
       <template
         v-for="(part, partIndex) in highlightResult(val)"
@@ -55,17 +56,11 @@
 
     props: {
       // Property names are identifiers, emitted when suggestion is selected.
-      // Property values are lang maps for labels to display.
+      // Property values are the text for.the match
       // @example
       //     {
-      //       'http://data.europeana.eu/concept/base/83': {
-      //         en: 'World War I',
-      //         es: 'Primera Guerra Mundial'
-      //       },
-      //       'http://data.europeana.eu/concept/base/1615': {
-      //         en: 'gospel music',
-      //         es: 'góspel'
-      //       }
+      //       "http://data.europeana.eu/concept/base/83": "World War I",
+      //       "http://data.europeana.eu/agent/base/60496": "Poquelin, Jean-Baptiste"
       //     }
       value: {
         type: Object,
@@ -107,10 +102,6 @@
     },
 
     computed: {
-      locale() {
-        return this.$store.state.i18n.locale;
-      },
-
       suggestionValues() {
         return Object.keys(this.value);
       },
@@ -194,7 +185,7 @@
         if (this.noSuggestionHasFocus || this.firstSuggestionHasFocus) {
           this.focus = this.numberOfSuggestions - 1;
         } else {
-          this.focus--;
+          this.focus = this.focus - 1;
         }
 
         this.selectSuggestion();
@@ -204,7 +195,7 @@
         if (this.noSuggestionHasFocus || this.lastSuggestionHasFocus) {
           this.focus = 0;
         } else {
-          this.focus++;
+          this.focus = this.focus + 1;
         }
 
         this.selectSuggestion();
@@ -221,46 +212,13 @@
         }
       },
 
-      // Localise a lang map
-      //
-      // Order of priority:
-      // 1. User's UI language
-      // 2. English
-      // 3. First available value
-      localiseSuggestionLabel(value) {
-        if (value[this.locale]) {
-          return value[this.locale];
-        } else if (value.en) {
-          return value.en;
-        }
-        return Object.values(value)[0];
-      },
-
       // Highlight the user's query in a suggestion
       // FIXME: only re-highlight when new suggestions come in, not immediately
       //        after the query changes?
       highlightResult(value) {
-        let matchingValues = {};
-
         // Find all the suggestion labels that match the query
-        for (const locale in value) {
-          const string = value[locale];
-          const matches = match(string, this.query);
-          if (matches.length > 0) {
-            matchingValues[locale] = parse(string, matches);
-          }
-        }
-
-        // If any suggestions match, return the localised one with higlight
-        if (Object.values(matchingValues).length > 0) {
-          return this.localiseSuggestionLabel(matchingValues);
-        }
-
-        // No matches, so return a localised suggestion without highlight
-        return [{
-          text: this.localiseSuggestionLabel(value),
-          highlight: false
-        }];
+        const matches = match(value, this.query);
+        return parse(value, matches);
       },
 
       closeDropdown() {
@@ -270,9 +228,7 @@
       },
 
       selectSuggestion() {
-        if (this.selectedSuggestionLabel) {
-          this.$emit('select', this.selectedSuggestionLabel[this.locale]);
-        }
+        if (this.selectedSuggestionLabel) this.$emit('select', this.selectedSuggestionLabel);
       }
     }
   };

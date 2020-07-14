@@ -66,7 +66,6 @@ export default {
     "right": "Parem"
   },
   "edmIsShownAtLinkAlt": "Vaadake teenusepakkuja veebisaidil",
-  "entity": "Üksus",
   "error": "Viga",
   "exhibitions": {
     "chapters": "Peatükid",
@@ -444,10 +443,7 @@ export default {
   "readMore": "Loe lähemalt",
   "record": {
     "downloadCopyrightInfo": "See toode on autoriõigusega kaitstud ja seda ei saa alla laadida.",
-    "extendedInformation": "Täiendav teave",
-    "hideAll": "Peida kogu teave ",
     "record": "Kirje",
-    "showAll": "Näita kogu teavet",
     "similarItems": "Sarnased tooted",
     "view": {
       "image": "Vaadake pilti",

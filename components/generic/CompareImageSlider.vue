@@ -152,7 +152,7 @@
       },
 
       sliderBarPosition() {
-        const leftPosition = this.imageWidth * this.sliderPosition - this.sliderWidth / 2;
+        const leftPosition = (this.imageWidth * this.sliderPosition) - (this.sliderWidth / 2);
         return {
           left: `${leftPosition}px`
         };
@@ -211,8 +211,8 @@
         const imagePosition = this.$refs.rightImage.$el.getBoundingClientRect();
         let pos = cursorXfromWindow - imagePosition.left;
 
-        const minPos = 0 + this.sliderWidth / 2;
-        const maxPos = this.imageWidth - this.sliderWidth / 2;
+        const minPos = 0 + (this.sliderWidth / 2);
+        const maxPos = this.imageWidth - (this.sliderWidth / 2);
 
         if (pos < minPos) {
           pos = minPos;

@@ -10,17 +10,21 @@ const store = new Vuex.Store({
       data: {
         footerMoreInfo: {
           name: 'More info',
-          links: [{
-            text: 'About Europeana',
-            url: '/'
-          }]
+          links: [
+            {
+              text: 'About Europeana',
+              url: '/'
+            }
+          ]
         },
         footerHelp: {
           name: 'Help',
-          links: [{
-            text: 'Help',
-            url: '/'
-          }]
+          links: [
+            {
+              text: 'Help',
+              url: '/'
+            }
+          ]
         }
       }
     },

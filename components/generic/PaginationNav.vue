@@ -9,7 +9,7 @@
     size="sm"
     align="center"
     data-qa="pagination navigation"
-    @change="changePaginationNav"
+    @input="changePaginationNav"
   />
 </template>
 

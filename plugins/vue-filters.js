@@ -6,7 +6,6 @@
 import Vue from 'vue';
 import marked from 'marked';
 
-
 Vue.filter('localise', val => {
   if (typeof val === 'undefined' || val === null) {
     return val;

@@ -66,7 +66,6 @@ export default {
     "right": "Højre"
   },
   "edmIsShownAtLinkAlt": "Vis på udbyderens websted",
-  "entity": "Entitet",
   "error": "Fejl",
   "exhibitions": {
     "chapters": "Kapitler",
@@ -444,10 +443,7 @@ export default {
   "readMore": "Læs mere",
   "record": {
     "downloadCopyrightInfo": "Denne artikel er ophavsretligt beskyttet og kan ikke downloades.",
-    "extendedInformation": "Udvidede oplysninger",
-    "hideAll": "Skjul alle oplysninger",
     "record": "Registrering",
-    "showAll": "Vis alle oplysninger",
     "similarItems": "Lignende artikler",
     "view": {
       "image": "Se billede",

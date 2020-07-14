@@ -19,14 +19,10 @@ const edmIsShownAt = 'https://example.org';
 const edmIsShownByWebResource = {
   about: 'https://example.org/doc.pdf',
   dcDescription: {
-    'en': [
-      'This is an example'
-    ]
+    'en': ['This is an example']
   },
   webResourceEdmRights: {
-    'def': [
-      'https://example.org'
-    ]
+    'def': ['https://example.org']
   },
   ebucoreHasMimeType: 'application/pdf'
 };
@@ -53,35 +49,39 @@ const apiResponse = {
   success: true,
   object: {
     about: europeanaId,
-    aggregations: [{
-      edmIsShownAt,
-      edmIsShownBy: edmIsShownByWebResource.about,
-      hasView: [edmHasViewWebResourceSecond.about, edmHasViewWebResourceThird.about, edmHasViewWebResourceFirst.about],
-      webResources: [
-        edmIsShownByWebResource,
-        edmHasViewWebResourceSecond,
-        edmHasViewWebResourceThird,
-        edmHasViewWebResourceFirst,
-        someOtherWebResource
-      ]
-    }],
-    europeanaAggregation: {
-      edmRights: { def: [ 'https://example.org' ] },
-      edmPreview: 'https://example.org'
-    },
-    proxies: [{
-      europeanaProxy: false,
-      dcTitle: {
-        'en': [
-          'This is a title'
-        ]
-      },
-      dcDescription: {
-        'en': [
-          'This is a description'
+    aggregations: [
+      {
+        edmIsShownAt,
+        edmIsShownBy: edmIsShownByWebResource.about,
+        hasView: [
+          edmHasViewWebResourceSecond.about,
+          edmHasViewWebResourceThird.about,
+          edmHasViewWebResourceFirst.about
+        ],
+        webResources: [
+          edmIsShownByWebResource,
+          edmHasViewWebResourceSecond,
+          edmHasViewWebResourceThird,
+          edmHasViewWebResourceFirst,
+          someOtherWebResource
         ]
       }
-    }],
+    ],
+    europeanaAggregation: {
+      edmRights: { def: ['https://example.org'] },
+      edmPreview: 'https://example.org'
+    },
+    proxies: [
+      {
+        europeanaProxy: false,
+        dcTitle: {
+          'en': ['This is a title']
+        },
+        dcDescription: {
+          'en': ['This is a description']
+        }
+      }
+    ],
     agents: [
       { about: 'http://data.europeana.eu/agent/base/123' }
     ],

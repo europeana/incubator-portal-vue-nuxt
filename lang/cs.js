@@ -66,7 +66,6 @@ export default {
     "right": "Doprava"
   },
   "edmIsShownAtLinkAlt": "Zobrazit na webu poskytovatele",
-  "entity": "Entita",
   "error": "Chyba",
   "exhibitions": {
     "chapters": "Kapitoly",
@@ -444,10 +443,7 @@ export default {
   "readMore": "Více informací",
   "record": {
     "downloadCopyrightInfo": "Tato položka je chráněna autorskými právy a nelze ji stáhnout.",
-    "extendedInformation": "Bližší informace",
-    "hideAll": "Skrýt všechny informace",
     "record": "Záznam",
-    "showAll": "Zobrazit všechny informace",
     "similarItems": "Podobné položky",
     "view": {
       "image": "Zobrazit obrázek",

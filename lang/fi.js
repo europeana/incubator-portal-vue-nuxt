@@ -66,7 +66,6 @@ export default {
     "right": "Oikea"
   },
   "edmIsShownAtLinkAlt": "Näytä palveluntarjoajan verkkosivustolla",
-  "entity": "Yksikkö",
   "error": "Virhe",
   "exhibitions": {
     "chapters": "Luvut",
@@ -444,10 +443,7 @@ export default {
   "readMore": "Lue lisää",
   "record": {
     "downloadCopyrightInfo": "Tämä tuote on suojattu tekijänoikeudella eikä sitä voi ladata.",
-    "extendedInformation": "Tarkemmat tiedot",
-    "hideAll": "Piilota kaikki tiedot",
     "record": "Tietue",
-    "showAll": "Näytä kaikki tiedot",
     "similarItems": "Samanlaisia kohteita",
     "view": {
       "image": "Näytä kuva",

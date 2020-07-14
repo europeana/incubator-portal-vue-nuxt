@@ -66,7 +66,6 @@ export default {
     "right": "Jobb"
   },
   "edmIsShownAtLinkAlt": "Megtekintés a szolgáltató webhelyén",
-  "entity": "Entitás",
   "error": "Hiba",
   "exhibitions": {
     "chapters": "Fejezetek",
@@ -444,10 +443,7 @@ export default {
   "readMore": "Bővebben",
   "record": {
     "downloadCopyrightInfo": "Ez az elem szerzői jogi védelem alatt áll, és nem tölthető le.",
-    "extendedInformation": "Kiterjesztett információk",
-    "hideAll": "Az összes információ elrejtése",
     "record": "Rekord",
-    "showAll": "Az összes információ megjelenítése",
     "similarItems": "Hasonló elemek",
     "view": {
       "image": "Kép megtekintése",

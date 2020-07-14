@@ -15,4 +15,5 @@ RUN apt-get -q update && apt-get -yq install apt-transport-https \
   && echo "deb https://packages.cloudfoundry.org/debian stable main" | tee /etc/apt/sources.list.d/cloudfoundry-cli.list \
   && apt-get -q update && apt-get -yq install cf-cli \
   && rm -rf /var/lib/apt/lists/* \
-  && su node -c "cf install-plugin blue-green-deploy -f -r CF-Community"
+  && su node -c "cf install-plugin blue-green-deploy -f -r CF-Community" \
+  && su node -c "cf install-plugin app-autoscaler-plugin -f -r CF-Community"

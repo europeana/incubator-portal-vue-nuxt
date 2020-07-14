@@ -27,30 +27,17 @@ const factory = () => mount(ContentCardSection, {
 });
 
 const dummySection = {
-  fields: {
-    headline: 'Test Headline',
-    hasPart: [
-      {
-        sys: { id: '123' },
-        fields: { name: 'Card one title', description: 'the first card', url: 'http://europeana.eu', image: {
-          fields: { file: { url: 'img/landscape.jpg' } } }
-        }
-      },
-      {
-        sys: { id: '456' },
-        fields: { name: 'Card two title', description: 'the second card', url: 'http://europeana.eu', image: {
-          fields: { file: { url: 'img/portrait.jpg' } } }
-        }
-      }
-    ],
-    moreButton: {
-      fields: {
-        url: 'http://europeana.eu',
-        text: 'Show more art'
-      }
-    }
+  headline: 'Test Headline',
+  hasPartCollection: {
+    items: [
+      { name: 'Card one title', description: 'the first card', url: 'http://europeana.eu', image: { url: 'img/landscape.jpg' } },
+      { name: 'Card two title', description: 'the second card', url: 'http://europeana.eu', image: { url: 'img/portrait.jpg' } }
+    ]
   },
-  mocks: { $t: () => {} }
+  moreButton: {
+    url: 'http://europeana.eu',
+    text: 'Show more art'
+  }
 };
 
 describe('components/browse/ContentCardSection', () => {
@@ -90,24 +77,12 @@ describe('components/browse/ContentCardSection', () => {
       const wrapper = factory();
       wrapper.setProps({
         section: {
-          fields: {
-            hasPart: [
-              {
-                sys: { id: '123' },
-                fields: { name: 'Card one title', slug: '123', identifier: 'http://data.europeana.eu/agent/base/123', image: 'img/landscape.jpg' }
-              },
-              {
-                sys: { id: '1234' },
-                fields: { name: 'Card one title', slug: '1234', identifier: 'http://data.europeana.eu/agent/base/1234', image: 'img/landscape.jpg' }
-              },
-              {
-                sys: { id: '12345' },
-                fields: { name: 'Card one title', slug: '12345', identifier: 'http://data.europeana.eu/agent/base/12345', image: 'img/landscape.jpg' }
-              },
-              {
-                sys: { id: '123456' },
-                fields: { name: 'Card one title', slug: '123456', identifier: 'http://data.europeana.eu/agent/base/12346', image: 'img/landscape.jpg' }
-              }
+          hasPartCollection: {
+            items: [
+              { name: 'Card one title', slug: '123', identifier: 'http://data.europeana.eu/agent/base/123', image: 'img/landscape.jpg' },
+              { name: 'Card one title', slug: '1234', identifier: 'http://data.europeana.eu/agent/base/1234', image: 'img/landscape.jpg' },
+              { name: 'Card one title', slug: '12345', identifier: 'http://data.europeana.eu/agent/base/12345', image: 'img/landscape.jpg' },
+              { name: 'Card one title', slug: '123456', identifier: 'http://data.europeana.eu/agent/base/12346', image: 'img/landscape.jpg' }
             ]
           }
         }
@@ -120,24 +95,12 @@ describe('components/browse/ContentCardSection', () => {
       const wrapper = factory();
       wrapper.setProps({
         section: {
-          fields: {
-            hasPart: [
-              {
-                sys: { id: '123' },
-                fields: { name: 'Card one title', slug: '123', identifier: 'http://data.europeana.eu/concept/base/123', image: 'img/landscape.jpg' }
-              },
-              {
-                sys: { id: '1234' },
-                fields: { name: 'Card one title', slug: '1234', identifier: 'http://data.europeana.eu/agent/base/1234', image: 'img/landscape.jpg' }
-              },
-              {
-                sys: { id: '12345' },
-                fields: { name: 'Card one title', slug: '12345', identifier: 'http://data.europeana.eu/agent/base/12345', image: 'img/landscape.jpg' }
-              },
-              {
-                sys: { id: '123456' },
-                fields: { name: 'Card one title', slug: '123456', identifier: 'http://data.europeana.eu/agent/base/12346', image: 'img/landscape.jpg' }
-              }
+          hasPartCollection: {
+            items: [
+              { name: 'Card one title', slug: '123', identifier: 'http://data.europeana.eu/concept/base/123', image: 'img/landscape.jpg' },
+              { name: 'Card one title', slug: '1234', identifier: 'http://data.europeana.eu/agent/base/1234', image: 'img/landscape.jpg' },
+              { name: 'Card one title', slug: '12345', identifier: 'http://data.europeana.eu/agent/base/12345', image: 'img/landscape.jpg' },
+              { name: 'Card one title', slug: '123456', identifier: 'http://data.europeana.eu/agent/base/12346', image: 'img/landscape.jpg' }
             ]
           }
         }

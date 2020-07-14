@@ -3,7 +3,6 @@ const axios = require('axios');
 const recordOrigin = 'https://api.europeana.eu';
 const apiKey = process.env['EUROPEANA_RECORD_API_KEY'];
 
-
 const getRecord = async(identifier) => {
   const url = recordOrigin + '/record/search.json';
   return axios.get(url, {

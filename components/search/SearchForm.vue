@@ -53,30 +53,68 @@
         :aria-label="$t('header.clearQuery')"
         @click="clearQuery"
       />
-      <div
-        v-show="showSearch && showSearchQuery"
-        class="search-query d-lg-none"
+      <template
+        v-if="pillLabel"
       >
-        <b-button
-          type="submit"
-          data-qa="search button"
-          class="search"
-          variant="primary"
-          :aria-label="$t('search')"
-          @click="toggleSearchBar"
-        />
-        <span>{{ $t('header.searchFor') }} "{{ query }}"</span>
-      </div>
+        <div
+          v-show="showSearch && showSearchQuery"
+          class="collection search-query d-lg-none"
+        >
+          <b-button
+            type="submit"
+            data-qa="search in collection button"
+            class="search"
+            variant="primary"
+            :aria-label="$t('search')"
+            @click="toggleSearchBar"
+          >
+            <span>{{ $t('header.inCollection', { query: query, collection: pillLabel.values[0] }) }}</span>
+          </b-button>
+        </div>
+        <div
+          v-show="showSearch && showSearchQuery"
+          class="search-query d-lg-none"
+        >
+          <b-button
+            data-qa="search entire collection button"
+            class="search"
+            variant="primary"
+            :aria-label="$t('search')"
+            @click.prevent="toggleSearchAndRemovePill"
+          >
+            <span>{{ $t('header.entireCollection', { query: query }) }}</span>
+          </b-button>
+        </div>
+      </template>
+      <template
+        v-else
+      >
+        <div
+          v-show="showSearch && showSearchQuery"
+          class="search-query d-lg-none"
+        >
+          <b-button
+            type="submit"
+            data-qa="mobile search button"
+            class="search"
+            variant="primary"
+            :aria-label="$t('search')"
+            @click="toggleSearchBar"
+          >
+            <span>{{ $t('header.searchFor', { query: query }) }}</span>
+          </b-button>
+        </div>
+      </template>
       <b-button
         type="submit"
-        data-qa="search button"
+        data-qa="desktop search button"
         class="search d-none d-lg-block"
         variant="primary"
         :aria-label="$t('search')"
       />
       <b-button
         v-show="!showSearch"
-        data-qa="search button"
+        data-qa="show mobile search button"
         class="search d-lg-none mr-3"
         variant="light"
         :aria-label="$t('search')"
@@ -99,6 +137,7 @@
   import SearchBarPill from './SearchBarPill';
   import { getEntitySuggestions } from '../../plugins/europeana/entity';
   import { mapGetters } from 'vuex';
+  import match from 'autosuggest-highlight/match';
 
   export default {
     name: 'SearchForm',
@@ -110,10 +149,6 @@
 
     props: {
       enableAutoSuggest: {
-        type: Boolean,
-        default: false
-      },
-      enableSuggestionValidation: {
         type: Boolean,
         default: false
       }
@@ -130,15 +165,11 @@
     },
 
     computed: {
-      showSearch: {
-        get() {
-          return this.$store.getters['ui/searchView'];
-        }
-      },
-
       ...mapGetters({
         apiConfig: 'apis/config',
-        queryUpdatesForFacetChanges: 'search/queryUpdatesForFacetChanges'
+        queryUpdatesForFacetChanges: 'search/queryUpdatesForFacetChanges',
+        showSearch: 'ui/searchView',
+        view: 'search/activeView'
       }),
 
       isAutoSuggestActive() {
@@ -173,10 +204,6 @@
           }),
           query
         };
-      },
-
-      view() {
-        return this.$store.getters['search/activeView'];
       }
     },
 
@@ -213,6 +240,7 @@
         this.suggestions = {};
         this.clearQuery();
         await this.$goto(newRoute);
+        this.selectedSuggestion = null;
       },
 
       getSearchSuggestions(query) {
@@ -228,21 +256,22 @@
         // Don't go getting more suggestions if we are already waiting for some
         if (this.gettingSuggestions) return;
 
+        const locale = this.$i18n.locale;
         this.gettingSuggestions = true;
 
         getEntitySuggestions(query, {
-          language: this.$i18n.locale
-        }, {
-          recordValidation: this.enableSuggestionValidation
+          language: locale
         })
           .then(suggestions => {
             this.suggestions = suggestions.reduce((memo, suggestion) => {
-              memo[suggestion.id] = suggestion.prefLabel;
+              const candidates = [(suggestion.prefLabel || {})[locale]]
+                .concat((suggestion.altLabel || {})[locale]);
+              memo[suggestion.id] = candidates.find(candidate => match(candidate, query).length > 0);
               return memo;
             }, {});
           })
           .catch(() => {
-            this.suggestions = [];
+            this.suggestions = {};
           })
           .then(() => {
             this.gettingSuggestions = false;
@@ -282,6 +311,11 @@
       clearQuery() {
         this.query = '';
         this.showSearchQuery = false;
+      },
+
+      async toggleSearchAndRemovePill() {
+        this.toggleSearchBar();
+        await this.$goto(this.pillRemoveLinkTo);
       }
     }
   };
@@ -313,7 +347,9 @@
 
   .btn {
     border-radius: 0;
+    font-size: 1rem;
     box-shadow: none;
+
     &:before {
       @extend .icon-font;
       display: inline-block;
@@ -366,7 +402,6 @@
         }
         .search-query {
           width: 100%;
-          padding: 0.375rem 1rem 0.375rem 3.5rem;
           height: 3.5rem;
           font-size: 1rem;
           color: $mediumgrey;
@@ -381,6 +416,16 @@
             top: 0;
             z-index: 99;
             height: 3.5rem;
+            padding: 0.375rem 1rem 0.375rem 3.5rem;
+            justify-content: flex-start;
+            &:focus {
+              background: $white;
+              outline: none;
+              color: $black;
+              ~ span {
+                z-index: 99;
+              }
+            }
             &:before {
               left: 1rem;
               top: 1rem;
@@ -412,6 +457,7 @@
       padding: 0.375rem 0.75rem;
       height: auto;
       width: auto;
+      outline: none;
 
       &:before {
         transform: translateY(-0.1rem);

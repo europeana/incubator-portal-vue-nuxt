@@ -1,6 +1,6 @@
 <template>
   <section
-    v-if="section && section.fields"
+    v-if="section"
     class="browse-section row mb-5"
     data-qa="browse section"
   >
@@ -8,10 +8,10 @@
       <h2
         data-qa="section headline"
       >
-        {{ section.fields.headline }}
+        {{ section.headline }}
       </h2>
       <p>
-        {{ section.fields.text }}
+        {{ section.text }}
       </p>
     </div>
     <div class="col-12">
@@ -22,31 +22,31 @@
       >
         <template v-if="!isPeopleSection">
           <BrowseContentCard
-            v-for="card in cards"
-            :key="card.sys.id"
-            :fields="card.fields"
-            :card-type="card.sys.contentType ? card.sys.contentType.sys.id : ''"
+            v-for="(card, index) in cards"
+            :key="index"
+            :fields="card"
+            :card-type="card && card['__typename']"
           />
         </template>
         <template v-else>
           <ContentCard
-            v-for="card in cards"
-            :key="card.sys.id"
-            :title="card.fields.name"
-            :url="entityRouterLink(card.fields.identifier, card.fields.slug)"
-            :image-url="card.fields.image"
+            v-for="(card, index) in cards"
+            :key="index"
+            :title="card.name"
+            :url="entityRouterLink(card.identifier, card.slug)"
+            :image-url="card.image"
             :image-optimisation-options="{ width: 510 }"
             variant="mini"
           />
         </template>
       </b-card-group>
       <SmartLink
-        v-if="section.fields.moreButton"
-        :destination="section.fields.moreButton.fields.url"
+        v-if="section.moreButton"
+        :destination="section.moreButton.url"
         class="btn btn-light"
         data-qa="section more button"
       >
-        {{ section.fields.moreButton.fields.text }}
+        {{ section.moreButton.text }}
       </SmartLink>
     </div>
   </section>
@@ -77,13 +77,13 @@
       }),
 
       cards() {
-        return this.section.fields.hasPart.filter(card => card.fields);
+        return this.section.hasPartCollection.items;
       },
 
       isPeopleSection() {
         if (this.cards.length !== 4) return false;
         return this.cards.every((card) => {
-          const identifier = card.fields.identifier;
+          const identifier = card.identifier;
           return identifier ? entityParamsFromUri(identifier).type === 'person' : false;
         });
       }
