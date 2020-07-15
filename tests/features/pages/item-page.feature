@@ -59,10 +59,9 @@ Feature: item page
     When I open `"The Milkmaid" item page`
     Then I see `similar items`
 
-  Scenario: Audio player
+  Scenario: Media player for audio
     When I open the `"The pride of Glencoe, song" item page`
-    Then I see a `audio player`
-    And I am on an accessible page
+    Then I see the `media player`
 
   Scenario: IIIF Image viewer
     When I open an `item page with a IIIF Image`

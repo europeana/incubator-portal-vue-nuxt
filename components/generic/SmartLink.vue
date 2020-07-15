@@ -10,7 +10,7 @@
     v-else
     :href="path"
     :target="isExternalLink ? '_blank' : '_self'"
-    :class="[{ 'is-external-link' : isExternalLink }, linkClass]"
+    :class="[{ 'is-external-link' : isExternalLink && !hideExternalIcon }, linkClass]"
   >
     <slot /><!-- This comment removes white space which gets underlined
  --><span
@@ -33,6 +33,10 @@
       linkClass: {
         type: String,
         default: ''
+      },
+      hideExternalIcon: {
+        type: Boolean,
+        default: false
       }
     },
 

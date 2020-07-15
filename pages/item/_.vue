@@ -55,7 +55,6 @@
                     :europeana-identifier="identifier"
                     :media="selectedMedia"
                     :image-src="selectedMediaImage.src"
-                    :enable-europeana-media-player="enableEuropeanaMediaPlayer"
                   />
                   <MediaThumbnailGrid
                     v-if="displayMediaThumbnailGrid"
@@ -206,7 +205,7 @@
   import { search } from '../../plugins/europeana/search';
   import { isIIIFPresentation, isRichMedia } from '../../plugins/media';
   import { langMapValueForLocale } from  '../../plugins/europeana/utils';
-  import { searchEntities } from '../../plugins/europeana/entity';
+  import { findEntities } from '../../plugins/europeana/entity';
   import { search as searchAnnotations } from '../../plugins/europeana/annotation';
 
   export default {
@@ -227,10 +226,9 @@
         query: `target_record_id:"${this.identifier}"`,
         profile: 'dereference'
       };
-
       axios.all([
         searchAnnotations(annotationSearchParams),
-        searchEntities(this.europeanaEntityUris),
+        findEntities(this.europeanaEntityUris),
         this.getSimilarItems()
       ])
         .then(axios.spread((annotations, entities, similar) => {
@@ -385,9 +383,6 @@
       },
       redirectNotificationsEnabled() {
         return this.$config.ENABLE_LINKS_TO_CLASSIC;
-      },
-      enableEuropeanaMediaPlayer() {
-        return this.$config.ENABLE_EUROPEANA_MEDIA_PLAYER;
       }
     },
 

@@ -175,6 +175,11 @@ const config = {
         path: '/*',
         component: 'pages/index.vue'
       });
+      routes.push({
+        name: 'collections',
+        path: '/(collections)',
+        component: 'pages/index.vue'
+      });
     },
     linkExactActiveClass: 'exact-active-link'
   },

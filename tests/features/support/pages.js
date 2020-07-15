@@ -25,7 +25,8 @@ const pages = {
   'item page without isShownBy or hasView': `${url}/en/item/9200102/BibliographicResource_3000134083514`,
   'item page': `${url}/en/item/09102/_GNM_693983`,
   'search page': `${url}/en/search?query=`,
-  'Swedish home page': `${url}/sv`
+  'Swedish home page': `${url}/sv`,
+  'topics listing page': `${url}/en/collections/topics`
 };
 
 module.exports = {

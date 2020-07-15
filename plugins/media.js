@@ -67,6 +67,9 @@ export function iiifManifest(media, europeanaIdentifier) {
 }
 
 export function isRichMedia(media) {
-  return isOEmbed(media) || isHTMLVideo(media) || isHTMLAudio(media) || isIIIFMedia(media) ||
-    (Number(process.env.ENABLE_EUROPEANA_MEDIA_PLAYER) && isPlayableMedia(media));
+  return isOEmbed(media) ||
+    isHTMLVideo(media) ||
+    isHTMLAudio(media) ||
+    isIIIFMedia(media) ||
+    isPlayableMedia(media);
 }

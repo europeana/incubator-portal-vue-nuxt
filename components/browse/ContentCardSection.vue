@@ -83,6 +83,7 @@
       isPeopleSection() {
         if (this.cards.length !== 4) return false;
         return this.cards.every((card) => {
+          if (card['__typename'] !== 'AutomatedEntityCard') return false;
           const identifier = card.identifier;
           return identifier ? entityParamsFromUri(identifier).type === 'person' : false;
         });

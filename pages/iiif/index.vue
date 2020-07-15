@@ -39,15 +39,16 @@
             allowFullscreen: true,
             allowMaximize: false,
             allowTopMenuButton: false,
-            allowWindowSideBar: false,
+            allowWindowSideBar: true,
             sideBarOpenByDefault: false,
             panels: {
               info: false,
               attribution: false,
               canvas: false,
-              annotations: false,
+              annotations: true,
               search: false
-            }
+            },
+            defaultSideBarPanel: 'annotations'
           },
           workspace: {
             showZoomControls: true,
@@ -57,12 +58,6 @@
             enabled: false
           }
         };
-
-        if (this.$config.ENABLE_IIIF_ANNOTATIONS) {
-          options.window.allowWindowSideBar = true;
-          options.window.panels.annotations = true;
-          options.window.defaultSideBarPanel = 'annotations';
-        }
 
         return options;
       }

@@ -84,10 +84,6 @@
       imageSrc: {
         type: String,
         default: ''
-      },
-      enableEuropeanaMediaPlayer: {
-        type: Boolean,
-        default: false
       }
     },
 
@@ -103,7 +99,7 @@
         return (this.imageSrc !== '') && !isRichMedia(this.media);
       },
       isPlayableMedia() {
-        return this.enableEuropeanaMediaPlayer && isPlayableMedia(this.media);
+        return isPlayableMedia(this.media);
       },
       isHTMLVideo() {
         return isHTMLVideo(this.media);

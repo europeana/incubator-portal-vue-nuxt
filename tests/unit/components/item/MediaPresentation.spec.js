@@ -157,9 +157,9 @@ describe('components/item/MediaPresentation', () => {
         });
       });
 
-      context('and media is not HTML video', () => {
+      context('and media is an image', () => {
         it('is `true`', () => {
-          const props = { europeanaIdentifier, media: { ebucoreHasMimeType: 'video/quicktime' }, imageSrc: 'http://www.example.org/preview.jpg' };
+          const props = { europeanaIdentifier, media: { ebucoreHasMimeType: 'image/png' }, imageSrc: 'http://www.example.org/preview.jpg' };
           const wrapper = factory(props);
 
           wrapper.vm.displayImage.should.be.true;
@@ -169,41 +169,23 @@ describe('components/item/MediaPresentation', () => {
   });
 
   describe('isPlayableMedia', () => {
-    context('when feature is enabled', () => {
-      const enableEuropeanaMediaPlayer = true;
+    context('and media is playable', () => {
+      const media = { ebucoreHasMimeType: 'video/ogg', about: 'http://www.example.org/video.ogg' };
 
-      context('and media is playable', () => {
-        const media = { ebucoreHasMimeType: 'video/ogg', about: 'http://www.example.org/video.ogg' };
+      it('is `true`', () => {
+        const wrapper = factory({ europeanaIdentifier, media });
 
-        it('is `true`', () => {
-          const wrapper = factory({ europeanaIdentifier, media, enableEuropeanaMediaPlayer });
-
-          wrapper.vm.isPlayableMedia.should.be.true;
-        });
-      });
-
-      context('but media is not playable', () => {
-        const media = { ebucoreHasMimeType: 'text/plain' };
-
-        it('is `false`', () => {
-          const wrapper = factory({ europeanaIdentifier, media, enableEuropeanaMediaPlayer });
-
-          wrapper.vm.isPlayableMedia.should.be.false;
-        });
+        wrapper.vm.isPlayableMedia.should.be.true;
       });
     });
 
-    context('when feature is disabled', () => {
-      const enableEuropeanaMediaPlayer = false;
+    context('but media is not playable', () => {
+      const media = { ebucoreHasMimeType: 'text/plain' };
 
-      context('and media is playable', () => {
-        const media = { ebucoreHasMimeType: 'video/ogg', about: 'http://www.example.org/video.ogg' };
+      it('is `false`', () => {
+        const wrapper = factory({ europeanaIdentifier, media });
 
-        it('is `false`', () => {
-          const wrapper = factory({ europeanaIdentifier, media, enableEuropeanaMediaPlayer });
-
-          wrapper.vm.isPlayableMedia.should.be.false;
-        });
+        wrapper.vm.isPlayableMedia.should.be.false;
       });
     });
   });

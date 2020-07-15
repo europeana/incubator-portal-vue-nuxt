@@ -58,7 +58,7 @@ export function getEntitySuggestions(text, params = {}) {
  * @param {string} type the type of the entity
  * @return {string} retrieved API name of type
  */
-function getEntityTypeApi(type) {
+export function getEntityTypeApi(type) {
   const names = {
     person: 'agent',
     topic: 'concept'
@@ -203,7 +203,7 @@ async function getEntityFacets(facets, currentId) {
   const entityUris = entities.slice(0, 4).map(entity => {
     return entity['label'];
   });
-  return getRelatedEntityData(await searchEntities(entityUris));
+  return getRelatedEntityData(await findEntities(entityUris));
 }
 
 /**
@@ -211,23 +211,15 @@ async function getEntityFacets(facets, currentId) {
  * @param {Array} entityUris the URIs of the entities to retrieve
  * @return {Object} entity data
  */
-export function searchEntities(entityUris) {
+export function findEntities(entityUris) {
   if (entityUris.length === 0) return;
-
   const q = entityUris.join('" OR "');
-  return axios.get(entityApiUrl('/search'), {
-    params: {
-      query: `entity_uri:("${q}")`,
-      wskey: config.entity.key
-    }
-  })
+  const params = {
+    query: `entity_uri:("${q}")`
+  };
+  return searchEntities(params)
     .then((response) => {
-      let items = response.data.items ? response.data.items : [];
-      return items;
-    })
-    .catch((error) => {
-      const message = error.response ? error.response.data.error : error.message;
-      throw new Error(message);
+      return response.entities || [];
     });
 }
 
@@ -298,4 +290,26 @@ export function entityParamsFromUri(uri) {
   const id = matched[2];
   const type = getEntityTypeHumanReadable(matched[1]);
   return { id, type };
+}
+
+/**
+ * Return all entity subjects of type concept / agent
+ * @param {Object} params additional parameters sent to the API
+ */
+export function searchEntities(params = {}) {
+  return axios.get(entityApiUrl('/search'), {
+    params: {
+      ...params,
+      wskey: config.entity.key
+    }
+  })
+    .then((response) => {
+      return {
+        entities: response.data.items ? response.data.items : [],
+        total: response.data.partOf ? response.data.partOf.total : null
+      };
+    })
+    .catch((error) => {
+      throw apiError(error);
+    });
 }

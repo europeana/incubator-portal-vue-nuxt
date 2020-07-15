@@ -12,7 +12,6 @@
     </a>
     <PageHeader
       :enable-auto-suggest="enableAutoSuggest"
-      :enable-language-selector="enableLanguageSelector"
       :main-navigation="linkGroups.mainNavigation"
       :mobile-navigation="linkGroups.mobileNavigation"
       keep-alive
@@ -99,9 +98,8 @@
         canonicalUrlWithoutLocale: 'http/canonicalUrlWithoutLocale'
       }),
       enableAutoSuggest() {
-        // Auto suggest on search form will be disabled unless toggled on by env var,
-        // and always disabled on entity pages.
-        return this.$config.ENABLE_AUTOSUGGEST && !(this.$store.state.entity && this.$store.state.entity.id);
+        // Auto suggest on search form will be disabled on entity pages.
+        return !(this.$store.state.entity && this.$store.state.entity.id);
       }
     },
 

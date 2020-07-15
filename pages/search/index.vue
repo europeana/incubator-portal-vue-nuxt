@@ -13,7 +13,6 @@
           <h1>{{ $t('search') }}</h1>
         </b-col>
         <RelatedCollections
-          v-if="relatedCollectionsEnabled"
           :query="this.$route.query.query"
         />
         <SearchInterface
@@ -62,9 +61,6 @@
       },
       redirectNotificationsEnabled() {
         return this.$config.ENABLE_LINKS_TO_CLASSIC;
-      },
-      relatedCollectionsEnabled() {
-        return this.$config.ENABLE_SEARCH_RELATED_COLLECTIONS;
       }
     },
 
