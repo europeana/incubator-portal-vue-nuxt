@@ -132,7 +132,30 @@ const config = {
     '@nuxtjs/axios',
     '@nuxtjs/auth',
     '~/modules/apis',
-    '~/modules/config',
+    ['~/modules/config', {
+      settings: [
+        'CTF_CDA_ACCESS_TOKEN',
+        'CTF_CPA_ACCESS_TOKEN',
+        'CTF_ENVIRONMENT_ID',
+        'CTF_GRAPHQL_ORIGIN',
+        'CTF_SPACE_ID',
+        'DISQUS_SHORTNAME',
+        'ELASTIC_APM_ENVIRONMENT',
+        'ELASTIC_APM_LOG_LEVEL',
+        'ELASTIC_APM_SERVER_URL',
+        'ENABLE_LINKS_TO_CLASSIC',
+        'ENABLE_SSL_NEGOTIATION',
+        'ENABLE_XX_USER_AUTH',
+        'EUROPEANA_ANNOTATION_API_KEY',
+        'EUROPEANA_ENTITY_API_KEY',
+        'EUROPEANA_NEWSPAPER_API_KEY',
+        'EUROPEANA_RECORD_API_KEY',
+        'EUROPEANA_WW1_API_KEY',
+        'GOOGLE_TAG_MANAGER_ID',
+        'INTERNAL_LINK_DOMAIN',
+        'SSL_DATASET_BLACKLIST'
+      ]
+    }],
     'bootstrap-vue/nuxt',
     'cookie-universal-nuxt',
     ['nuxt-i18n', {

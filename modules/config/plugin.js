@@ -1,4 +1,4 @@
-import settings from './settings';
+import settingsWhitelist from './settings';
 
 export default ({ app, store }, inject) => {
   if (store) {
@@ -7,9 +7,10 @@ export default ({ app, store }, inject) => {
       state: {
         settings: {}
       },
+
       mutations: {
         set(state, env = {}) {
-          for (const property of settings) {
+          for (const property of settingsWhitelist) {
             let value = env[property];
             // typecast feature toggles
             if (property.startsWith('ENABLE_') || property.startsWith('DISABLE_')) {
