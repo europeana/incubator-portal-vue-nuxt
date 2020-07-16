@@ -5,13 +5,8 @@ import queries from './queries';
 import storeModule from './store';
 
 export default ({ app, store }, inject) => {
-  const origin = store.contentful.state.origin || 'https://graphql.contentful.com';
-  const path = `/content/v1/spaces/${store.contentful.state.space}/environments/${store.contentful.state.environment || 'master'}`;
-
   const query = (alias, variables = {}) => {
-    const accessToken = store.contentful.state.accessTokens[variables.preview ? 'preview' : 'delivery'];
-
-    const url = `${origin}${path}`;
+    const accessToken = store.getters['contentful/accessToken'](variables.preview);
 
     const body = {
       query: queries[alias],
@@ -30,7 +25,7 @@ export default ({ app, store }, inject) => {
       ...variables
     };
 
-    return axios.post(url, body, { headers, params });
+    return axios.post(store.getters['contentful/endpoint'], body, { headers, params });
   };
 
   const plugin = {
