@@ -50,6 +50,7 @@ async function waitForApp() {
     try {
       const response = await axios.get(waitForAppUrl);
       if (response.status !== 200) throw new Error;
+      console.log('Reached it');
       return;
     } catch (e) {
       i = i + 1;
