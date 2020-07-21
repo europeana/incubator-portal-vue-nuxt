@@ -4,7 +4,8 @@ import middleware from '../middleware';
 import config from './config';
 
 import {
-  currentHost, isHttps, routePermittedOnEitherScheme, routeOnDatasetBlacklist
+  currentHost, httpPort, httpsPort, isHttps,
+  routePermittedOnEitherScheme, routeOnDatasetBlacklist
 } from './utils';
 
 const negotiate = (context) => {
@@ -17,11 +18,11 @@ const negotiate = (context) => {
   if (ssl && routeBlacklisted) {
     // redirect to non-ssl
     redirectToScheme = 'http';
-    redirectToPort = context.store.state.http.httpPort;
+    redirectToPort = httpPort(context);
   } else if (!ssl && !routeBlacklisted) {
     // redirect to ssl
     redirectToScheme = 'https';
-    redirectToPort = context.store.state.http.httpsPort;
+    redirectToPort = httpsPort(context);
   } else {
     return;
   }
@@ -33,8 +34,6 @@ const negotiate = (context) => {
 };
 
 middleware.sslNegotiation = async(context) => {
-  await context.store.dispatch('http/init', context);
-
   if (!config.sslNegotiation.enabled || routePermittedOnEitherScheme(context.route)) return;
 
   return negotiate(context);

@@ -1,20 +1,13 @@
 import config from './config';
 
-import { currentProtocol, currentHost, isHttps, requestOrigin } from './utils';
-
-import storeModule from './store';
+import * as utils from './utils';
 
 const plugin = {
-  config,
-  currentHost,
-  currentProtocol,
-  isHttps,
-  requestOrigin
+  ...utils,
+  config
 };
 
-export default ({ app, store }, inject) => {
+export default async({ app }, inject) => {
   app.$http = plugin;
   inject('http', plugin);
-
-  if (store) store.registerModule('http', storeModule);
 };

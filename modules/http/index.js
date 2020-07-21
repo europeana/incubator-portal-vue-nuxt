@@ -14,7 +14,7 @@ const defaults = {
   }
 };
 
-const templates = ['config.ejs', 'store.js', 'utils.js'];
+const templates = ['config.ejs', 'utils.js'];
 const plugins = ['middleware.js', 'plugin.goto.js', 'plugin.http.js', 'plugin.path.js'];
 
 export default function(moduleOptions) {

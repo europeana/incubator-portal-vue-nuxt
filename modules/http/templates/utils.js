@@ -1,3 +1,15 @@
+export const canonicalUrl = (context) => {
+  return origin(context) + context.route.fullPath;
+};
+
+export const canonicalUrlWithoutLocale = (context) => {
+  return canonicalUrl(context).replace(/(:\/\/[^/]+)\/[a-z]{2}(\/|$)/, '$1$2');
+};
+
+export const origin = (context) => {
+  return requestOrigin(context);
+};
+
 export const isHttps = ({ req }) => {
   if (process.client) {
     return (window.location.protocol === 'https:');
@@ -14,6 +26,14 @@ export const isHttps = ({ req }) => {
   if (req.protocol === 'https') return true;
 
   return false;
+};
+
+export const httpPort = (context) => {
+  return context.app.$http.config.ports.http ? `:${context.app.$http.config.ports.http}` : '';
+};
+
+export const httpsPort = (context) => {
+  return context.app.$http.config.ports.https ? `:${context.app.$http.config.ports.https}` : '';
 };
 
 export const currentHost = ({ req }) => {

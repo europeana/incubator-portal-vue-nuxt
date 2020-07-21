@@ -1,30 +1,33 @@
 import config from './config';
 
 import {
+  currentHost, currentProtocol, httpPort, httpsPort,
   routePermittedOnEitherScheme, routeOnDatasetBlacklist
 } from './utils';
 
-export default ({ app, store }, inject) => {
+export default (context, inject) => {
   const path = (route) => {
-    const localePath = app.localePath(route);
+    const localePath = context.app.localePath(route);
 
     if (!config.sslNegotiation.enabled || routePermittedOnEitherScheme(route)) return localePath;
 
     const routeBlacklisted = routeOnDatasetBlacklist(route, config.sslNegotiation.datasetBlacklist);
 
+    const protocol = currentProtocol(context);
+
     let switchToProtocol;
     let switchToPort;
-    if (routeBlacklisted && store.state.http.protocol === 'https:') {
+    if (routeBlacklisted && (protocol === 'https:')) {
       switchToProtocol = 'http:';
-      switchToPort = store.state.http.httpPort;
-    } else if (!routeBlacklisted && store.state.http.protocol === 'http:') {
+      switchToPort = httpPort(context);
+    } else if (!routeBlacklisted && (protocol === 'http:')) {
       switchToProtocol = 'https:';
-      switchToPort = store.state.http.httpsPort;
+      switchToPort = httpsPort(context);
     }
 
     if (!switchToProtocol) return localePath;
 
-    const portlessHost = store.state.http.host.split(':')[0];
+    const portlessHost = currentHost(context).split(':')[0];
 
     return `${switchToProtocol}//${portlessHost}${switchToPort}${localePath}`;
   };

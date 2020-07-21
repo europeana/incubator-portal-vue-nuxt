@@ -39,7 +39,7 @@
 </template>
 
 <script>
-  import { mapGetters, mapState } from 'vuex';
+  import { mapState } from 'vuex';
 
   import ClientOnly from 'vue-client-only';
   import PageHeader from '../components/PageHeader';
@@ -58,6 +58,8 @@
     },
 
     async fetch() {
+      // TODO: move canonical URL computed properties to data properties, and
+      //       deduce them here?
       const contentfulVariables = {
         locale: this.$i18n.isoLocale(),
         preview: this.$route.query.mode === 'preview'
@@ -93,10 +95,12 @@
       ...mapState({
         breadcrumbs: state => state.breadcrumb.data
       }),
-      ...mapGetters({
-        canonicalUrl: 'http/canonicalUrl',
-        canonicalUrlWithoutLocale: 'http/canonicalUrlWithoutLocale'
-      }),
+      canonicalUrl() {
+        return this.$http.canonicalUrl({ route: this.$route, req: this.$req || {} });
+      },
+      canonicalUrlWithoutLocale() {
+        return this.$http.canonicalUrlWithoutLocale({ route: this.$route, req: this.$req || {} });
+      },
       enableAutoSuggest() {
         // Auto suggest on search form will be disabled on entity pages.
         return !(this.$store.state.entity && this.$store.state.entity.id);
