@@ -11,3 +11,4 @@ storiesOf('Item page/Media Carousel', module)
       </b-container>
     `
   }));
+  

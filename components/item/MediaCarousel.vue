@@ -5,19 +5,18 @@
       v-model="slide"
       :interval="0"
       controls
-      img-width="400"
       no-wrap="true"
     >
       <b-carousel-slide
       >
         <template v-slot:img>
-          <img data-v-370eeff7="" src="https://api.europeana.eu/api/v2/thumbnail-by-url.json?size=w400&amp;type=IMAGE&amp;uri=http%3A%2F%2Frepos.europeanafashion.eu%2Fpaulvanriel%2F54332959.jpg" alt="">
+          <img data-v-370eeff7="" src="https://api.europeana.eu/api/v2/thumbnail-by-url.json?type=IMAGE&amp;uri=http%3A%2F%2Frepos.europeanafashion.eu%2Fpaulvanriel%2F54332959.jpg" alt="">
         </template>
       </b-carousel-slide>
 
       <b-carousel-slide>
         <template v-slot:img>
-          <img data-v-370eeff7="" src="https://api.europeana.eu/api/v2/thumbnail-by-url.json?size=w400&amp;type=IMAGE&amp;uri=http%3A%2F%2Fdata.jck.nl%2Fthumbnail%2Fjck%2Fjoods-historisch%2Fd616%2F616NM009292%2F500" alt="">
+          <img data-v-370eeff7="" src="https://api.europeana.eu/api/v2/thumbnail-by-url.json?type=IMAGE&amp;uri=http%3A%2F%2Fdata.jck.nl%2Fthumbnail%2Fjck%2Fjoods-historisch%2Fd616%2F616NM009292%2F500" alt="">
         </template>
       </b-carousel-slide>
 
