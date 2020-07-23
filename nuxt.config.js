@@ -59,6 +59,7 @@ const config = {
       'BreadcrumbPlugin',
       'ButtonPlugin',
       'CardPlugin',
+      'CarouselPlugin',
       'DropdownPlugin',
       'FormCheckboxPlugin',
       'FormGroupPlugin',
