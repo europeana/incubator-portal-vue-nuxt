@@ -38,13 +38,6 @@
   import ContentHeader from '../../../components/generic/ContentHeader';
   import ContentCard from '../../../components/generic/ContentCard';
 
-  import {
-    searchEntities,
-    getEntitySlug,
-    getEntityTypeApi,
-    getEntityTypeHumanReadable
-  } from '../../../plugins/europeana/entity';
-
   const PER_PAGE = 24;
   export default {
     name: 'CollectionTypeIndexPage',
@@ -54,19 +47,19 @@
       PaginationNav: () => import('../../../components/generic/PaginationNav')
     },
     middleware: 'sanitisePageQuery',
-    asyncData({ params, error, app }) {
+    asyncData({ params, error, app, $apis }) {
       if (!['persons', 'topics'].includes(params.type)) {
         return  error({ statusCode: 404, message: 'unknown collection type' });
       }
       const entityIndexParams = {
         query: '*:*',
         page: app.$page - 1,
-        type: getEntityTypeApi(params.type.slice(0, -1)),
+        type: this.$apis.entity.getEntityTypeApi(params.type.slice(0, -1)),
         pageSize: PER_PAGE,
         scope: 'europeana',
         fl: 'skos_prefLabel.*,isShownBy,isShownBy.thumbnail'
       };
-      return searchEntities(entityIndexParams)
+      return $apis.entity.searchEntities(entityIndexParams)
         .then(response => response)
         .then(data => {
           return {
@@ -102,8 +95,8 @@
         return {
           name: 'collections-type-all',
           params: {
-            type: getEntityTypeHumanReadable(entity.type),
-            pathMatch: getEntitySlug(entity.id, entity.prefLabel.en)
+            type: this.$apis.entity.getEntityTypeHumanReadable(entity.type),
+            pathMatch: this.$apis.entity.getEntitySlug(entity.id, entity.prefLabel.en)
           }
         };
       },

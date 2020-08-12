@@ -15,12 +15,6 @@
 <script>
   import ContentCard from '../../components/generic/ContentCard';
 
-  import {
-    getEntityDescription,
-    getEntitySlug,
-    getEntityTypeHumanReadable
-  } from '../../plugins/europeana/entity';
-
   export default {
     name: 'EntityCards',
 
@@ -36,10 +30,6 @@
     },
 
     methods: {
-      getEntityDescription,
-      getEntitySlug,
-      getEntityTypeHumanReadable,
-
       depiction(entity) {
         return (!entity || !entity.isShownBy) ? null : entity.isShownBy.thumbnail;
       },
@@ -52,8 +42,8 @@
         return {
           name: 'collections-type-all',
           params: {
-            type: getEntityTypeHumanReadable(entity.type),
-            pathMatch: getEntitySlug(entity.id, entity.prefLabel.en)
+            type: this.$apis.entity.getEntityTypeHumanReadable(entity.type),
+            pathMatch: this.$apis.entity.getEntitySlug(entity.id, entity.prefLabel.en)
           }
         };
       }

@@ -21,9 +21,9 @@
 </template>
 
 <script>
-  import RelatedChip from './RelatedChip';
-  import { getEntityTypeHumanReadable, getEntitySlug } from '../../plugins/europeana/entity';
   import { mapGetters } from 'vuex';
+
+  import RelatedChip from './RelatedChip';
 
   export default {
     name: 'RelatedCollections',
@@ -65,8 +65,8 @@
         const uriMatch = id.match(`^${this.apiConfig.data.origin}/([^/]+)(/base)?/(.+)$`);
         return this.$path({
           name: 'collections-type-all', params: {
-            type: getEntityTypeHumanReadable(uriMatch[1]),
-            pathMatch: getEntitySlug(id, name)
+            type: this.$apis.utils.entity.getEntityTypeHumanReadable(uriMatch[1]),
+            pathMatch: this.$apis.entity.getEntitySlug(id, name)
           }
         });
       },

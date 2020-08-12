@@ -15,8 +15,6 @@
   import { mapGetters } from 'vuex';
 
   import ContentCard from '../generic/ContentCard';
-  import { getEntityTypeHumanReadable } from '../../plugins/europeana/entity';
-  import { isEuropeanaRecordId } from '../../plugins/europeana/record';
 
   export default {
     components: {
@@ -112,7 +110,7 @@
     },
     methods: {
       forEuropeanaRecord() {
-        return (typeof this.fields.identifier === 'string') && isEuropeanaRecordId(this.fields.identifier);
+        return (typeof this.fields.identifier === 'string') && this.$apis.record.isEuropeanaRecordId(this.fields.identifier);
       },
       forEuropeanaEntity() {
         return (typeof this.fields.identifier === 'string') && this.fields.identifier.includes(this.apiConfig.data.origin);
@@ -120,7 +118,7 @@
       entityRouterLink(uri, slug) {
         const uriMatch = uri.match(`^${this.apiConfig.data.origin}/([^/]+)(/base)?/(.+)$`);
         return {
-          name: 'collections-type-all', params: { type: getEntityTypeHumanReadable(uriMatch[1]), pathMatch: slug ? slug : uriMatch[3] }
+          name: 'collections-type-all', params: { type: this.$apis.entity.getEntityTypeHumanReadable(uriMatch[1]), pathMatch: slug ? slug : uriMatch[3] }
         };
       },
       recordRouterLink(identifier) {

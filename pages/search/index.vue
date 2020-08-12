@@ -40,12 +40,6 @@
 
     async fetch({ store, query, res }) {
       await store.dispatch('search/activate');
-      store.commit('search/set', ['userParams', query]);
-
-      await store.dispatch('search/run');
-      if (store.state.search.error && typeof res !== 'undefined') {
-        res.statusCode = store.state.search.errorStatusCode;
-      }
     },
     computed: {
       notificationUrl() {

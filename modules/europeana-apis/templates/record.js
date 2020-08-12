@@ -4,10 +4,9 @@ import omitBy from 'lodash/omitBy';
 import uniq from 'lodash/uniq';
 import merge from 'deepmerge';
 
-import { apiError } from './utils';
+import { apiError, combineMerge } from './utils';
 import { config } from './';
 import { thumbnailUrl, thumbnailTypeForMimeType } from  './thumbnail';
-import { combineMerge } from '../utils';
 
 /**
  * Parse the record data based on the data from the API response

@@ -54,7 +54,7 @@
 
 <script>
   import { mapGetters } from 'vuex';
-  import { entityParamsFromUri, getEntityTypeHumanReadable } from '../../plugins/europeana/entity';
+
   import ContentCard from '../generic/ContentCard';
   import BrowseContentCard from './BrowseContentCard';
   import SmartLink from '../generic/SmartLink';
@@ -85,7 +85,7 @@
         return this.cards.every((card) => {
           if (card['__typename'] !== 'AutomatedEntityCard') return false;
           const identifier = card.identifier;
-          return identifier ? entityParamsFromUri(identifier).type === 'person' : false;
+          return identifier ? this.$apis.entity.entityParamsFromUri(identifier).type === 'person' : false;
         });
       }
     },
@@ -93,7 +93,7 @@
       entityRouterLink(uri, slug) {
         const uriMatch = uri.match(`^${this.apiConfig.data.origin}/([^/]+)(/base)?/(.+)$`);
         return {
-          name: 'collections-type-all', params: { type: getEntityTypeHumanReadable(uriMatch[1]), pathMatch: slug ? slug : uriMatch[3] }
+          name: 'collections-type-all', params: { type: this.$apis.entity.getEntityTypeHumanReadable(uriMatch[1]), pathMatch: slug ? slug : uriMatch[3] }
         };
       }
     }

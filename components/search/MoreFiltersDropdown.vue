@@ -92,7 +92,7 @@
   import Vue from 'vue';
   import isEqual from 'lodash/isEqual';
   import { mapGetters } from 'vuex';
-  import { rangeToQueryParam, rangeFromQueryParam } from '../../plugins/europeana/search';
+
   import MoreFiltersDropdownFacet from './MoreFiltersDropdownFacet';
   import DateFilter from './DateFilter';
   import RadioGroupFilter from './RadioGroupFilter';
@@ -162,7 +162,7 @@
         if (!proxyDctermsIssued || proxyDctermsIssued.length < 1) {
           return { start: null, end: null, specific: this.isCheckedSpecificDate };
         }
-        const range = rangeFromQueryParam(proxyDctermsIssued[0]);
+        const range = this.$apis.search.rangeFromQueryParam(proxyDctermsIssued[0]);
         if (!range) {
           return { start: proxyDctermsIssued[0], end: null, specific: true };
         }
@@ -191,7 +191,7 @@
             dateQuery = [dateRange.start];
           }
         } else if (dateRange.start || dateRange.end) {
-          dateQuery = [rangeToQueryParam(dateRange)];
+          dateQuery = [this.$apis.search.rangeToQueryParam(dateRange)];
         }
         this.isCheckedSpecificDate = dateRange.specific;
         this.updateSelected(facetName, dateQuery);

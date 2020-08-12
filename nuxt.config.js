@@ -130,7 +130,7 @@ const config = {
     '@nuxtjs/axios',
     '@nuxtjs/auth',
     '@nuxtjs/dotenv',
-    '~/modules/apis',
+    '~/modules/europeana-apis',
     'bootstrap-vue/nuxt',
     'cookie-universal-nuxt',
     ['nuxt-i18n', {

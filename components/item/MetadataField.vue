@@ -47,7 +47,6 @@
 </template>
 
 <script>
-  import { langMapValueForLocale } from  '../../plugins/europeana/utils';
   import EntityField from './EntityField';
 
   export default {
@@ -110,7 +109,7 @@
         } else if (Array.isArray(this.fieldData)) {
           return { values: this.fieldData, code: '' };
         }
-        return langMapValueForLocale(this.fieldData, this.$i18n.locale, { omitUrisIfOtherValues: this.omitUrisIfOtherValues, omitAllUris: this.omitAllUris });
+        return this.$apis.utils.langMapValueForLocale(this.fieldData, this.$i18n.locale, { omitUrisIfOtherValues: this.omitUrisIfOtherValues, omitAllUris: this.omitAllUris });
       },
 
       hasValuesForLocale() {

@@ -65,9 +65,6 @@
 
   import { mapState } from 'vuex';
 
-  import * as entities from '../../../plugins/europeana/entity';
-  import { langMapValueForLocale } from  '../../../plugins/europeana/utils';
-  import { getEntityTypeHumanReadable, getEntitySlug } from '../../../plugins/europeana/entity';
   import { mapGetters } from 'vuex';
 
   export default {
@@ -84,7 +81,7 @@
     fetch({ query, params, redirect, error, app, store }) {
       store.commit('search/disableCollectionFacet');
 
-      const entityUri = entities.getEntityUri(params.type, params.pathMatch);
+      const entityUri = this.$apis.entity.getEntityUri(params.type, params.pathMatch);
 
       if (entityUri !== store.state.entity.id) {
         // TODO: group as a reset action on the store?
@@ -117,7 +114,7 @@
 
       return axios.all(
         [store.dispatch('entity/searchForRecords', query)]
-          .concat(fetchEntity ? entities.getEntity(params.type, params.pathMatch) : () => {})
+          .concat(fetchEntity ? this.$apis.entity.getEntity(params.type, params.pathMatch) : () => {})
           .concat(fetchFromContentful ? app.$contentful.query('collectionPage', contentfulVariables) : () => {})
       )
         .then(axios.spread((recordSearchResponse, entityResponse, pageResponse) => {
@@ -133,7 +130,7 @@
           const page = store.state.entity.page;
 
           const entityName = page ? page.name : entity.prefLabel.en;
-          const desiredPath = entities.getEntitySlug(entity.id, entityName);
+          const desiredPath = this.$apis.entity.getEntitySlug(entity.id, entityName);
 
           if (params.pathMatch !== desiredPath) {
             const redirectPath = app.$path({
@@ -227,7 +224,7 @@
       title() {
         if (!this.entity) return this.titleFallback();
         if (this.editorialTitle) return this.titleFallback(this.editorialTitle);
-        return langMapValueForLocale(this.entity.prefLabel, this.$store.state.i18n.locale);
+        return this.$apis.utils.langMapValueForLocale(this.entity.prefLabel, this.$store.state.i18n.locale);
       }
     },
 
@@ -238,7 +235,7 @@
 
       // TODO: move into a new entity store action?
       if (!this.relatedCollectionCards) {
-        entities.relatedEntities(this.$route.params.type, this.$route.params.pathMatch, { origin: this.$route.query.recordApi })
+        this.$apis.entity.relatedEntities(this.$route.params.type, this.$route.params.pathMatch, { origin: this.$route.query.recordApi })
           .then((related) => {
             this.$store.commit('entity/setRelatedEntities', related);
           });
@@ -265,8 +262,8 @@
         const uriMatch = id.match(`^${this.apiConfig.data.origin}/([^/]+)(/base)?/(.+)$`);
         return this.$path({
           name: 'collections-type-all', params: {
-            type: getEntityTypeHumanReadable(uriMatch[1]),
-            pathMatch: getEntitySlug(id, name)
+            type: this.$apis.entity.getEntityTypeHumanReadable(uriMatch[1]),
+            pathMatch: this.$apis.entity.getEntitySlug(id, name)
           }
         });
       }

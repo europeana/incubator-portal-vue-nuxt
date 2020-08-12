@@ -143,12 +143,7 @@
   import MediaPresentation from '../../components/item/MediaPresentation';
   import MetadataBox from '../../components/item/MetadataBox';
 
-  import { getRecord, similarItemsQuery } from '../../plugins/europeana/record';
-  import { search } from '../../plugins/europeana/search';
   import { isIIIFPresentation, isRichMedia } from '../../plugins/media';
-  import { langMapValueForLocale } from  '../../plugins/europeana/utils';
-  import { findEntities } from '../../plugins/europeana/entity';
-  import { search as searchAnnotations } from '../../plugins/europeana/annotation';
 
   export default {
     components: {
@@ -169,8 +164,8 @@
         profile: 'dereference'
       };
       axios.all([
-        searchAnnotations(annotationSearchParams),
-        findEntities(this.europeanaEntityUris),
+        this.$apis.annotation.search(annotationSearchParams),
+        this.$apis.entity.findEntities(this.europeanaEntityUris),
         this.getSimilarItems()
       ])
         .then(axios.spread((annotations, entities, similar) => {
@@ -184,8 +179,8 @@
 
     fetchOnServer: false,
 
-    asyncData({ params, res, query }) {
-      return getRecord(`/${params.pathMatch}`, { origin: query.recordApi })
+    asyncData({ params, res, query, $apis }) {
+      return $apis.record.getRecord(`/${params.pathMatch}`, { origin: query.recordApi })
         .then((result) => {
           return result.record;
         })
@@ -255,8 +250,8 @@
       titlesInCurrentLanguage() {
         let titles = [];
 
-        const mainTitle = this.title ? langMapValueForLocale(this.title, this.$i18n.locale) : '';
-        const alternativeTitle = this.altTitle ? langMapValueForLocale(this.altTitle, this.$i18n.locale) : '';
+        const mainTitle = this.title ? this.$apis.utils.langMapValueForLocale(this.title, this.$i18n.locale) : '';
+        const alternativeTitle = this.altTitle ? this.$apis.utils.langMapValueForLocale(this.altTitle, this.$i18n.locale) : '';
 
         const allTitles = [].concat(mainTitle, alternativeTitle).filter(Boolean);
         for (let title of allTitles) {
@@ -271,7 +266,7 @@
         if (!this.description) {
           return false;
         }
-        return langMapValueForLocale(this.description, this.$i18n.locale);
+        return this.$apis.utils.langMapValueForLocale(this.description, this.$i18n.locale);
       },
       metaTitle() {
         return this.titlesInCurrentLanguage[0] ? this.titlesInCurrentLanguage[0].value : this.$t('record.record');
@@ -308,11 +303,11 @@
         return this.selectedMedia.webResourceEdmRights ? this.selectedMedia.webResourceEdmRights : this.fields.edmRights;
       },
       rightsStatement() {
-        if (this.edmRights) return langMapValueForLocale(this.edmRights, this.$i18n.locale).values[0];
+        if (this.edmRights) return this.$apis.utils.langMapValueForLocale(this.edmRights, this.$i18n.locale).values[0];
         return false;
       },
       dataProvider() {
-        const edmDataProvider = langMapValueForLocale(this.coreFields.edmDataProvider, this.$i18n.locale);
+        const edmDataProvider = this.$apis.utils.langMapValueForLocale(this.coreFields.edmDataProvider, this.$i18n.locale);
 
         if (edmDataProvider.values[0].about) {
           return edmDataProvider.values[0];
@@ -338,10 +333,10 @@
           this.$root.$emit('bv::toggle::collapse', 'extended-metadata');
         }
         this.$gtm.push({
-          itemCountry: langMapValueForLocale(this.fields.edmCountry, 'en').values[0],
-          itemDataProvider: langMapValueForLocale(this.coreFields.edmDataProvider, 'en').values[0],
-          itemProvider: langMapValueForLocale(this.fields.edmProvider, 'en').values[0],
-          itemRights: langMapValueForLocale(this.fields.edmRights, 'en').values[0]
+          itemCountry: this.$apis.utils.langMapValueForLocale(this.fields.edmCountry, 'en').values[0],
+          itemDataProvider: this.$apis.utils.langMapValueForLocale(this.coreFields.edmDataProvider, 'en').values[0],
+          itemProvider: this.$apis.utils.langMapValueForLocale(this.fields.edmProvider, 'en').values[0],
+          itemRights: this.$apis.utils.langMapValueForLocale(this.fields.edmRights, 'en').values[0]
         });
       }
 
@@ -373,8 +368,8 @@
           edmDataProvider: this.getSimilarItemsData(this.fields.edmDataProvider)
         };
 
-        return search({
-          query: similarItemsQuery(this.identifier, dataSimilarItems),
+        return this.$apis.search.search({
+          query: this.$apis.record.similarItemsQuery(this.identifier, dataSimilarItems),
           rows: 4,
           profile: 'minimal',
           facet: ''
@@ -389,7 +384,7 @@
       getSimilarItemsData(value) {
         if (!value) return;
 
-        const data = langMapValueForLocale(value, this.$i18n.locale).values;
+        const data = this.$apis.utils.langMapValueForLocale(value, this.$i18n.locale).values;
         if (!data) return;
 
         return data.filter(item => typeof item === 'string');

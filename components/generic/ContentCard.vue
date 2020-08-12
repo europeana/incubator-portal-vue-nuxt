@@ -89,7 +89,6 @@
 
 <script>
   import SmartLink from './SmartLink';
-  import { langMapValueForLocale } from  '../../plugins/europeana/utils';
   import UserButtons from '../account/UserButtons';
 
   export default {
@@ -190,7 +189,7 @@
         } else if (typeof this.title === 'string') {
           return { values: [this.title], code: null };
         } else {
-          return langMapValueForLocale(this.title, this.$i18n.locale);
+          return this.$apis.utils.langMapValueForLocale(this.title, this.$i18n.locale);
         }
       },
 
@@ -226,7 +225,7 @@
           } else if (Array.isArray(value)) {
             return { values: value, code: null };
           } else {
-            return langMapValueForLocale(value, this.$i18n.locale, { omitUrisIfOtherValues: this.omitUrisIfOtherValues, omitAllUris: this.omitAllUris });
+            return this.$apis.utils.langMapValueForLocale(value, this.$i18n.locale, { omitUrisIfOtherValues: this.omitUrisIfOtherValues, omitAllUris: this.omitAllUris });
           }
         });
       },

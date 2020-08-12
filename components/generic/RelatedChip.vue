@@ -20,8 +20,6 @@
 </template>
 
 <script>
-  import { langMapValueForLocale } from  '../../plugins/europeana/utils';
-
   export default {
     name: 'RelatedChip',
 
@@ -54,7 +52,7 @@
           values: [this.title],
           code: null
         };
-        return langMapValueForLocale(this.title, this.$i18n.locale);
+        return this.$apis.utils.langMapValueForLocale(this.title, this.$i18n.locale);
       }
     }
   };
