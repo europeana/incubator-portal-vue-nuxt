@@ -258,7 +258,7 @@
   }
 
   .user-buttons {
-    display: none;
+    display: block;
     position: absolute;
     top: 1rem;
     right: 1rem;
@@ -291,6 +291,13 @@
       }
     }
   }
+
+  @media (hover: hover) {
+    .user-buttons {
+      border: none;
+      display: none;
+    }
+  } 
 
   &:hover {
     box-shadow: $boxshadow-large;
