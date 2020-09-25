@@ -12,8 +12,8 @@
     </a>
     <PageHeader
       :enable-auto-suggest="enableAutoSuggest"
-      :main-navigation="linkGroups.mainNavigation"
-      :mobile-navigation="linkGroups.mobileNavigation"
+      :main-navigation="$linkGroups('mainNavigation')"
+      :mobile-navigation="$linkGroups('mainNavigation')"
       keep-alive
     />
     <main
@@ -31,8 +31,8 @@
     </main>
     <client-only>
       <PageFooter
-        :help-navigation="linkGroups.footerHelp"
-        :more-info-navigation="linkGroups.footerMoreInfo"
+        :help-navigation="$linkGroups('footerHelp')"
+        :more-info-navigation="$linkGroups('footerMoreInfo')"
       />
     </client-only>
   </div>
@@ -57,35 +57,9 @@
       PageFooter: () => import('../components/PageFooter')
     },
 
-    async fetch() {
-      const contentfulVariables = {
-        locale: this.$i18n.isoLocale(),
-        preview: this.$route.query.mode === 'preview'
-      };
-
-      let data;
-      try {
-        const response = await this.$contentful.query('linkGroups', contentfulVariables);
-        data = response.data;
-      } catch (e) {
-        return;
-      }
-
-      const linkGroups = {};
-      for (const identifier in data.data) {
-        const linkGroup = data.data[identifier].items[0];
-        linkGroups[identifier] = {
-          name: linkGroup.name ? linkGroup.name : null,
-          links: linkGroup.links.items
-        };
-      }
-      this.linkGroups = linkGroups;
-    },
-
     data() {
       return {
-        ...config,
-        linkGroups: {}
+        ...config
       };
     },
 

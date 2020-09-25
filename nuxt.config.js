@@ -88,6 +88,7 @@ const config = {
     '~/plugins/europeana',
     '~/plugins/vue/index',
     '~/plugins/i18n.js',
+    '~/plugins/linkGroups',
     '~/plugins/vue-filters',
     '~/plugins/vue-directives'
   ],
