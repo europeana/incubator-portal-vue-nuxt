@@ -12,7 +12,7 @@
       />
     </b-container>
     <b-container
-      v-else
+      v-else-if="!$fetchState.pending"
       data-qa="item page"
     >
       <b-row class="my-5">
@@ -59,7 +59,7 @@
                   />
                   <MediaThumbnailGrid
                     v-if="displayMediaThumbnailGrid"
-                    :media="media"
+                    :media="record.media"
                     :selected="selectedMedia.about"
                     @select="selectMedia"
                   />
@@ -94,26 +94,21 @@
               :rights-statement="rightsStatement"
               :data-provider-name="dataProvider.values[0]"
               :data-provider-lang="dataProvider.code"
-              :is-shown-at="isShownAt"
+              :is-shown-at="record.isShownAt"
             />
           </div>
 
           <MetadataBox
             :all-metadata="allMetaData"
-            :core-metadata="coreFields"
+            :core-metadata="record.coreFields"
             :transcribing-annotations="transcribingAnnotations"
           />
 
-          <section
-            v-if="similarItems && similarItems.length > 0"
-          >
-            <h2>{{ $t('record.similarItems') }}</h2>
-            <ItemPreviewCardGroup
-              v-model="similarItems"
-              view="similar"
-              class="mb-3"
+          <client-only>
+            <SimilarItems
+              :europeana-identifier="identifier"
             />
-          </section>
+          </client-only>
         </b-col>
         <b-col
           cols="12"
@@ -137,7 +132,6 @@
 </template>
 
 <script>
-  import axios from 'axios';
   import { mapGetters } from 'vuex';
 
   import ClientOnly from 'vue-client-only';
@@ -158,7 +152,7 @@
       ClientOnly,
       EntityCards: () => import('../../components/entity/EntityCards'),
       MediaActionBar,
-      ItemPreviewCardGroup: () => import('../../components/item/ItemPreviewCardGroup'),
+      SimilarItems: () => import('../../components/item/SimilarItems'),
       MediaPresentation,
       MediaThumbnailGrid: () => import('../../components/item/MediaThumbnailGrid'),
       MetadataBox,
@@ -166,60 +160,52 @@
     },
 
     fetch() {
+      this.identifier = `/${this.$route.params.pathMatch}`;
       const annotationSearchParams = {
         query: `target_record_id:"${this.identifier}"`,
         profile: 'dereference'
       };
-      axios.all([
+      return Promise.all([
+        getRecord(this.identifier),
+        // TODO: move the following requests into their own components, client-side only
         searchAnnotations(annotationSearchParams),
-        findEntities(this.europeanaEntityUris),
-        this.getSimilarItems()
+        findEntities(this.europeanaEntityUris)
       ])
-        .then(axios.spread((annotations, entities, similar) => {
-          this.annotations = annotations;
+        .then(result => {
+          this.record = result[0].record;
+          this.annotations = result[1];
+          this.relatedEntities = result[2];
+
           this.transcribingAnnotations = this.annotationsByMotivation('transcribing');
           this.taggingAnnotations = this.annotationsByMotivation('tagging');
-          this.relatedEntities = entities;
-          this.similarItems = similar.items;
-        }));
-    },
-
-    fetchOnServer: false,
-
-    asyncData({ params, res, query }) {
-      return getRecord(`/${params.pathMatch}`, { origin: query.recordApi })
-        .then((result) => {
-          return result.record;
-        })
-        .catch((error) => {
-          if (typeof res !== 'undefined') {
-            res.statusCode = (typeof error.statusCode === 'undefined') ? 500 : error.statusCode;
-          }
-          return { error: error.message };
         });
+      // FIXME
+      // .catch((error) => {
+      //   if (typeof res !== 'undefined') {
+      //     res.statusCode = (typeof error.statusCode === 'undefined') ? 500 : error.statusCode;
+      //   }
+      //   return { error: error.message };
+      // });
     },
 
     data() {
       return {
-        agents: null,
-        altTitle: null,
         cardGridClass: null,
-        concepts: null,
-        coreFields: null,
-        description: null,
         error: null,
-        fields: null,
         identifier: null,
-        isShownAt: null,
-        media: [],
+        record: {
+          coreFields: {},
+          fields: {},
+          media: [],
+          agents: [],
+          concepts: []
+        },
         relatedEntities: [],
         selectedMediaItem: null,
         similarItems: [],
         annotations: [],
         taggingAnnotations: [],
         transcribingAnnotations: [],
-        title: null,
-        type: null,
         useProxy: true
       };
     },
@@ -239,16 +225,16 @@
         }, {});
       },
       fieldsAndKeywords() {
-        return { ...this.fields, ...{ keywords: this.keywords } };
+        return { ...this.record.fields, ...{ keywords: this.keywords } };
       },
       allMetaData() {
-        return { ...this.coreFields, ...this.fieldsAndKeywords };
+        return { ...this.record.coreFields, ...this.fieldsAndKeywords };
       },
       europeanaAgents() {
-        return (this.agents || []).filter((agent) => agent.about.startsWith(`${this.apiConfig.data.origin}/agent/`));
+        return (this.record.agents || []).filter((agent) => agent.about.startsWith(`${this.apiConfig.data.origin}/agent/`));
       },
       europeanaConcepts() {
-        return (this.concepts || []).filter((concept) => concept.about.startsWith(`${this.apiConfig.data.origin}/concept/`));
+        return (this.record.concepts || []).filter((concept) => concept.about.startsWith(`${this.apiConfig.data.origin}/concept/`));
       },
       europeanaEntityUris() {
         const entities = this.europeanaConcepts.concat(this.europeanaAgents);
@@ -257,8 +243,8 @@
       titlesInCurrentLanguage() {
         let titles = [];
 
-        const mainTitle = this.title ? langMapValueForLocale(this.title, this.$i18n.locale) : '';
-        const alternativeTitle = this.altTitle ? langMapValueForLocale(this.altTitle, this.$i18n.locale) : '';
+        const mainTitle = this.record.title ? langMapValueForLocale(this.record.title, this.$i18n.locale) : '';
+        const alternativeTitle = this.record.altTitle ? langMapValueForLocale(this.record.altTitle, this.$i18n.locale) : '';
 
         const allTitles = [].concat(mainTitle, alternativeTitle).filter(Boolean);
         for (let title of allTitles) {
@@ -270,51 +256,51 @@
         return titles;
       },
       descriptionInCurrentLanguage() {
-        if (!this.description) {
+        if (!this.record.description) {
           return false;
         }
-        return langMapValueForLocale(this.description, this.$i18n.locale);
+        return langMapValueForLocale(this.record.description, this.$i18n.locale);
       },
       metaTitle() {
         return this.titlesInCurrentLanguage[0] ? this.titlesInCurrentLanguage[0].value : this.$t('record.record');
       },
       metaDescription() {
-        if (!this.descriptionInCurrentLanguage) return '';
-        return this.descriptionInCurrentLanguage.values[0] ? this.descriptionInCurrentLanguage.values[0] : '';
+        if (!this.record.descriptionInCurrentLanguage) return '';
+        return this.record.descriptionInCurrentLanguage.values[0] ? this.record.descriptionInCurrentLanguage.values[0] : '';
       },
       isRichMedia() {
         return isRichMedia(this.selectedMedia);
       },
       selectedMedia: {
         get() {
-          return this.selectedMediaItem || this.media[0] || {};
+          return this.selectedMediaItem || this.record.media[0] || {};
         },
         set(about) {
-          this.selectedMediaItem = this.media.find((item) => item.about === about) || {};
+          this.selectedMediaItem = this.record.media.find((item) => item.about === about) || {};
         }
       },
       selectedMediaImage() {
         if (!this.selectedMedia.thumbnails) return {};
         return {
           src: this.selectedMedia.thumbnails.large,
-          link: this.isShownAt
+          link: this.record.isShownAt
         };
       },
       displayMediaThumbnailGrid() {
         // TODO: the IIIF Presentation check may need to account for potentially
         //       some media items being in one Presentation manifest, but
         //       others being, say, audio or video.
-        return this.media.length > 1 && !isIIIFPresentation(this.selectedMedia);
+        return this.record.media.length > 1 && !isIIIFPresentation(this.selectedMedia);
       },
       edmRights() {
-        return this.selectedMedia.webResourceEdmRights ? this.selectedMedia.webResourceEdmRights : this.fields.edmRights;
+        return this.selectedMedia.webResourceEdmRights ? this.selectedMedia.webResourceEdmRights : this.record.fields.edmRights;
       },
       rightsStatement() {
         if (this.edmRights) return langMapValueForLocale(this.edmRights, this.$i18n.locale).values[0];
         return false;
       },
       dataProvider() {
-        const edmDataProvider = langMapValueForLocale(this.coreFields.edmDataProvider, this.$i18n.locale);
+        const edmDataProvider = langMapValueForLocale(this.record.coreFields.edmDataProvider, this.$i18n.locale);
 
         if (edmDataProvider.values[0].about) {
           return edmDataProvider.values[0];
@@ -329,7 +315,7 @@
         return Boolean(Number(process.env.ENABLE_LINKS_TO_CLASSIC));
       },
       playableMedia() {
-        return this.media.filter(resource => isPlayableMedia(resource));
+        return this.record.media.filter(resource => isPlayableMedia(resource));
       }
     },
 
@@ -343,16 +329,16 @@
           this.$root.$emit('bv::toggle::collapse', 'extended-metadata');
         }
         this.$gtm.push({
-          itemCountry: langMapValueForLocale(this.fields.edmCountry, 'en').values[0],
-          itemDataProvider: langMapValueForLocale(this.coreFields.edmDataProvider, 'en').values[0],
-          itemProvider: langMapValueForLocale(this.fields.edmProvider, 'en').values[0],
-          itemRights: langMapValueForLocale(this.fields.edmRights, 'en').values[0]
+          itemCountry: langMapValueForLocale(this.record.fields.edmCountry, 'en').values[0],
+          itemDataProvider: langMapValueForLocale(this.record.coreFields.edmDataProvider, 'en').values[0],
+          itemProvider: langMapValueForLocale(this.record.fields.edmProvider, 'en').values[0],
+          itemRights: langMapValueForLocale(this.record.fields.edmRights, 'en').values[0]
         });
       }
 
       window.addEventListener('message', (msg) => {
         if (msg.data.event === 'updateDownloadLink') {
-          this.useProxy = (this.media.some((item) => item.about === msg.data.id));
+          this.useProxy = (this.record.media.some((item) => item.about === msg.data.id));
           this.selectedMedia.about = msg.data.id;
         }
       });
@@ -384,10 +370,10 @@
         }
 
         const dataSimilarItems = {
-          dcSubject: this.getSimilarItemsData(this.coreFields.dcSubject),
-          dcType: this.getSimilarItemsData(this.title),
-          dcCreator: this.getSimilarItemsData(this.coreFields.dcCreator),
-          edmDataProvider: this.getSimilarItemsData(this.fields.edmDataProvider)
+          dcSubject: this.getSimilarItemsData(this.record.coreFields.dcSubject),
+          dcType: this.getSimilarItemsData(this.record.type),
+          dcCreator: this.getSimilarItemsData(this.record.coreFields.dcCreator),
+          edmDataProvider: this.getSimilarItemsData(this.record.fields.edmDataProvider)
         };
 
         return search({
