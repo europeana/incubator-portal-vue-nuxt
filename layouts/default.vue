@@ -98,8 +98,7 @@
         canonicalUrlWithoutLocale: 'http/canonicalUrlWithoutLocale'
       }),
       enableAutoSuggest() {
-        // Auto suggest on search form will be disabled on entity pages.
-        return !(this.$store.state.entity && this.$store.state.entity.id);
+        return this.$store.state.search.autoSuggestEnabled;
       }
     },
 

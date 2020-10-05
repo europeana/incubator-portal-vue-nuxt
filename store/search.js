@@ -68,6 +68,7 @@ export const state = () => ({
   active: false,
   apiOptions: {},
   apiParams: {},
+  autoSuggestEnabled: true,
   collectionFacetEnabled: true,
   error: null,
   errorStatusCode: null,
@@ -95,6 +96,12 @@ export const mutations = {
   removeResettableFilter(state, filterName) {
     const index = state.resettableFilters.indexOf(filterName);
     if (index !== -1) state.resettableFilters.splice(index, 1);
+  },
+  disableAutoSuggest(state) {
+    state.autoSuggestEnabled = false;
+  },
+  enableAutoSuggest(state) {
+    state.autoSuggestEnabled = true;
   },
   disableCollectionFacet(state) {
     state.collectionFacetEnabled = false;

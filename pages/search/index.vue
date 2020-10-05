@@ -40,6 +40,7 @@
 
     async fetch({ store, query, res }) {
       await store.dispatch('search/activate');
+      store.commit('search/enableCollectionFacet');
       store.commit('search/set', ['userParams', query]);
 
       await store.dispatch('search/run');
@@ -55,10 +56,6 @@
       redirectNotificationsEnabled() {
         return Boolean(Number(process.env.ENABLE_LINKS_TO_CLASSIC));
       }
-    },
-
-    mounted() {
-      this.$store.commit('search/enableCollectionFacet');
     },
 
     head() {
