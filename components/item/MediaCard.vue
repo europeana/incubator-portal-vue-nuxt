@@ -3,7 +3,7 @@
     v-if="displayImage"
     :europeana-identifier="europeanaIdentifier"
     :media="media"
-    :lazy="lazy"
+    @loaded="() => $emit('loaded')"
   />
   <div
     v-else-if="isSinglePlayableMedia"
@@ -85,10 +85,6 @@
       isSinglePlayableMedia: {
         type: Boolean,
         default: false
-      },
-      lazy: {
-        type: Boolean,
-        default: true
       }
     },
 

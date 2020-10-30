@@ -4,9 +4,9 @@
     :href="imageLink"
     target="_blank"
   >
-    <component
-      :is="lazy ? 'b-img-lazy' : 'b-img'"
+    <b-img-lazy
       :src="media.thumbnails['large']"
+      ref="lazyImg"
       class="w-auto"
       alt=""
       data-qa="media preview image"
@@ -17,10 +17,10 @@
       ({{ $t('newWindow') }})
     </span>
   </b-link>
-  <component
-    :is="lazy ? 'b-img-lazy' : 'b-img'"
+  <b-img-lazy
     v-else-if="!imageLink && media.thumbnails['large']"
     :src="media.thumbnails['large']"
+    ref="lazyImg"
     alt=""
     class="mw-100"
     data-qa="media preview image"
@@ -35,14 +35,20 @@
         type: Object,
         default: null
       },
-      lazy: {
-        type: Boolean,
-        default: true
-      },
       europeanaIdentifier: {
         type: String,
         default: ''
       }
+    },
+    mounted() {
+      this.$watch(
+        () => {
+          return this.$refs.lazyImg.isShown;
+        },
+        (imageIsShown) => {
+          if (imageIsShown) this.$emit('loaded');
+        }
+      );
     },
     computed: {
       imageLink() {

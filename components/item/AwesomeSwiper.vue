@@ -18,7 +18,7 @@
           :europeana-identifier="europeanaIdentifier"
           :media="item"
           :is-single-playable-media="isSinglePlayableMedia"
-          :lazy="false"
+          @loaded="updateSwiper"
         />
       </div>
       <MediaCard
@@ -26,7 +26,7 @@
         :europeana-identifier="europeanaIdentifier"
         :media="item"
         :is-single-playable-media="isSinglePlayableMedia"
-        :lazy="index > 0"
+        @loaded="updateSwiper"
       />
     </swiper-slide>
     <div
@@ -75,7 +75,6 @@
       const singleMediaResource = this.displayableMedia.length === 1;
       return {
         swiperOptions: {
-          init: false,
           threshold: singleMediaResource ? 5000000 :  null,
           slidesPerView: 'auto',
           spaceBetween: singleMediaResource ? null : 40,
@@ -95,25 +94,17 @@
       };
     },
     computed: {
-      swiper() {
-        return this.$refs.awesome.$swiper;
-      },
       isSinglePlayableMedia() {
         return this.displayableMedia.filter(resource => isPlayableMedia(resource)).length === 1;
       }
     },
     methods: {
       onSlideChange() {
-        this.$emit('select', this.displayableMedia[this.swiper.activeIndex].about);
+        this.$emit('select', this.displayableMedia[this.$refs.awesome.$swiper.activeIndex].about);
       },
       updateSwiper() {
-        this.swiper.update();
+        this.$refs.awesome.$swiper.resize.resizeHandler();
       }
-    },
-    mounted() {
-      setTimeout(() => {
-        this.swiper.init();
-      }, 500);
     }
   };
 </script>
@@ -130,12 +121,8 @@
     }
 
     .swiper-slide {
-      width: 100%;
+      width: auto;
       min-width: 16rem;
-
-      @media (min-width: $bp-medium) {
-        width: auto;
-      }
       :before {
         content: '';
         transition: $standard-transition;
@@ -162,14 +149,9 @@
       }
 
       a {
-        display: flex;
+        display: inline-flex;
         height: 100%;
         align-items: center;
-        justify-content: center;
-
-        @media (min-width: $bp-medium) {
-          display: inline-flex;
-        }
       }
     }
 
