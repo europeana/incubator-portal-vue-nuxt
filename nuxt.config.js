@@ -127,7 +127,7 @@ const config = {
   */
   modules: [
     '@nuxtjs/axios',
-    '@nuxtjs/auth',
+    '@nuxtjs/auth-next',
     '@nuxtjs/dotenv',
     'bootstrap-vue/nuxt',
     'cookie-universal-nuxt',
@@ -246,16 +246,28 @@ if (Number(process.env['ENABLE_XX_USER_AUTH'])) {
     strategies: {
       local: false,
       keycloak: {
-        _scheme: process.env.OAUTH_SCHEME,
-        client_id: process.env.OAUTH_CLIENT,
+        scheme: 'oauth2',
+        endpoints: {
+          authorization: `${process.env.OAUTH_ORIGIN}/auth/realms/${process.env.OAUTH_REALM}/protocol/openid-connect/auth`,
+          token: `${process.env.OAUTH_ORIGIN}/auth/realms/${process.env.OAUTH_REALM}/protocol/openid-connect/token`,
+          logout: `${process.env.OAUTH_ORIGIN}/auth/realms/${process.env.OAUTH_REALM}/protocol/openid-connect/logout`
+        },
+        token: {
+          property: 'access_token',
+          type: 'Bearer',
+          name: 'Authorization',
+          maxAge: 1800 // Can be dynamic ?
+        },
+        refreshToken: {
+          property: 'refresh_token',
+          maxAge: 60 * 60 * 24 * 30 // Can be dynamic ?
+        },
+        responseType: 'code',
+        grantType: 'authorization_code',
+        clientId: process.env.OAUTH_CLIENT,
         scope: process.env.OAUTH_SCOPE.split(','),
-        realm: process.env.OAUTH_REALM,
-        authorization_endpoint: `${process.env.OAUTH_ORIGIN}/auth/realms/${process.env.OAUTH_REALM}/protocol/openid-connect/auth`,
-        access_token_endpoint: `${process.env.OAUTH_ORIGIN}/auth/realms/${process.env.OAUTH_REALM}/protocol/openid-connect/token`,
-        userinfo_endpoint: `${process.env.OAUTH_ORIGIN}/auth/realms/${process.env.OAUTH_REALM}/protocol/openid-connect/userinfo`,
-        end_session_endpoint: `${process.env.OAUTH_ORIGIN}/auth/realms/${process.env.OAUTH_REALM}/protocol/openid-connect/logout`,
-        response_type: 'code id_token token',
-        token_type: 'Bearer'
+        codeChallengeMethod: 'S256',
+        access_type: 'offline'
       }
     },
     plugins: [{ src: '~/plugins/authAxios' }]
