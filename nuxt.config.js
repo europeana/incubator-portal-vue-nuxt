@@ -238,7 +238,7 @@ if (Number(process.env['ENABLE_XX_USER_AUTH'])) {
     //  no redirect on logout
     redirect: {
       login: '/account/login',
-      logout: false,
+      logout: '/',
       callback: '/account/callback',
       home: '/account'
     },
@@ -249,25 +249,15 @@ if (Number(process.env['ENABLE_XX_USER_AUTH'])) {
         scheme: 'oauth2',
         endpoints: {
           authorization: `${process.env.OAUTH_ORIGIN}/auth/realms/${process.env.OAUTH_REALM}/protocol/openid-connect/auth`,
+          userInfo: `${process.env.OAUTH_ORIGIN}/auth/realms/${process.env.OAUTH_REALM}/protocol/openid-connect/userinfo`,
           token: `${process.env.OAUTH_ORIGIN}/auth/realms/${process.env.OAUTH_REALM}/protocol/openid-connect/token`,
           logout: `${process.env.OAUTH_ORIGIN}/auth/realms/${process.env.OAUTH_REALM}/protocol/openid-connect/logout`
-        },
-        token: {
-          property: 'access_token',
-          type: 'Bearer',
-          name: 'Authorization',
-          maxAge: 1800 // Can be dynamic ?
-        },
-        refreshToken: {
-          property: 'refresh_token',
-          maxAge: 60 * 60 * 24 * 30 // Can be dynamic ?
         },
         responseType: 'code',
         grantType: 'authorization_code',
         clientId: process.env.OAUTH_CLIENT,
         scope: process.env.OAUTH_SCOPE.split(','),
-        codeChallengeMethod: 'S256',
-        access_type: 'offline'
+        codeChallengeMethod: 'S256'
       }
     },
     plugins: [{ src: '~/plugins/authAxios' }]
