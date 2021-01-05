@@ -96,7 +96,7 @@
 </template>
 
 <script>
-  import axios from 'axios';
+  // import axios from 'axios';
   import isEmpty from 'lodash/isEmpty';
 
   import MetadataBox from '../../components/item/MetadataBox';
@@ -116,36 +116,40 @@
       NotificationBanner: () => import('../../components/generic/NotificationBanner')
     },
 
+    // fetch() {
+    //   const annotationSearchParams = {
+    //     query: `target_record_id:"${this.identifier}"`,
+    //     profile: 'dereference'
+    //   };
+    //   axios.all([
+    //     this.$apis.annotation.search(annotationSearchParams),
+    //     this.$apis.entity.findEntities(this.europeanaEntityUris),
+    //     this.getSimilarItems()
+    //   ])
+    //     .then(axios.spread((annotations, entities, similar) => {
+    //       this.annotations = annotations;
+    //       this.transcribingAnnotations = this.annotationsByMotivation('transcribing');
+    //       this.taggingAnnotations = this.annotationsByMotivation('tagging');
+    //       this.relatedEntities = entities;
+    //       this.similarItems = similar.items;
+    //     }));
+    // },
+    //
+    // fetchOnServer: false,
+
     fetch() {
-      const annotationSearchParams = {
-        query: `target_record_id:"${this.identifier}"`,
-        profile: 'dereference'
-      };
-      axios.all([
-        this.$apis.annotation.search(annotationSearchParams),
-        this.$apis.entity.findEntities(this.europeanaEntityUris),
-        this.getSimilarItems()
-      ])
-        .then(axios.spread((annotations, entities, similar) => {
-          this.annotations = annotations;
-          this.transcribingAnnotations = this.annotationsByMotivation('transcribing');
-          this.taggingAnnotations = this.annotationsByMotivation('tagging');
-          this.relatedEntities = entities;
-          this.similarItems = similar.items;
-        }));
-    },
-
-    fetchOnServer: false,
-
-    asyncData({ params, res, app, $apis }) {
-      return $apis.record
-        .getRecord(`/${params.pathMatch}`, { locale: app.i18n.locale })
-        .then(result => result.record)
-        .catch(error => {
-          if (typeof res !== 'undefined') {
-            res.statusCode = (typeof error.statusCode === 'undefined') ? 500 : error.statusCode;
+      return this.$apis.record
+        .getRecord(`/${this.$route.params.pathMatch}`, { locale: this.$i18n.locale })
+        .then(result => {
+          for (const key in result.record) {
+            this[key] = result.record[key];
           }
-          return { error: error.message };
+        })
+        .catch(error => {
+          // if (typeof res !== 'undefined') {
+          //   res.statusCode = (typeof error.statusCode === 'undefined') ? 500 : error.statusCode;
+          // }
+          this.error = error.message;
         });
     },
 
@@ -259,14 +263,14 @@
     },
 
     mounted() {
-      if (process.browser && this.fields) {
-        this.$gtm.push({
-          itemCountry: langMapValueForLocale(this.fields.edmCountry, 'en').values[0],
-          itemDataProvider: langMapValueForLocale(this.coreFields.edmDataProvider, 'en').values[0],
-          itemProvider: langMapValueForLocale(this.fields.edmProvider, 'en').values[0],
-          itemRights: langMapValueForLocale(this.fields.edmRights, 'en').values[0]
-        });
-      }
+      // if (process.browser && this.fields) {
+      //   this.$gtm.push({
+      //     itemCountry: langMapValueForLocale(this.fields.edmCountry, 'en').values[0],
+      //     itemDataProvider: langMapValueForLocale(this.coreFields.edmDataProvider, 'en').values[0],
+      //     itemProvider: langMapValueForLocale(this.fields.edmProvider, 'en').values[0],
+      //     itemRights: langMapValueForLocale(this.fields.edmRights, 'en').values[0]
+      //   });
+      // }
     },
 
     methods: {

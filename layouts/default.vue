@@ -64,30 +64,29 @@
       PageFooter: () => import('../components/PageFooter')
     },
 
-    async fetch() {
+    fetch() {
       const contentfulVariables = {
         locale: this.$i18n.isoLocale(),
         preview: this.$route.query.mode === 'preview'
       };
 
-      let data;
-      try {
-        const response = await this.$contentful.query('linkGroups', contentfulVariables);
-        data = response.data;
-      } catch (e) {
-        return;
-      }
-
-      const linkGroups = {};
-      for (const identifier in data.data) {
-        const linkGroup = data.data[identifier].items[0];
-        linkGroups[identifier] = {
-          name: linkGroup.name ? linkGroup.name : null,
-          links: linkGroup.links.items
-        };
-      }
-      this.linkGroups = linkGroups;
-      if (this.$announcer) this.$announcer.setComplementRoute(this.$t('pageHasLoaded'));
+      return this.$contentful.query('linkGroups', contentfulVariables)
+        .then(response => {
+          const data = response.data.data;
+          const linkGroups = {};
+          for (const identifier in data) {
+            const linkGroup = data[identifier].items[0];
+            linkGroups[identifier] = {
+              name: linkGroup.name ? linkGroup.name : null,
+              links: linkGroup.links.items
+            };
+          }
+          this.linkGroups = linkGroups;
+          if (this.$announcer) this.$announcer.setComplementRoute(this.$t('pageHasLoaded'));
+        })
+        .catch(() => {
+          return;
+        });
     },
 
     fetchOnServer: false,
