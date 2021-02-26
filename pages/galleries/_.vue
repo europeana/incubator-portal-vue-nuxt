@@ -93,7 +93,8 @@
         return data.name;
       },
       imageUrl(data) {
-        return (data.encoding ? data.encoding.edmPreview : data.thumbnailUrl) + '&size=w400';
+        if (!data.encoding) return '';
+        return data.encoding.edmPreview[0] + '&size=w400';
       }
     },
     head() {

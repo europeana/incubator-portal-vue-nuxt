@@ -67,10 +67,10 @@ module.exports = function(migration) {
     .omitted(false)
     .linkType('Entry');
 
-  heroHeader.changeFieldControl("title", "builtin", "singleLine", {});
-  heroHeader.changeFieldControl("headline", "builtin", "singleLine", {});
-  heroHeader.changeFieldControl("image", "builtin", "entryLinkEditor", {});
-  heroHeader.changeFieldControl("link", "builtin", "entryLinkEditor", {});
+  heroHeader.changeFieldControl('title', 'builtin', 'singleLine', {});
+  heroHeader.changeFieldControl('headline', 'builtin', 'singleLine', {});
+  heroHeader.changeFieldControl('image', 'builtin', 'entryLinkEditor', {});
+  heroHeader.changeFieldControl('link', 'builtin', 'entryLinkEditor', {});
 
   const browsePage = migration.editContentType('browsePage');
 
@@ -81,5 +81,4 @@ module.exports = function(migration) {
         linkContentType: ['heroHeader', 'imageWithAttribution']
       }
     ]);
-
 };
