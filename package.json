@@ -47,7 +47,10 @@
     "test:stack:start": "docker-compose -f ./docker/stack/docker-compose.yml start app nginx chrome-en chrome-ja chrome-nl",
     "test:stack:stop": "docker-compose -f ./docker/stack/docker-compose.yml stop app nginx chrome-en chrome-ja chrome-nl",
     "test:unit": "vue-cli-service test:unit --include tests/unit/setup",
-    "version": "node bin/version.js && git add .sonarcloud.properties"
+    "test:unit:coverage": "npm run test:unit:coverage:setup && nyc --reporter=html --reporter=text-summary npm run test:unit",
+    "test:unit:coverage:lcov": "npm run test:unit:coverage:setup && nyc --reporter=lcov npm run test:unit",
+    "test:unit:coverage:setup": "node tests/unit/patch-istanbul-lib-source-maps.js",
+    "version": "node bin/version.js && git add sonar-project.properties"
   },
   "dependencies": {
     "@elastic/apm-rum-vue": "^1.1.9",
@@ -104,7 +107,9 @@
     "eslint": "^6.3.0",
     "eslint-loader": "^3.0.0",
     "eslint-plugin-vue": "^6.2.2",
+    "istanbul-instrumenter-loader": "^3.0.1",
     "nock": "^10.0.6",
+    "nyc": "^15.1.0",
     "properties-reader": "^2.2.0",
     "sass": "^1.30.0",
     "sass-loader": "^8.0.0",

@@ -3,18 +3,18 @@ const propertiesReader = require('properties-reader');
 
 const pkgVersion = require('../package').version;
 
-const versionSonarcloudProperties = async() => {
-  const sonarcloudPropertiesFilePath = path.resolve(__dirname, '../.sonarcloud.properties');
-  const sonarcloudProperties = propertiesReader(sonarcloudPropertiesFilePath,
+const versionSonarProjectProperties = async() => {
+  const sonarProjectPropertiesFilePath = path.resolve(__dirname, '../sonar-project.properties');
+  const sonarProjectProperties = propertiesReader(sonarProjectPropertiesFilePath,
     'utf-8',
     { writer: { saveSections: false } }
   );
-  sonarcloudProperties.set('sonar.projectVersion', pkgVersion);
-  await sonarcloudProperties.save(sonarcloudPropertiesFilePath);
+  sonarProjectProperties.set('sonar.projectVersion', pkgVersion);
+  await sonarProjectProperties.save(sonarProjectPropertiesFilePath);
 };
 
 const version = async() => {
-  await versionSonarcloudProperties();
+  await versionSonarProjectProperties();
 };
 
 version();

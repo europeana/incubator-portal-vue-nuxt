@@ -13,6 +13,9 @@ export default {
     },
 
     keycloakAccountUrl() {
+      if (!this.$auth || !this.$auth.strategy) {
+        return null;
+      }
       const keycloakAccountUrl = new URL(
         `/auth/realms/${this.$auth.strategy.options.realm}/account`, this.$auth.strategy.options.origin
       );
@@ -26,6 +29,9 @@ export default {
 
   methods: {
     keycloakLogin() {
+      if (!this.$auth || !this.$auth.$storage) {
+        return;
+      }
       this.$auth.$storage.setUniversal('redirect', this.keycloakLoginRedirect);
       this.$auth.$storage.setUniversal('portalLoggingIn', true);
       this.$auth.loginWith('keycloak', { params: { 'ui_locales': this.$i18n.locale } });

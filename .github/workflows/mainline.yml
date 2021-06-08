@@ -21,6 +21,28 @@ env:
   PERCY_BRANCH: master
 
 jobs:
+  test-unit:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+    - uses: actions/cache@v2
+      id: cache-node
+      with:
+        path: |
+          ~/.npm
+          **/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('./package-lock.json') }}
+    - if: steps.cache-node.outputs.cache-hit != 'true'
+      run: npm install
+    - run: npm run test:unit:coverage
+    - uses: SonarSource/sonarcloud-github-action@v1.6
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
   test-visual:
     runs-on: ubuntu-latest
     steps:

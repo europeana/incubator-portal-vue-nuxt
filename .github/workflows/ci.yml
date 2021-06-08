@@ -65,7 +65,13 @@ jobs:
         key: ${{ runner.os }}-node-${{ hashFiles('./package-lock.json') }}
     - if: steps.cache-node.outputs.cache-hit != 'true'
       run: npm install
-    - run: npm run test:unit
+    - run: npm run test:unit:coverage
+    # TODO: should this be its own job, dependent on test-unit, and supplied the
+    #       generated coverage/lcov.info file?
+    - uses: SonarSource/sonarcloud-github-action@v1.6
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   build:
     needs: [test-unit]

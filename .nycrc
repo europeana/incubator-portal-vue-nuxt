@@ -1,0 +1,15 @@
+{
+  "all": true,
+  "extension": [
+    ".js",
+    ".vue"
+  ],
+  "include": [
+    "src/**"
+  ],
+  "exclude": [
+    "src/**/*.stories.js",
+    "src/lang/**"
+  ],
+  "sourceMap": false
+}
