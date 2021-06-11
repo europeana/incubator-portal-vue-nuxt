@@ -229,6 +229,7 @@ module.exports = {
     '~/plugins/hotjar.client',
     '~/plugins/link',
     '~/plugins/page',
+    '~/plugins/vue-a2b.client',
     '~/plugins/vue-filters',
     '~/plugins/vue-directives',
     '~/plugins/vue-announcer.client',

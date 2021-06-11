@@ -37,17 +37,34 @@
         <span />
         <span />
       </b-button>
-      <SmartLink
-        :destination="{ name: 'index' }"
-        class="logo d-inline-flex"
-      >
-        <img
-          src="../assets/img/logo.svg"
-          :alt="$t('homeLinkAlt')"
-          class="mw-100"
-          data-qa="logo"
+      <split-test name="Vue AB test test">
+        <SmartLink
+          slot="A"
+          :destination="{ name: 'index' }"
+          class="logo d-inline-flex"
+          chance="2"
         >
-      </SmartLink>
+          <img
+            src="../assets/img/logo.svg"
+            :alt="$t('homeLinkAlt')"
+            class="logo-variant-green mw-100"
+            data-qa="logo"
+          >
+        </SmartLink>
+        <SmartLink
+          slot="B"
+          :destination="{ name: 'index' }"
+          class="logo d-inline-flex"
+          chance="1"
+        >
+          <img
+            src="../assets/img/logo.svg"
+            :alt="$t('homeLinkAlt')"
+            class="logo-variant-yellow mw-100"
+            data-qa="logo"
+          >
+        </SmartLink>
+      </split-test>
       <b-navbar
         class="align-items-center flex-row d-flex p-0 mr-3"
         role="navigation"
@@ -298,4 +315,13 @@
       }
     }
   }
+
+  .logo-variant-green {
+    background-color: green;
+  }
+
+  .logo-variant-yellow {
+    background-color: yellow;
+  }
+
 </style>
