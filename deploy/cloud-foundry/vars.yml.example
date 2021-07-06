@@ -1,4 +1,5 @@
-memory: 128M
+memory: 200M
+command: npm run start
 env:
   HOST: 0.0.0.0
 services: []

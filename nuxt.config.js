@@ -240,11 +240,12 @@ module.exports = {
     '~/plugins/vue-filters',
     '~/plugins/vue-directives',
     '~/plugins/vue-announcer.client',
-    '~/plugins/vue-masonry.client'
+    '~/plugins/vue-masonry.client',
+    '~/plugins/contentful-graphql/plugin.server',
+    '~/plugins/contentful-graphql/plugin.client'
   ],
 
   buildModules: [
-    '~/modules/contentful-graphql',
     '~/modules/axios-logger',
     '~/modules/http',
     '~/modules/query-sanitiser',

@@ -5,12 +5,12 @@ const utils = require('../../../../../src/cachers/entities/organisations/utils')
 
 describe('cachers/entities/organisations/utils', () => {
   describe('createRedisClient', () => {
-    const redisClientStub = {
-      on: sinon.spy(),
-      get: sinon.spy(),
-      set: sinon.spy(),
-      quit: sinon.spy()
-    };
+    const redisClientStub = ['del', 'get', 'set', 'hdel', 'hget', 'hkeys', 'hset', 'quit', 'on']
+      .reduce((memo, key) => {
+        memo[key] = sinon.spy();
+        return memo;
+      }, {});
+
     before('stub redis methods', () => {
       sinon.stub(redis, 'createClient').returns(redisClientStub);
     });

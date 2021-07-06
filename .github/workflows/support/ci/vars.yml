@@ -1,4 +1,5 @@
 memory: 128M
+command: npm run start
 env:
   CTF_CDA_ACCESS_TOKEN: ${CTF_CDA_ACCESS_TOKEN}
   CTF_ENVIRONMENT_ID: ${CTF_ENVIRONMENT_ID}

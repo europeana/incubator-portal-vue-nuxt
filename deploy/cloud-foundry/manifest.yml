@@ -3,7 +3,7 @@
 applications:
 - buildpacks:
   - nodejs_buildpack
-  command: "npm run start"
+  command: ((command))
   memory: ((memory))
   health-check-type: port
   stack: cflinuxfs3

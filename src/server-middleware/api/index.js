@@ -1,9 +1,11 @@
 const express = require('express');
+const morgan = require('morgan');
 const defu = require('defu');
 
 const app = express();
 app.disable('x-powered-by'); // Security: do not disclose technology fingerprints
 app.use(express.json());
+app.use(morgan('combined'));
 
 let runtimeConfig;
 app.use((res, req, next) => {
@@ -17,6 +19,12 @@ app.use((res, req, next) => {
 
 const debugMemoryUsage = require('./debug/memory-usage');
 app.get('/debug/memory-usage', debugMemoryUsage);
+
+import contentfulWebhook from './contentful/webhook';
+app.post('/contentful/webhook', (req, res) => contentfulWebhook(runtimeConfig)(req, res));
+
+import contentful from './contentful';
+app.get('/contentful/:alias', (req, res) => contentful(runtimeConfig)(req, res));
 
 import entitiesOrganisations from './entities/organisations';
 app.get('/entities/organisations', (req, res) => entitiesOrganisations(runtimeConfig)(req, res));
