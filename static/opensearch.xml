@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">
+  <ShortName>Europeana</ShortName>
+  <LongName>Europeana Search</LongName>
+  <Description>Search cultural heritage from European museums, galleries, libraries and archives.</Description>
+  <SyndicationRight>open</SyndicationRight>
+  <InputEncoding>UTF-8</InputEncoding>
+  <Url type="text/html" rel="results" template="https://www.europeana.eu/search?query={searchTerms}"/>
+  <Url type="application/rss+xml" template="https://www.europeana.eu/api/v2/opensearch.rss?searchTerms={searchTerms}&amp;startIndex={startIndex?}&amp;count={count?}"/>
+  <Image height="16" width="16" type="image/x-icon">https://www.europeana.eu/favicon.ico</Image>
+  <moz:SearchForm>https://www.europeana.eu/search</moz:SearchForm>
+</OpenSearchDescription>
