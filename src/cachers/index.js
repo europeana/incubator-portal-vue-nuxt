@@ -2,18 +2,54 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 
-const commands = [
-  'entities:organisations'
+const defu = require('defu');
+const utils = require('./utils');
+const nuxtConfig = require('../../nuxt.config');
+const runtimeConfig = defu(nuxtConfig.privateRuntimeConfig, nuxtConfig.publicRuntimeConfig);
+
+const cachers = [
+  'entities:organisations',
+  'items:recent'
 ];
 
-const cli = commands.reduce((memo, command) => {
+const cli = cachers.reduce((memo, command) => {
   const commandPath = command.replace(/:/g, '/');
+  // TODO: lazy-require just the script for command called
   memo[command] = require(`./${commandPath}`);
   return memo;
 }, {});
 
 const main = () => {
-  return cli[process.argv[2]].cli(process.argv[3]);
+  const cacher = process.argv[2];
+  const command = process.argv[3];
+
+  let executor;
+
+  switch (command) {
+    case 'set':
+      executor = cli[cacher].cache(runtimeConfig);
+      break;
+    case 'get':
+      executor = readCacheKey(cli[cacher].CACHE_KEY);
+      break;
+    default:
+      console.error(`Unknown command "${command}"`);
+      process.exit(1);
+      break;
+  }
+
+  return executor;
+};
+
+const readCacheKey = (cacheKey) => {
+  try {
+    const redisClient = utils.createRedisClient(runtimeConfig);
+    return redisClient.getAsync(cacheKey)
+      .then(data => redisClient.quitAsync()
+        .then(() => ({ body: JSON.parse(data) || {} })));
+  } catch (error) {
+    return Promise.reject({ statusCode: 500, body: utils.errorMessage(error) });
+  }
 };
 
 main()

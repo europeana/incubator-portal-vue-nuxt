@@ -21,6 +21,9 @@ app.get('/debug/memory-usage', debugMemoryUsage);
 import entitiesOrganisations from './entities/organisations';
 app.get('/entities/organisations', (req, res) => entitiesOrganisations(runtimeConfig)(req, res));
 
+import itemsRecent from './items/recent';
+app.get('/items/recent', (req, res) => itemsRecent(runtimeConfig)(req, res));
+
 import jiraServiceDesk from './jira/service-desk';
 app.post('/jira/service-desk', (req, res) => jiraServiceDesk(runtimeConfig.jira)(req, res));
 

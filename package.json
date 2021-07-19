@@ -40,6 +40,7 @@
     "bootstrap-vue": "^2.21.2",
     "cookie-universal-nuxt": "^2.0.18",
     "core-js": "^3.15.1",
+    "dateformat": "^4.5.1",
     "deep-object-diff": "^1.1.0",
     "deepmerge": "^4.2.2",
     "defu": "^5.0.0",

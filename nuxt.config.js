@@ -23,6 +23,7 @@ module.exports = {
         klaro: featureIsEnabled(process.env.ENABLE_KLARO),
         jiraServiceDeskFeedbackForm: featureIsEnabled(process.env.ENABLE_JIRA_SERVICE_DESK_FEEDBACK_FORM),
         linksToClassic: featureIsEnabled(process.env.ENABLE_LINKS_TO_CLASSIC),
+        recentItems: featureIsEnabled(process.env.ENABLE_RECENT_ITEMS),
         recommendations: featureIsEnabled(process.env.ENABLE_RECOMMENDATIONS),
         acceptSetRecommendations: featureIsEnabled(process.env.ENABLE_ACCEPT_SET_RECOMMENDATIONS),
         acceptEntityRecommendations: featureIsEnabled(process.env.ENABLE_ACCEPT_ENTITY_RECOMMENDATIONS),

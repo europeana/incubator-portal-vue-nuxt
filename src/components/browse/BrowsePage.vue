@@ -15,6 +15,9 @@
         :description="headline"
       />
       <BrowseSections :sections="hasPartCollection.items" />
+      <RecentItems
+        v-if="recentItems"
+      />
     </b-container>
   </div>
 </template>
@@ -28,7 +31,8 @@
     components: {
       ContentHeader,
       BrowseSections,
-      HeroHeader
+      HeroHeader,
+      RecentItems: () => import('@/components/item/RecentItems')
     },
     props: {
       name: {
@@ -54,6 +58,10 @@
       heroImage: {
         type: Object,
         default: null
+      },
+      recentItems: {
+        type: Boolean,
+        default: false
       }
     },
     computed: {

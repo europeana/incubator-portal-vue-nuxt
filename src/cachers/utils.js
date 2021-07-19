@@ -1,22 +1,22 @@
 const redis = require('redis');
 const { promisify } = require('util');
 
-const redisConfig = (params = {}) => {
+const redisConfig = (config = {}) => {
   const redisOptions = {
-    url: params.redisUrl
+    url: config.redis.url
   };
 
-  if (params.redisTlsCa) {
+  if (config.redis.tlsCa) {
     redisOptions.tls = {
-      ca: [Buffer.from(params.redisTlsCa, 'base64')]
+      ca: [Buffer.from(config.redis.tlsCa, 'base64')]
     };
   }
 
   return redisOptions;
 };
 
-const createRedisClient = (params = {}) => {
-  const redisClient = redis.createClient(redisConfig(params));
+const createRedisClient = (config = {}) => {
+  const redisClient = redis.createClient(redisConfig(config));
 
   redisClient.on('error', console.error);
 
