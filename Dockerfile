@@ -8,8 +8,10 @@ WORKDIR /app
 RUN apk add --no-cache jq
 
 COPY package.json package-original.json
-
 RUN jq -Mr '{dependencies,devDependencies}' package-original.json > package.json
+
+COPY package-lock.json package-lock-original.json
+RUN jq -Mr '{dependencies,lockfileVersion,requires}' package-lock-original.json > package-lock.json
 
 
 # 1. Build
@@ -26,12 +28,11 @@ WORKDIR /app
 RUN apk add --no-cache git
 
 COPY bin ./bin
-COPY --from=0 /app/package.json .
-COPY package-lock.json ./
+COPY --from=0 /app/package.json /app/package-lock.json ./
 
 RUN npm install
 
-COPY babel.config.js .env.example nuxt.config.js package.json *.md ./
+COPY babel.config.js .env.example nuxt.config.js package.json package-lock.json *.md ./
 COPY src ./src
 
 RUN npm run build
