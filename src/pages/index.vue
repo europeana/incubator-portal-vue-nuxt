@@ -8,6 +8,8 @@
       :has-part-collection="hasPartCollection"
       :hero="hero"
       :hero-image="heroImage"
+      :recent-items="showRecentItems"
+      :highlighted-entities="showHighlightedEntities"
     >
       <NotificationBanner
         v-if="showNotificationBanner"
@@ -86,8 +88,17 @@
     computed: {
       showNotificationBanner() {
         return (
-          this.$config.app.features.linksToClassic && this.identifier === 'home'
+          this.$config.app.features.linksToClassic && this.isHomePage
         );
+      },
+      isHomePage() {
+        return this.identifier === 'home';
+      },
+      showRecentItems() {
+        return this.$config.app.features.recentItems && this.isHomePage;
+      },
+      showHighlightedEntities() {
+        return this.$config.app.features.highlightedEntities && this.isHomePage;
       },
       notificationUrl() {
         return `https://classic.europeana.eu/portal/${

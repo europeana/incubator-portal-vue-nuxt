@@ -1,22 +1,23 @@
+const axios = require('axios');
 const redis = require('redis');
 const { promisify } = require('util');
 
-const redisConfig = (params = {}) => {
+const redisConfig = (config = {}) => {
   const redisOptions = {
-    url: params.redisUrl
+    url: config.redis.url
   };
 
-  if (params.redisTlsCa) {
+  if (config.redis.tlsCa) {
     redisOptions.tls = {
-      ca: [Buffer.from(params.redisTlsCa, 'base64')]
+      ca: [Buffer.from(config.redis.tlsCa, 'base64')]
     };
   }
 
   return redisOptions;
 };
 
-const createRedisClient = (params = {}) => {
-  const redisClient = redis.createClient(redisConfig(params));
+const createRedisClient = (config = {}) => {
+  const redisClient = redis.createClient(redisConfig(config));
 
   redisClient.on('error', console.error);
 
@@ -25,6 +26,15 @@ const createRedisClient = (params = {}) => {
   }
 
   return redisClient;
+};
+
+const createAxiosClient = (config = {}, api = 'record') => {
+  return axios.create({
+    baseURL: config.europeana.apis[api].url || `https://api.europeana.eu/${api}`,
+    params: {
+      wskey: config.europeana.apis[api].key
+    }
+  });
 };
 
 const errorMessage = (error) => {
@@ -42,6 +52,7 @@ const errorMessage = (error) => {
 };
 
 module.exports = {
+  createAxiosClient,
   createRedisClient,
   errorMessage
 };

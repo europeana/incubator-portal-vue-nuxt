@@ -20,9 +20,11 @@ module.exports = {
       schemaOrgDatasetId: process.env.SCHEMA_ORG_DATASET_ID,
       siteName: APP_SITE_NAME,
       features: {
-        klaro: featureIsEnabled(process.env.ENABLE_KLARO),
+        highlightedEntities: featureIsEnabled(process.env.ENABLE_HIGHLIGHTED_ENTITIES),
         jiraServiceDeskFeedbackForm: featureIsEnabled(process.env.ENABLE_JIRA_SERVICE_DESK_FEEDBACK_FORM),
+        klaro: featureIsEnabled(process.env.ENABLE_KLARO),
         linksToClassic: featureIsEnabled(process.env.ENABLE_LINKS_TO_CLASSIC),
+        recentItems: featureIsEnabled(process.env.ENABLE_RECENT_ITEMS),
         recommendations: featureIsEnabled(process.env.ENABLE_RECOMMENDATIONS),
         acceptSetRecommendations: featureIsEnabled(process.env.ENABLE_ACCEPT_SET_RECOMMENDATIONS),
         acceptEntityRecommendations: featureIsEnabled(process.env.ENABLE_ACCEPT_ENTITY_RECOMMENDATIONS),

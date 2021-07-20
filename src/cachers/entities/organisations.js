@@ -1,18 +1,6 @@
-const axios = require('axios');
 const utils = require('../utils');
 
 const CACHE_KEY = '@europeana:portal.js:entity:organizations';
-
-const axiosConfig = (params = {}) => {
-  return {
-    baseURL: params.europeanaEntityApiBaseUrl || 'https://api.europeana.eu/entity',
-    params: {
-      wskey: params.europeanaEntityApiKey
-    }
-  };
-};
-
-const createAxiosClient = (params = {}) => axios.create(axiosConfig(params));
 
 let axiosClient;
 let redisClient;
@@ -22,7 +10,7 @@ const pageSize = 100;
 const pageOfOrganisationResults = page => {
   return axiosClient.get('/search', {
     params: {
-      ...axiosClient.defaults.params,
+      ...axiosClient.defaults.config,
       query: '*:*',
       type: 'organization',
       page,
@@ -69,10 +57,10 @@ const writeToRedis = (organisations) => {
     }));
 };
 
-const set = async(params = {}) => {
+const cache = async(config = {}) => {
   try {
-    axiosClient = createAxiosClient(params);
-    redisClient = utils.createRedisClient(params);
+    axiosClient = utils.createAxiosClient(config, 'entity');
+    redisClient = utils.createRedisClient(config);
 
     const allResults = await allOrganisationResults();
     const organisations = organisationsObject(allResults);
@@ -83,31 +71,7 @@ const set = async(params = {}) => {
   }
 };
 
-const get = (params = {}) => {
-  try {
-    redisClient = utils.createRedisClient(params);
-    return redisClient.getAsync(CACHE_KEY)
-      .then(organisations => redisClient.quitAsync()
-        .then(() => ({ body: JSON.parse(organisations) || {} })));
-  } catch (error) {
-    return Promise.reject({ statusCode: 500, body: utils.errorMessage(error) });
-  }
-};
-
-function cli(command) {
-  const params = {
-    europeanaEntityApiBaseUrl: process.env.EUROPEANA_ENTITY_API_URL,
-    europeanaEntityApiKey: process.env.EUROPEANA_ENTITY_API_KEY || process.env.EUROPEANA_API_KEY,
-    redisUrl: process.env.REDIS_URL,
-    redisTlsCa: process.env.REDIS_TLS_CA
-  };
-
-  return this[command](params);
-}
-
 module.exports = {
   CACHE_KEY,
-  cli,
-  get,
-  set
+  cache
 };
